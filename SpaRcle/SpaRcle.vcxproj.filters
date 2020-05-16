@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{d35a0bec-a400-43a6-9b46-df9fe48c9831}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cores">
+      <UniqueIdentifier>{5a809153-58f9-4d97-aa6c-49aa578419a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{95e48c04-afae-4db6-ba88-3d0b96cbe371}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{fc11b54b-29ae-4047-b1fc-cdd805ded35b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SRFramework.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Core.h">
+      <Filter>Cores</Filter>
+    </ClInclude>
+    <ClInclude Include="CentralNeuralSystem.h" />
+    <ClInclude Include="Causality.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Reality.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Logicality.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Emotionality.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="SRFramework.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="CentralNeuralSystem.cpp" />
+    <ClCompile Include="Causality.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Reality.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Logicality.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Emotionality.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
