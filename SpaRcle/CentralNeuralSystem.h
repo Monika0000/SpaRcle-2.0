@@ -17,6 +17,10 @@ namespace SpaRcle {
 			debug = nullptr;
 			settings = nullptr;
 
+			isCreate = false;
+			isInit = false;
+			isRun = false;
+
 			//!//////////////////
 
 			LSystem = nullptr;
@@ -26,14 +30,25 @@ namespace SpaRcle {
 		};
 		~CentralNeuralSystem() { Close(); };
 	public:
+		bool IsRun() { return isRun; }
+	public:
 		bool Create(Debug* debug, Settings* settings);
 		bool Init();
 		bool Run();
 		bool Close();
 	private:
+		bool isCreate;
+		bool isInit;
+		bool isRun;
+	private:
+		void TaskFunc();
+		std::thread task;
+	private:
 		Debug* debug;
 		Settings* settings;
 	public:
+		inline const bool AddCore(Core* core) { cores.push_back(core); return true; };
+	private:
 		std::vector<Core*> cores;
 	private:
 		Reality*		RSystem;

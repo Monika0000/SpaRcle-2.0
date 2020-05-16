@@ -154,6 +154,7 @@
     <ClInclude Include="Causality.h" />
     <ClInclude Include="CentralNeuralSystem.h" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="Neuron.h" />
     <ClInclude Include="Emotionality.h" />
     <ClInclude Include="Logicality.h" />
     <ClInclude Include="Reality.h" />
@@ -164,6 +165,7 @@
   <ItemGroup>
     <ClCompile Include="Causality.cpp" />
     <ClCompile Include="CentralNeuralSystem.cpp" />
+    <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="Emotionality.cpp" />
     <ClCompile Include="Logicality.cpp" />
     <ClCompile Include="pch.cpp">

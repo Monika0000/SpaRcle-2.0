@@ -26,18 +26,20 @@ namespace SpaRcle {
 
 		class Debug {
 		 	enum class Type {
-				_Log, _Info, _System, _Warning, _Error, _Fatal
+				_Log, _Info, _System, _Warning, _Error, _Fatal, _Debug
 			};
 		public:
 			Debug(std::string path);
 			~Debug();
 		public:
-			inline void SetConsole(bool v) { isConsole = v; }
+			inline void SetConsoleEnable(bool v) { isConsole = v; }
 		public:
 			inline void Log(std::string msg) { Print(msg, Type::_Log); }
 			inline void Info(std::string msg) { Print(msg, Type::_Info); }
 			inline void Warn(std::string msg) { Print(msg, Type::_Warning); }
-			inline void Erorr(std::string msg) { Print(msg, Type::_Error); }
+			inline void Error(std::string msg) { Print(msg, Type::_Error); }
+			inline void System(std::string msg) { Print(msg, Type::_System); }
+			static inline void InternalError(std::string msg) { std::cout << "[Internal error] " + msg + "\n"; }
 		private:
 			std::ofstream log_file;
 			bool isConsole;

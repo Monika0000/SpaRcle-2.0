@@ -17,15 +17,14 @@ namespace SpaRcle {
 	public:
 		bool LoadCore(Core* core) { 
 			if (isCreate && !isInit) {
-				this->CNS->cores.push_back(core);
-				return true;
+				return this->CNS->AddCore(core);
 			}
 			else if (isCreate) {
-				debug->Erorr("LoadCore : framework is not create!");
+				debug->Error("LoadCore : framework is not create!");
 				return false;
 			}
 			else if (!isInit) {
-				debug->Erorr("LoadCore : framework already initialize! Load cores before init!");
+				debug->Error("LoadCore : framework already initialize! Load cores before init!");
 				return false;
 			}
 		}
@@ -43,5 +42,6 @@ namespace SpaRcle {
 	private:
 		Settings* settings;
 		Debug* debug;
+		FileManager* file_manager;
 	};
 }

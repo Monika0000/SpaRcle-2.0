@@ -1,6 +1,9 @@
 ﻿#pragma once
 #include <Windows.h>
 #include "Debug.h"
+#include "FileManager.h"
+#include "Input.h"
+#include <thread>
 
 #define WIN32_LEAN_AND_MEAN             // Исключите редко используемые компоненты из заголовков Windows
 

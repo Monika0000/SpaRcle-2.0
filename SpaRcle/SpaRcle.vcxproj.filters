@@ -13,6 +13,9 @@
     <Filter Include="Systems">
       <UniqueIdentifier>{fc11b54b-29ae-4047-b1fc-cdd805ded35b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{781b5c65-64e3-439a-9d26-98de55054b10}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SRFramework.h">
@@ -40,6 +43,9 @@
     <ClInclude Include="Emotionality.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Neuron.h">
+      <Filter>Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -63,6 +69,9 @@
     </ClCompile>
     <ClCompile Include="Emotionality.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Neuron.cpp">
+      <Filter>Data</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
