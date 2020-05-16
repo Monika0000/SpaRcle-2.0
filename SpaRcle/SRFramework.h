@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Debug.h"
-#include "SRHelper.h"
+#include <SRHelper.h>
 #include "Settings.h"
 #include "CentralNeuralSystem.h"
 
@@ -10,11 +10,26 @@
 
 namespace SpaRcle {
 	using namespace Helper;
+	using namespace Network;
+
 	class SRFramework {
 	public:
 		SRFramework(Debug* debug, Settings* settings);
 		~SRFramework();
 	public:
+		bool SetTCP(TCP* tcp) {
+			if (isCreate && !isInit) {
+				return this->tcp = tcp;
+			}
+			else if (isCreate) {
+				debug->Error("SetTCP : framework is not create!");
+				return false;
+			}
+			else if (!isInit) {
+				debug->Error("SetTCP : framework already initialize! Set TCP before init!");
+				return false;
+			}
+		}
 		bool LoadCore(Core* core) { 
 			if (isCreate && !isInit) {
 				return this->CNS->AddCore(core);
@@ -41,6 +56,7 @@ namespace SpaRcle {
 		CentralNeuralSystem* CNS;
 	private:
 		Settings* settings;
+		TCP* tcp;
 		Debug* debug;
 		FileManager* file_manager;
 	};

@@ -14,6 +14,8 @@ int main() {
 	SRFramework* framework = new SRFramework(debug, settings);
 	framework->Create();
 
+	framework->SetTCP(new TCP("localhost", 1111, debug));
+
 	Vision* vision = new Vision();
 	framework->LoadCore(vision);
 

@@ -9,8 +9,11 @@
 #include "Reality.h"
 #include "Emotionality.h"
 
+#include "Neuron.h"
+
 namespace SpaRcle {
 	using namespace Helper;
+
 	class CentralNeuralSystem {
 	public:
 		CentralNeuralSystem() {

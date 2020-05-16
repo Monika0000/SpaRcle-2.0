@@ -10,6 +10,9 @@ namespace SpaRcle {
 		isInit = false;
 		isRun = false;
 
+		this->file_manager = nullptr;
+		this->tcp = nullptr;
+
 		this->CNS = nullptr;
 
 		this->debug = debug;
@@ -23,6 +26,8 @@ namespace SpaRcle {
 		this->CNS = new CentralNeuralSystem();
 		if (!this->CNS->Create(debug, settings)) return false;
 
+		this->file_manager = new FileManager();
+
 		isCreate = true;
 		return true;
 	}
@@ -30,17 +35,23 @@ namespace SpaRcle {
 		debug->Info("Initializing framework...");
 		if (!isCreate) { debug->Error("Framework is not create!"); return false; } else isInit = true;
 
+		this->file_manager->Start(debug);
+
 		if (!this->CNS->Init()) return false;
 
 		return true;
 	}
 	bool SRFramework::Run() {
 		debug->Info("Running framework...");
-		if (!isInit) { debug->Error("Framework is not initialize!"); return false; } else isRun = true;
+		if (!isInit) { debug->Error("Framework is not initialize!"); return false; }
 
 		if (!this->CNS->Run()) { debug->Error("Failed running CNS!"); return false; }
 
+		if (!this->tcp->Run()) { debug->Error("Failed running TCP client-server!"); return false; }
+
 		debug->System("All systems are successfully activated!");
+
+		isRun = true;
 
 		while (isRun) {
 			if (Input::GetKey(KeyCode::Esc)) break;

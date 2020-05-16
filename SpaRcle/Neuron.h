@@ -10,6 +10,10 @@ namespace SpaRcle {
 
 	class Neuron;
 
+	struct Vector3 {
+		float x, y, z;
+	};
+
 	class Synapse {
 	public:
 		Synapse(std::string name, Neuron* neuron) { 
@@ -54,6 +58,8 @@ namespace SpaRcle {
 		Neuron();
 		~Neuron();
 	public:
+		Vector3 position;
+		unsigned long meetings;
 		Dendrite* dendr;
 		Akson* akson;					///%Следствия
 		std::vector<Synapse*> Synapses;	///%Причины

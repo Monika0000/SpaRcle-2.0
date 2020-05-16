@@ -26,6 +26,7 @@ namespace SpaRcle {
 
 		FileManager::FileManager() {
 			this->open_files = std::vector<std::string>();
+			this->isStart = false;
 		}
 		FileManager::~FileManager() {
 			this->open_files.clear();
@@ -35,6 +36,8 @@ namespace SpaRcle {
 				Debug::InternalError("FileManager::Start : debugger is nullptr!");
 				return false;
 			}
+
+			isStart = true;
 
 			return true;
 		}

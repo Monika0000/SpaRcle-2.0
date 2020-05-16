@@ -12,6 +12,8 @@ namespace SpaRcle {
 		public:
 			bool Start(Debug* debug);
 		private:
+			bool isStart;
+		private:
 			Debug* debug;
 		private:
 			std::vector<std::string> open_files;

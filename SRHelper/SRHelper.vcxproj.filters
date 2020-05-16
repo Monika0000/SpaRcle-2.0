@@ -10,6 +10,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{e44aedf8-7ab5-43b0-818d-de225d44e2bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{f542a7be-9029-4c10-9b98-0f6917ef1782}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KeyCodes.h">
@@ -30,6 +33,9 @@
     <ClInclude Include="SRHelper.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="TCP.h">
+      <Filter>Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">
@@ -46,6 +52,9 @@
     </ClCompile>
     <ClCompile Include="SRHelper.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="TCP.cpp">
+      <Filter>Network</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
