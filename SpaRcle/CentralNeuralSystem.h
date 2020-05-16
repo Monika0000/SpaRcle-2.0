@@ -1,9 +1,13 @@
 #pragma once
 #include <vector>
-#include "Logicality.h"
 #include "Core.h"
 #include <SRHelper.h>
 #include "Settings.h"
+
+#include "Logicality.h"
+#include "Causality.h"
+#include "Reality.h"
+#include "Emotionality.h"
 
 namespace SpaRcle {
 	using namespace Helper;
@@ -15,7 +19,10 @@ namespace SpaRcle {
 
 			//!//////////////////
 
-			LogicSystem = nullptr;
+			LSystem = nullptr;
+			ESystem = nullptr;
+			RSystem = nullptr;
+			CSystem = nullptr;
 		};
 		~CentralNeuralSystem() { Close(); };
 	public:
@@ -29,7 +36,10 @@ namespace SpaRcle {
 	public:
 		std::vector<Core*> cores;
 	private:
-		Logicality* LogicSystem;
+		Reality*		RSystem;
+		Emotionality*	ESystem;
+		Causality*		CSystem;
+		Logicality*		LSystem;
 	};
 }
 
