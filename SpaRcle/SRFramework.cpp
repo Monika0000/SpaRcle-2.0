@@ -1,8 +1,11 @@
 #include "pch.h"
 #include "SRFramework.h"
 #include <Input.h>
+#include "Package.h"
 
 namespace SpaRcle {
+	using namespace Network;
+
 	SRFramework::SRFramework(Debug* debug, Settings* settings) {
 		if (!debug) Debug::InternalError("SRFramework : fatal error!");
 
@@ -23,10 +26,10 @@ namespace SpaRcle {
 	bool SRFramework::Create() {
 		debug->Info("Creating framework...");
 
-		this->CNS = new CentralNeuralSystem();
-		if (!this->CNS->Create(debug, settings)) return false;
-
 		this->file_manager = new FileManager();
+
+		this->CNS = new CentralNeuralSystem();
+		if (!this->CNS->Create(debug, settings, file_manager)) return false;
 
 		isCreate = true;
 		return true;
@@ -44,10 +47,10 @@ namespace SpaRcle {
 	bool SRFramework::Run() {
 		debug->Info("Running framework...");
 		if (!isInit) { debug->Error("Framework is not initialize!"); return false; }
-
 		if (!this->CNS->Run()) { debug->Error("Failed running CNS!"); return false; }
-
 		if (!this->tcp->Run()) { debug->Error("Failed running TCP client-server!"); return false; }
+
+		tcp->Send(new Move { "head", 1.f});
 
 		debug->System("All systems are successfully activated!");
 

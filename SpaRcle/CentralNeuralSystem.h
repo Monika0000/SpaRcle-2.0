@@ -9,6 +9,8 @@
 #include "Reality.h"
 #include "Emotionality.h"
 
+#include "Hippocampus.h"
+
 #include "Neuron.h"
 
 namespace SpaRcle {
@@ -19,6 +21,7 @@ namespace SpaRcle {
 		CentralNeuralSystem() {
 			debug = nullptr;
 			settings = nullptr;
+			file_manager = nullptr;
 
 			isCreate = false;
 			isInit = false;
@@ -30,12 +33,16 @@ namespace SpaRcle {
 			ESystem = nullptr;
 			RSystem = nullptr;
 			CSystem = nullptr;
+
+			//!//////////////////
+
+			hippocampus = new Hippocampus();
 		};
 		~CentralNeuralSystem() { Close(); };
 	public:
 		bool IsRun() { return isRun; }
 	public:
-		bool Create(Debug* debug, Settings* settings);
+		bool Create(Debug* debug, Settings* settings, FileManager* file_manager);
 		bool Init();
 		bool Run();
 		bool Close();
@@ -49,6 +56,7 @@ namespace SpaRcle {
 	private:
 		Debug* debug;
 		Settings* settings;
+		FileManager* file_manager;
 	public:
 		inline const bool AddCore(Core* core) { cores.push_back(core); return true; };
 	private:
@@ -58,6 +66,8 @@ namespace SpaRcle {
 		Emotionality*	ESystem;
 		Causality*		CSystem;
 		Logicality*		LSystem;
+
+		Hippocampus* hippocampus;
 	};
 }
 

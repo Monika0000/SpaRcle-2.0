@@ -7,6 +7,9 @@ namespace SpaRcle {
 			this->ip = ip;
 			this->port = port;
 			this->debug = debug;
+
+			client_thread = std::thread();
+			server_thread = std::thread();
 		}
 
 		SpaRcle::Network::TCP::~TCP() {
@@ -21,7 +24,28 @@ namespace SpaRcle {
 			return true;
 		}
 
-		template<typename T> void TCP::Send(T data) {
+		bool TCP::Close() {
+			isRun = false;
+
+			if (client_thread.joinable()) client_thread.join();
+			if (server_thread.joinable()) server_thread.join();
+
+			return true;
+		}
+
+		void TCP::Client() {
+			while (isRun) {
+
+			}
+		}
+
+		void TCP::Server() {
+			while (isRun) {
+
+			}
+		}
+
+		void TCP::Send(IPackage* data) {
 
 		}
 	}

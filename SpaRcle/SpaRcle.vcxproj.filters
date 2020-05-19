@@ -13,7 +13,10 @@
     <Filter Include="Systems">
       <UniqueIdentifier>{fc11b54b-29ae-4047-b1fc-cdd805ded35b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data">
+    <Filter Include="Network">
+      <UniqueIdentifier>{2e9465bf-26b2-4858-8571-80591e56a600}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NN">
       <UniqueIdentifier>{781b5c65-64e3-439a-9d26-98de55054b10}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -30,7 +33,6 @@
     <ClInclude Include="Core.h">
       <Filter>Cores</Filter>
     </ClInclude>
-    <ClInclude Include="CentralNeuralSystem.h" />
     <ClInclude Include="Causality.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -44,7 +46,16 @@
       <Filter>Systems</Filter>
     </ClInclude>
     <ClInclude Include="Neuron.h">
-      <Filter>Data</Filter>
+      <Filter>NN</Filter>
+    </ClInclude>
+    <ClInclude Include="Package.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Hippocampus.h">
+      <Filter>NN</Filter>
+    </ClInclude>
+    <ClInclude Include="CentralNeuralSystem.h">
+      <Filter>NN</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +68,6 @@
     <ClCompile Include="Settings.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="CentralNeuralSystem.cpp" />
     <ClCompile Include="Causality.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
@@ -71,7 +81,13 @@
       <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="Neuron.cpp">
-      <Filter>Data</Filter>
+      <Filter>NN</Filter>
+    </ClCompile>
+    <ClCompile Include="Hippocampus.cpp">
+      <Filter>NN</Filter>
+    </ClCompile>
+    <ClCompile Include="CentralNeuralSystem.cpp">
+      <Filter>NN</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
