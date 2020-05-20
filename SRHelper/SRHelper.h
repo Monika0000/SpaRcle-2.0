@@ -5,6 +5,10 @@
 #include "Input.h"
 #include "TCP.h"
 #include <thread>	
+#include <random>
+#include <ostream>
+#include <string>
+#include <sstream>
 
 #define WIN32_LEAN_AND_MEAN             // Исключите редко используемые компоненты из заголовков Windows
 
@@ -15,7 +19,7 @@ namespace SpaRcle {
 			Math() {};
 			~Math() {};
 		public:
-			inline double Round(double x) { return ((x * 100) / 100); /*return floor(x * 100) / 100;*/ }
+			inline static double Round(double x) { return ((x * 100) / 100); /*return floor(x * 100) / 100;*/ }
 		};
 
 		class Array {
@@ -23,7 +27,7 @@ namespace SpaRcle {
 			~Array() { };
 			Array() { };
 		public:
-			template <typename T> const bool Contains(std::vector<T>& Vec, const T& Element) {
+			template <typename T> static const bool Contains(std::vector<T>& Vec, const T& Element) {
 				if (std::find(Vec.begin(), Vec.end(), Element) != Vec.end()) return true;
 				return false;
 			};
@@ -39,6 +43,25 @@ namespace SpaRcle {
 				GetCurrentDirectory(100, cwd);
 				std::wstring ws(&cwd[0]);
 				return std::string(ws.begin(), ws.end());
+			}
+		};
+
+		class String {
+		private:
+			static std::default_random_engine generator;
+			static std::uniform_int_distribution<int> distribution;
+			static const std::string VALID_CHARS;
+		private:
+			String() {  };
+			~String() {  };
+		public:
+			static std::string RandomString(int size) {
+				std::ostringstream oss;
+				for (std::size_t i = 0; i < size; ++i)
+				{
+					oss << VALID_CHARS[distribution(generator)];
+				}
+				return oss.str();
 			}
 		};
 	}

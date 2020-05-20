@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TCP.h"
+#include <thread>
 
 namespace SpaRcle {
 	namespace Network {
@@ -25,6 +26,8 @@ namespace SpaRcle {
 		}
 
 		bool TCP::Close() {
+			debug->Info("Stopping TCP client-server...\n\tIp   : " + ip + "\n\tPort : " + std::to_string(port));
+
 			isRun = false;
 
 			if (client_thread.joinable()) client_thread.join();

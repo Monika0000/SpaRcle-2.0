@@ -8,7 +8,7 @@ namespace SpaRcle {
 		enum class KeyboardLayout { EN, RU, UNKNOWN };
 
 		enum class KeyCode {
-			Esc = 27, //, Shift, Enter, Space, W
+			Esc = 27, E = 69, I = 73, O = 79, P = 80, Q = 81, R = 82, T = 84, U = 85, W = 87, Y = 89
 		};
 
 		class Input {

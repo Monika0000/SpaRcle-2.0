@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "CentralNeuralSystem.h"
+#include "Core.h"
 
 namespace SpaRcle {
+	using namespace Network;
+	using namespace Helper;
+
 	bool CentralNeuralSystem::Create(Debug* debug, Settings* settings, FileManager* file_manager) {
 		if (!debug) { Debug::InternalError("CNS : debug is nullptr!"); return false; } else this->debug = debug;
 
@@ -31,6 +35,8 @@ namespace SpaRcle {
 
 		if (!this->hippocampus->Init()) { debug->Error("CNS : failed initialize hippocampus!"); return false; }
 
+		for (Core* core : cores) core->Init();
+
 		//!///////////////////////////////
 
 		isInit = true;
@@ -45,6 +51,8 @@ namespace SpaRcle {
 		//!/////////////////////////////////////////////////////////////
 
 		if (!this->hippocampus->Run()) { debug->Error("CNS : failed running hippocampus!"); return false; }
+
+		for (Core* core : cores) core->Run();
 
 		//!/////////////////////////////////////////////////////////////
 
@@ -66,6 +74,8 @@ namespace SpaRcle {
 		debug->Info("Close CNS...");
 
 		isRun = false;
+
+		for (Core* core : cores) core->Close();
 
 		if (this->hippocampus) this->hippocampus->Close();
 

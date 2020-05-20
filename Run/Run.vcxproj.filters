@@ -2,11 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Vision.cpp" />
     <ClCompile Include="Moving.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Vision.h" />
     <ClInclude Include="Moving.h" />
   </ItemGroup>
 </Project>

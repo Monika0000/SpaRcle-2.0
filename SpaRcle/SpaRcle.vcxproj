@@ -167,6 +167,7 @@
   <ItemGroup>
     <ClCompile Include="Causality.cpp" />
     <ClCompile Include="CentralNeuralSystem.cpp" />
+    <ClCompile Include="Core.cpp" />
     <ClCompile Include="Hippocampus.cpp" />
     <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="Emotionality.cpp" />

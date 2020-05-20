@@ -7,14 +7,14 @@ namespace SpaRcle {
 	using namespace Network;
 
 	SRFramework::SRFramework(Debug* debug, Settings* settings) {
-		if (!debug) Debug::InternalError("SRFramework : fatal error!");
+		if (!debug) Debug::InternalError("SRFramework : debug is nullptr!");
+		if (!settings) debug->Error("SRFramework : settings is nullptr!");
 
 		isCreate = false;
 		isInit = false;
 		isRun = false;
 
 		this->file_manager = nullptr;
-		this->tcp = nullptr;
 
 		this->CNS = nullptr;
 
@@ -48,9 +48,9 @@ namespace SpaRcle {
 		debug->Info("Running framework...");
 		if (!isInit) { debug->Error("Framework is not initialize!"); return false; }
 		if (!this->CNS->Run()) { debug->Error("Failed running CNS!"); return false; }
-		if (!this->tcp->Run()) { debug->Error("Failed running TCP client-server!"); return false; }
+		//if (!this->tcp->Run()) { debug->Error("Failed running TCP client-server!"); return false; }
 
-		tcp->Send(new Move { "head", 1.f});
+		//tcp->Send(new Move { "head", 1.f});
 
 		debug->System("All systems are successfully activated!");
 
@@ -65,10 +65,15 @@ namespace SpaRcle {
 		return true;
 	}
 	bool SRFramework::Close() {
+		isRun = false;
+
 		debug->Info("Close framework...");
 
 		if (CNS) delete CNS;
 		if (settings) delete settings;
+
+		debug->System("All system completed successfully!");
+
 		if (debug) delete debug;
 
 		return true;

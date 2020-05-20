@@ -58,7 +58,16 @@ namespace SpaRcle {
 		Settings* settings;
 		FileManager* file_manager;
 	public:
-		inline const bool AddCore(Core* core) { cores.push_back(core); return true; };
+		inline const bool AddCore(Core* core) { 
+			if (!isRun) {
+				cores.push_back(core);
+				return true;
+			}
+			else {
+				debug->Error("CNS::AddCore() : The kernel can be added only before starting the central nervous system!");
+				return false;
+			}
+		};
 	private:
 		std::vector<Core*> cores;
 	private:

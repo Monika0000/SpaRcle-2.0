@@ -89,5 +89,8 @@
     <ClCompile Include="CentralNeuralSystem.cpp">
       <Filter>NN</Filter>
     </ClCompile>
+    <ClCompile Include="Core.cpp">
+      <Filter>Cores</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -105,7 +105,7 @@ constexpr int SCAN_KP_FORWARD_SLASH = 0xE035l;
 constexpr int SCAN_PRINT_SCREEN     = 0xE02AE037l;
 */
 
-constexpr short KEY_ESC = 0;
-constexpr short KEY_ENTER = 0;
-constexpr short KEY_SPACE = 0;
-constexpr short KEY_SHIFT = 0;
+//constexpr short KEY_ESC = 0;
+//constexpr short KEY_ENTER = 0;
+//constexpr short KEY_SPACE = 0;
+//constexpr short KEY_SHIFT = 0;

@@ -17,6 +17,7 @@ namespace SpaRcle {
 		SRFramework(Debug* debug, Settings* settings);
 		~SRFramework();
 	public:
+		/*
 		bool SetTCP(TCP* tcp) {
 			if (isCreate && !isInit) {
 				return this->tcp = tcp;
@@ -29,20 +30,26 @@ namespace SpaRcle {
 				debug->Error("SetTCP : framework already initialize! Set TCP before init!");
 				return false;
 			}
-		}
+		}*/
 		bool LoadCore(Core* core) { 
 			if (isCreate && !isInit) {
 				return this->CNS->AddCore(core);
 			}
 			else if (isCreate) {
-				debug->Error("LoadCore : framework is not create!");
+				debug->Error("SRFramework::LoadCore() : framework is not create!");
 				return false;
 			}
 			else if (!isInit) {
-				debug->Error("LoadCore : framework already initialize! Load cores before init!");
+				debug->Error("SRFramework::LoadCore() : framework already initialize! Load cores before init!");
+				return false;
+			}
+			else {
+				debug->Error("SRFramework::LoadCore() : unknown error!");
 				return false;
 			}
 		}
+	public:
+		bool IsRun() const { return isRun; }
 	public:
 		bool Create();
 		bool Init();
@@ -56,7 +63,6 @@ namespace SpaRcle {
 		CentralNeuralSystem* CNS;
 	private:
 		Settings* settings;
-		TCP* tcp;
 		Debug* debug;
 		FileManager* file_manager;
 	};
