@@ -163,6 +163,7 @@
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SRFramework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ISystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Causality.cpp" />

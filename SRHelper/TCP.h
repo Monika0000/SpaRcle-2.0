@@ -1,12 +1,18 @@
 #pragma once
+#pragma comment(lib, "ws2_32.lib")
+#pragma warning(disable: 4996)
+
 #include <string>
 #include "Debug.h"
-#include <iostream>
 #include <thread>
+
+#include <iostream>
 #include <winsock.h>
 
 namespace SpaRcle {
 	namespace Network {
+		const int BUFFER_SIZE = 4096;
+
 		using namespace Helper;
 
 		__interface IPackage  {
@@ -21,6 +27,23 @@ namespace SpaRcle {
 			bool Run();
 			bool Close();
 		private:
+			static bool isLoadWSAStartup;
+			bool LoadWSAStartup() {
+				if (!isLoadWSAStartup) {
+					debug->System("Loading WSAStartup dll...");
+					WSAData wsaData;
+					WORD DLLVersion = MAKEWORD(2, 1);
+
+					int r = WSAStartup(DLLVersion, &wsaData);
+					if (r != 0) {
+						debug->Error("Failed loading WSAStartup dll!");
+						return false;
+					}
+					isLoadWSAStartup = true;
+				}
+				return true;
+			}
+
 			void Client();
 			void Server();
 		private:

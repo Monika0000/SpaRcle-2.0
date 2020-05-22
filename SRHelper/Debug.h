@@ -26,7 +26,7 @@ namespace SpaRcle {
 
 		class Debug {
 		 	enum class Type {
-				_Log, _Info, _System, _Warning, _Error, _Fatal, _Debug
+				_Log, _Info, _System, _Warning, _Error, _Fatal, _Debug, _Network
 			};
 		public:
 			Debug(std::string path);
@@ -39,6 +39,7 @@ namespace SpaRcle {
 			inline void Warn(std::string msg) { Print(msg, Type::_Warning); }
 			inline void Error(std::string msg) { Print(msg, Type::_Error); }
 			inline void System(std::string msg) { Print(msg, Type::_System); }
+			inline void Network(std::string msg) { Print(msg, Type::_Network); }
 			static inline void InternalError(std::string msg) { std::cout << "[Internal error] " + msg + "\n"; }
 		private:
 			std::ofstream log_file;

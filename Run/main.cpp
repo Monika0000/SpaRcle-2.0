@@ -26,7 +26,8 @@ int main() {
 	//framework->SetTCP(new TCP("localhost", 1111, debug));
 	Moving* moving = new Moving(
 		"moving",
-		new TCP("localhost", 1000, debug),
+		//new TCP("127.0.0.1", 1025, debug),
+		new TCP("127.0.0.1", 1025, debug),
 		debug,
 		settings);
 

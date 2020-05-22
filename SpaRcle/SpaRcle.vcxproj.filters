@@ -57,6 +57,9 @@
     <ClInclude Include="CentralNeuralSystem.h">
       <Filter>NN</Filter>
     </ClInclude>
+    <ClInclude Include="ISystem.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

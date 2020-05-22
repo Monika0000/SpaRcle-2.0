@@ -52,6 +52,8 @@ namespace SpaRcle {
 
 		//tcp->Send(new Move { "head", 1.f});
 
+		//Sleep(1000);
+
 		debug->System("All systems are successfully activated!");
 
 		isRun = true;
@@ -65,9 +67,9 @@ namespace SpaRcle {
 		return true;
 	}
 	bool SRFramework::Close() {
-		isRun = false;
-
 		debug->Info("Close framework...");
+
+		isRun = false;
 
 		if (CNS) delete CNS;
 		if (settings) delete settings;

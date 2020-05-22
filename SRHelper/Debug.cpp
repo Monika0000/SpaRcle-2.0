@@ -1,7 +1,13 @@
 #include "pch.h"
 #include "Debug.h"
+#include <iostream>
+#include <time.h>
 
 SpaRcle::Helper::Debug::Debug(std::string path) {
+    system("color 70");
+    setlocale(LC_ALL, "rus");
+    srand(static_cast<unsigned int>(time(0)));
+
     isConsole = true;
     path_log = path;
     prefix = "";
@@ -25,6 +31,7 @@ void SpaRcle::Helper::Debug::Print(std::string& msg, Type type) {
         case SpaRcle::Helper::Debug::Type::_Error:   prefix = "[Error] "; break;
         case SpaRcle::Helper::Debug::Type::_Fatal:   prefix = "[Fatal] "; break;
         case SpaRcle::Helper::Debug::Type::_Debug:   prefix = "[Debug] "; break;
+        case SpaRcle::Helper::Debug::Type::_Network: prefix = "[Network] "; break;
         default:
             Debug::InternalError("Debug : unknown type!");
             break;

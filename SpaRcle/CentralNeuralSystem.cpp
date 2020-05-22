@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CentralNeuralSystem.h"
 #include "Core.h"
+#include "Logicality.h"
 
 namespace SpaRcle {
 	using namespace Network;
@@ -15,7 +16,7 @@ namespace SpaRcle {
 
 		if (!file_manager) { debug->Error("CNS : file manager is nullptr!"); return false; } else this->file_manager = file_manager;
 
-		this->CSystem = new Causality();
+		this->CSystem = new Causality(debug, settings);
 		this->LSystem = new Logicality();
 		this->RSystem = new Reality();
 		this->ESystem = new Emotionality();
@@ -35,7 +36,11 @@ namespace SpaRcle {
 
 		if (!this->hippocampus->Init()) { debug->Error("CNS : failed initialize hippocampus!"); return false; }
 
-		for (Core* core : cores) core->Init();
+		for (Core* core : cores) 
+			if (!core->Init(LSystem, CSystem)) {
+				debug->Error("Failed initializing core \"" + core->GetName() + "\"!");
+				return false;
+			}
 
 		//!///////////////////////////////
 
@@ -50,9 +55,18 @@ namespace SpaRcle {
 
 		//!/////////////////////////////////////////////////////////////
 
+		CSystem->Run();
+		//LSystem->Run();
+		//ESystem->Run();
+		//RSystem->Run();
+
 		if (!this->hippocampus->Run()) { debug->Error("CNS : failed running hippocampus!"); return false; }
 
-		for (Core* core : cores) core->Run();
+		for (Core* core : cores)
+			if (!core->Run()) {
+				debug->Error("Failed running core \"" + core->GetName() + "\"!");
+				return false;
+			}
 
 		//!/////////////////////////////////////////////////////////////
 
@@ -75,9 +89,18 @@ namespace SpaRcle {
 
 		isRun = false;
 
+		CSystem->Close();
+		//LSystem->Close();
+		//ESystem->Close();
+		//RSystem->Close();
+
+		//!///////////////////////////////
+
 		for (Core* core : cores) core->Close();
 
 		if (this->hippocampus) this->hippocampus->Close();
+
+		//!///////////////////////////////
 
 		task.join();
 

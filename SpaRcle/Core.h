@@ -4,6 +4,8 @@
 #include <thread>
 #include <Debug.h>
 #include "Settings.h"
+#include "Logicality.h"
+#include "Causality.h"
 
 namespace SpaRcle {
 	using namespace Network;
@@ -19,6 +21,9 @@ namespace SpaRcle {
 		Debug* debug;
 		Settings* settings;
 
+		Logicality* logic;
+		Causality* causality;
+
 		std::string core_name;
 	public:
 		Core(std::string core_name, TCP* tcp, Debug* debug, Settings* settings) 
@@ -26,8 +31,10 @@ namespace SpaRcle {
 		{
 			isRun = false; 
 			task = std::thread();
+			logic = nullptr;
 		}
 		~Core() { Close(); }
+		const std::string GetName() const { return core_name; }
 	public:
 		virtual void* GetData() { return nullptr; } ///$TODO
 	protected:
@@ -35,8 +42,12 @@ namespace SpaRcle {
 		virtual bool Update() { return false; };
 		virtual bool Completed() { return false; };
 	public:
-		bool Init() {
+		bool Init(Logicality* logic, Causality* causality) {
 			debug->Info("Initializing core \"" + core_name + "\"...");
+
+			if (!logic) { debug->Error("Logicality in core \"" + core_name + "\" is nullprt!"); return false; } else this->logic = logic;
+			if (!causality) { debug->Error("Causality in core \"" + core_name + "\" is nullprt!"); return false; } else this->causality = causality;
+
 			return Start();
 		};
 		bool Run() { 
