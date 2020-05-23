@@ -6,5 +6,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Moving.h" />
+    <ClInclude Include="MoveKernel.h" />
   </ItemGroup>
 </Project>

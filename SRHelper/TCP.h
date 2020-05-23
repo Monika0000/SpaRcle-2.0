@@ -5,6 +5,9 @@
 #include <string>
 #include "Debug.h"
 #include <thread>
+#include <vector>
+
+#include <typeinfo>
 
 #include <iostream>
 #include <winsock.h>
@@ -16,7 +19,13 @@ namespace SpaRcle {
 		using namespace Helper;
 
 		__interface IPackage  {
-			virtual std::string GetData() = 0;
+			/*
+				ƒанный интерфейс предназначен дл€ харнени€ данных, которые необходимо отправить/получить через интернет
+				 ласс, который реализует этот интерфейс, может быть передан в метод Send, и отправлен клиенту, благодар€ методу GetData,
+				а метод Recv возвращает указанный тип данных, заполн€€ его пол€ данных, использу€ метод SetData
+			*/
+			virtual std::string GetSendData() = 0;
+			virtual bool SetData(std::string data) = 0;
 		};
 
 		class TCP {
@@ -50,6 +59,22 @@ namespace SpaRcle {
 			bool isRun;
 		public:
 			void Send(IPackage* data);
+			template <typename T> IPackage* Recv() {
+				if (recive_data.size() > 0) {
+					T* data = new T();
+					if (!data->SetData(recive_data[0])) {
+						debug->Error("Failed recv message from [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(client_sock) + "]");
+						recive_data.erase(recive_data.begin());
+						return nullptr;
+					}
+
+					recive_data.erase(recive_data.begin());
+
+					return data;
+				} else return nullptr;
+			}
+		private:
+			std::vector<std::string> recive_data;
 		private:
 			std::string ip;
 			int port;
@@ -62,7 +87,6 @@ namespace SpaRcle {
 			std::thread client_thread;
 			std::thread server_thread;
 		};
-
 	}
 }
 

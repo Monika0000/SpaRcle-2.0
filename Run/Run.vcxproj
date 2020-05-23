@@ -162,6 +162,7 @@
     <ClCompile Include="Moving.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MoveKernel.h" />
     <ClInclude Include="Moving.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

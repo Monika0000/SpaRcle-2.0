@@ -48,9 +48,6 @@
     <ClInclude Include="Neuron.h">
       <Filter>NN</Filter>
     </ClInclude>
-    <ClInclude Include="Package.h">
-      <Filter>Network</Filter>
-    </ClInclude>
     <ClInclude Include="Hippocampus.h">
       <Filter>NN</Filter>
     </ClInclude>

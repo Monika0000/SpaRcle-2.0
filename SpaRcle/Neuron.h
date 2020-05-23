@@ -4,14 +4,22 @@
 #include "Settings.h"
 #include <string>
 #include <vector>
+#include <Vector3.h>
 
 namespace SpaRcle {
 	using namespace Helper;
 
 	class Neuron;
 
-	struct Vector3 {
-		float x, y, z;
+	__interface IKernel {
+		/*
+			Данный интерфейс предназначен для описания хранимых данных внутри нейрона
+			Save - возвращает содержимое в виде строки, которую можно сохранить в файл
+			Load - принимает ту самую строку и расшифровывает ее, "запихивая" данные внутрь себя
+		*/
+	public:
+		virtual std::string Save() = 0;
+		virtual bool Load(std::string data) = 0;
 	};
 
 	class Synapse {
@@ -55,11 +63,13 @@ namespace SpaRcle {
 
 	class Neuron {
 	public:
-		Neuron();
+		Neuron(IKernel* kernel);
 		~Neuron();
 	public:
-		Vector3 position;
-		unsigned long meetings;
+		IKernel* kernel;				// Ядро нейрона, хранит его данные
+	public:
+		//Vector3 position;
+		unsigned long usings;
 		Dendrite* dendr;
 		Akson* akson;					///%Следствия
 		std::vector<Synapse*> Synapses;	///%Причины

@@ -84,7 +84,8 @@ namespace SpaRcle {
 						connect = false;
 					}
 					else if (!message.empty()) {
-						debug->Network("From [" + ip + ":" + std::to_string(port) + "] recive => "+ message);
+						//debug->Network("From [" + ip + ":" + std::to_string(port) + "] recive => "+ message);
+						recive_data.push_back(message); ///$TODO
 					}
 					 
 					Sleep(300);

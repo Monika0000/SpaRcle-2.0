@@ -3,8 +3,8 @@
 #include <vector>
 #include <string>
 #include <thread>
-#include "Neuron.h"
 #include <SRHelper.h>
+#include "MoveKernel.h"
 
 using namespace SpaRcle;
 using namespace Network;

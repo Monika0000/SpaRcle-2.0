@@ -8,7 +8,12 @@ using namespace SpaRcle;
 using namespace SpaRcle::Helper;
 
 int main() {
-	
+	//Vector3* vector = Vector3::FromString("(2,sf3 d25 1.3)");
+	//std::cout << vector->GetString() << std::endl;
+
+	//std::string* arr = String::FixedSplit("data data1 lol hah", " ", 4);
+	//for (int i = 0; i < 4; i++) std::cout << arr[i] << std::endl;
+
 	while (false) {
 		std::vector<int> keys = Input::GetPressKeyIndexes();
 		for (int k : keys)

@@ -48,6 +48,9 @@
     <ClInclude Include="SRArray.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">
