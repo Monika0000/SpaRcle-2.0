@@ -1,15 +1,13 @@
 #include "Moving.h"
-
 bool Moving::Start() { // Initializing
 
 	return true;
 }
 
 bool Moving::Update() {	// Running
-	/*
-		Получить данные движения из tcp сервера
-		Воздействовать на нейронные связи относящиеся к данному сектору
-	*/
+	
+	//	Получить данные движения из tcp сервера
+	//	Воздействовать на нейронные связи относящиеся к данному сектору
 
 	std::string name = "";
 	if (Input::GetKey(KeyCode::W))

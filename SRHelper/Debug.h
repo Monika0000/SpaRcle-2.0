@@ -1,11 +1,14 @@
 #pragma once
+#include <windows.h>
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <consoleapi2.h>
+#include <WinBase.h>
 
 namespace SpaRcle {
 	namespace Helper {
-		enum ConsoleColor {
+		enum ConsoleColor{
 			Black = 0,
 			Blue = 1,
 			Green = 2,
@@ -40,7 +43,16 @@ namespace SpaRcle {
 			inline void Error(std::string msg) { Print(msg, Type::_Error); }
 			inline void System(std::string msg) { Print(msg, Type::_System); }
 			inline void Network(std::string msg) { Print(msg, Type::_Network); }
-			static inline void InternalError(std::string msg) { std::cout << "[Internal error] " + msg + "\n"; }
+			static inline void InternalError(std::string msg) { 
+				HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Red));
+				std::cout << "[Internal error] ";
+				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Black));
+				std::cout << msg + "\n"; 
+			}
+		private:
+			bool use = false;
+			HANDLE hConsole = 0;
 		private:
 			std::ofstream log_file;
 			bool isConsole;

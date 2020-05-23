@@ -13,6 +13,12 @@
     <Filter Include="Network">
       <UniqueIdentifier>{f542a7be-9029-4c10-9b98-0f6917ef1782}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{5336a64b-7b7e-4dff-8a14-a00a0545307a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helper">
+      <UniqueIdentifier>{971cb270-ea2f-4ab4-abb2-ccdffc264c87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KeyCodes.h">
@@ -35,6 +41,12 @@
     </ClInclude>
     <ClInclude Include="TCP.h">
       <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="SRString.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="SRArray.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

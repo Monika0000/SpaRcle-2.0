@@ -74,21 +74,19 @@ namespace SpaRcle {
 						connect = true;
 					}
 					
-					int k = ::recv(client_sock, buffer, BUFFER_SIZE, 0);
+					//int k = ::recv(client_sock, buffer, BUFFER_SIZE, 0);
+					int k = recv(client_sock, buffer, sizeof(buffer), NULL);
 					message = buffer;
 					memset(buffer, 0x00, BUFFER_SIZE);
-					//int k = recv(client_sock, client_buffer, sizeof(client_buffer), NULL);
-					printf(buffer);
 
-					if (!message.empty()) {
-						//debug->Network("From [" + ip + ":" + std::to_string(port) + "] recive => "+ std::string(client_buffer));
-						//printf(client_buffer);
-					}
-					else if (k == 0) {
+					if (k == 0) {
 						debug->Network("TCP client [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(client_sock) + "] has been disconnected!");
 						connect = false;
 					}
-					//debug->Log(std::to_string(k));
+					else if (!message.empty()) {
+						debug->Network("From [" + ip + ":" + std::to_string(port) + "] recive => "+ message);
+					}
+					 
 					Sleep(300);
 				}
 			}

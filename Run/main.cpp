@@ -8,6 +8,7 @@ using namespace SpaRcle;
 using namespace SpaRcle::Helper;
 
 int main() {
+	
 	while (false) {
 		std::vector<int> keys = Input::GetPressKeyIndexes();
 		for (int k : keys)
@@ -36,4 +37,5 @@ int main() {
 	framework->Init();
 	framework->Run();
 	framework->Close();
+	
 }
