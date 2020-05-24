@@ -9,7 +9,7 @@ using namespace SpaRcle::Network;
 class MoveKernel : public IKernel, public IPackage {
 public:
 	MoveKernel() {
-
+		boneRotation = nullptr;
 	}
 	~MoveKernel() {
 		delete boneRotation;

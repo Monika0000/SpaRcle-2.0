@@ -29,7 +29,7 @@ namespace SpaRcle {
 
 		class Debug {
 		 	enum class Type {
-				_Log, _Info, _System, _Warning, _Error, _Fatal, _Debug, _Network
+				_Log, _Info, _System, _Warning, _Error, _Fatal, _Debug, _Network, _Library
 			};
 		public:
 			Debug(std::string path);
@@ -49,6 +49,16 @@ namespace SpaRcle {
 				std::cout << "[Internal error] ";
 				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Black));
 				std::cout << msg + "\n"; 
+			}
+			static inline void Library(std::string msg) {
+				HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Green));
+				std::cout << "[Library] ";
+				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Black));
+				std::cout << msg + "\n";
+			}
+			static inline void InitColorTherme() {
+				system("color 70");
 			}
 		private:
 			bool use = false;

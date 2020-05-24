@@ -4,7 +4,7 @@
 #include <time.h>
 
 SpaRcle::Helper::Debug::Debug(std::string path) {
-    system("color 70");
+    InitColorTherme();
     setlocale(LC_ALL, "rus");
     srand(static_cast<unsigned int>(time(0)));
 

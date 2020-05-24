@@ -63,7 +63,7 @@ namespace SpaRcle {
 		std::vector<CausalCoreData> cores_data;
 	public:
 		bool AddCore(Core* core);
-		bool Remember(std::string core_name, std::string n_name, void* n_data) {
+		bool Remember(std::string core_name, std::string n_name, IKernel* kernel_data) {
 			///$TODO n_data
 		}
 	};
