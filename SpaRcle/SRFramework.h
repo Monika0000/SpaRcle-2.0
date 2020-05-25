@@ -14,7 +14,7 @@ namespace SpaRcle {
 
 	class SRFramework {
 	public:
-		SRFramework(Debug* debug, Settings* settings);
+		SRFramework(Debug* debug, Settings* settings, FileManager* file_manager);
 		~SRFramework();
 	public:
 		/*

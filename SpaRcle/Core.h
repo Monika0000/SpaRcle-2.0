@@ -6,6 +6,8 @@
 #include "Settings.h"
 #include "Logicality.h"
 #include "Causality.h"
+#include <FileManager.h>
+#include "Neuron.h"
 
 namespace SpaRcle {
 	using namespace Network;
@@ -20,14 +22,15 @@ namespace SpaRcle {
 		TCP* tcp;
 		Debug* debug;
 		Settings* settings;
+		FileManager* file_manager;
 
 		Logicality* logic;
 		Causality* causality;
 
 		std::string core_name;
 	public:
-		Core(std::string core_name, TCP* tcp, Debug* debug, Settings* settings) 
-			: core_name(core_name), tcp(tcp), settings(settings), debug(debug)
+		Core(std::string core_name, TCP* tcp, Debug* debug, Settings* settings, FileManager*file_manager) 
+			: core_name(core_name), tcp(tcp), settings(settings), debug(debug), file_manager(file_manager)
 		{
 			isRun = false; 
 			task = std::thread();

@@ -1,5 +1,8 @@
 #include "Moving.h"
 #include <TCP.h>
+#include "Neuron.h"
+#include "MoveKernel.h"
+#include "FileManager.h"
 
 using namespace SpaRcle;
 using namespace Network;
@@ -17,16 +20,17 @@ bool Moving::Update() {	// Running
 
 	//MoveKernel* mkernel = static_cast<MoveKernel*>(tcp->Recv<MoveKernel>());
 	MoveKernel* mkernel = (MoveKernel*)(tcp->Recv<MoveKernel>());
-	//std::string data;// = 
-	//tcp->Recv();
-	//PackageString* str = (PackageString*)(tcp->Recv<PackageString>());
-	//if (str) std::cout << str->str << std::endl;
-	//delete str;
-
 
 	if (mkernel) {
-		debug->Log(mkernel->Save());
-	//
+		if (mkernel->isNew) {
+			RegisterBone(mkernel);
+
+			MoveKernel* k = (MoveKernel *)((Neuron*)(file_manager->Load<Neuron>(mkernel->boneName)))->kernel;
+			debug->Info(k->boneName);
+		}
+		else
+			debug->Log(mkernel->Save());
+
 		delete mkernel;
 	}
 	//if (!data.empty()) { //! Если данные присутствуют
@@ -42,10 +46,41 @@ bool Moving::Update() {	// Running
 		name = String::RandomString(10);
 	}
 
-	if(!name.empty()) if (!Helper::Array::Contains<std::string>(NNames, name)) {
-		NNames.push_back(name);
-		//std::cout << name << std::endl;
+	return true;
+}
+
+bool Moving::RegisterBone(MoveKernel* kernel, Neuron* bone_neuron) {
+	if (bone_neuron) {
+		debug->Error("Moving::RegisterBone() : Neuron does not have to be initialized!");
+		return false;
 	}
 
+	if (!Array::Contains<std::string>(NBones, kernel->boneName)) {
+		/*
+			TODO:  Здесь вероятно нужно попытаться загрузить нейрон, если не загрузится - создать новый
+			При загрузке устанавливаем ядро нейрону, по дефолту ядра не будет в нейроне, загружаться будут только аксоны, синапсы и дендриты
+
+			Нейроны будут зраниться в одной папке, а ядра, в другой
+		*/
+		bone_neuron = static_cast<Neuron*>(file_manager->Load<Neuron>(kernel->boneName));
+
+		if (bone_neuron) {
+			NBones.push_back(kernel->boneName);
+
+			bone_neuron->kernel = kernel;
+			NAdress.push_back(bone_neuron);
+
+			debug->Log("Moving : register new bone \"" + kernel->boneName + "\" has been successfully!");
+		}
+		else {
+			Neuron* n = new Neuron(kernel);
+			if (file_manager->Save<Neuron>(n, kernel->boneName)) {
+				debug->Log("Moving : register and saving new bone \"" + kernel->boneName + "\" has been successfully!");
+			} else {
+				debug->Warn("Moving : register new bone \"" + kernel->boneName + "\" has been failed!");
+				return false;
+			}
+		}
+	}
 	return true;
 }

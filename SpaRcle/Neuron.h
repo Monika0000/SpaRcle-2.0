@@ -61,10 +61,13 @@ namespace SpaRcle {
 		float bad, good;
 	};
 
-	class Neuron {
+	class Neuron : public ISavable {
 	public:
 		Neuron(IKernel* kernel);
 		~Neuron();
+	public:
+		bool Save(std::ofstream file) override { return false; }
+		bool Load(std::ifstream file) override { return false; }
 	public:
 		IKernel* kernel;				// ядро нейрона, хранит его данные
 	public:

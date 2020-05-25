@@ -51,6 +51,9 @@
     <ClInclude Include="Vector3.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="IPackage.h">
+      <Filter>Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">

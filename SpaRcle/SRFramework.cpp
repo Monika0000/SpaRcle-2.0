@@ -5,7 +5,7 @@
 namespace SpaRcle {
 	using namespace Network;
 
-	SRFramework::SRFramework(Debug* debug, Settings* settings) {
+	SRFramework::SRFramework(Debug* debug, Settings* settings, FileManager*file_manager) {
 		if (!debug) Debug::InternalError("SRFramework : debug is nullptr!");
 		if (!settings) debug->Error("SRFramework : settings is nullptr!");
 
@@ -13,19 +13,16 @@ namespace SpaRcle {
 		isInit = false;
 		isRun = false;
 
-		this->file_manager = nullptr;
-
 		this->CNS = nullptr;
 
 		this->debug = debug;
+		this->file_manager = file_manager;
 		if (settings) this->settings = settings; else this->settings = new Settings(Utils::GetPathToExe());
 	}
 	SRFramework::~SRFramework() { Close(); }
 
 	bool SRFramework::Create() {
 		debug->Info("Creating framework...");
-
-		this->file_manager = new FileManager();
 
 		this->CNS = new CentralNeuralSystem();
 		if (!this->CNS->Create(debug, settings, file_manager)) return false;
@@ -72,6 +69,7 @@ namespace SpaRcle {
 
 		if (CNS) delete CNS;
 		if (settings) delete settings;
+		if (file_manager) delete file_manager;
 
 		debug->System("All system completed successfully!");
 

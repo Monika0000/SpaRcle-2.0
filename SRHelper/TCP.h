@@ -2,7 +2,6 @@
 #pragma comment(lib, "ws2_32.lib")
 #pragma warning(disable: 4996)
 
-#include <string>
 #include "Debug.h"
 #include <thread>
 #include <vector>
@@ -11,6 +10,7 @@
 
 #include <iostream>
 #include <winsock.h>
+#include "IPackage.h"
 
 namespace SpaRcle {
 	namespace Network {
@@ -18,21 +18,6 @@ namespace SpaRcle {
 
 		using namespace Helper;
 
-		__interface IPackage  { //__interface
-		 //private:
-			 //char* str;
-		 //public:
-			 //IPackage() { };
-			 //~IPackage() { if (str) delete[] str; };
-			/*
-				ƒанный интерфейс предназначен дл€ харнени€ данных, которые необходимо отправить/получить через интернет
-				 ласс, который реализует этот интерфейс, может быть передан в метод Send, и отправлен клиенту, благодар€ методу GetData,
-				а метод Recv возвращает указанный тип данных, заполн€€ его пол€ данных, использу€ метод SetData
-			*/
-			virtual std::string GetSendData() = 0;
-			virtual bool SetData(std::string data) = 0;
-			//operator char*() { return str; }
-		};
 		/*
 		class PackageString : public IPackage {
 		public:

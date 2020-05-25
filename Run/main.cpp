@@ -33,17 +33,18 @@ int main() {
 
 	Settings* settings = new Settings();
 	Debug* debug = new Debug(settings->GetPath());
+	FileManager* file_manager = new FileManager();
 
-	SRFramework* framework = new SRFramework(debug, settings);
+	SRFramework* framework = new SRFramework(debug, settings, file_manager);
 	framework->Create();
 
-	//framework->SetTCP(new TCP("localhost", 1111, debug));
 	Moving* moving = new Moving(
 		"moving",
 		//new TCP("127.0.0.1", 1025, debug),
 		new TCP("127.0.0.1", 1025, debug),
 		debug,
-		settings);
+		settings,
+		file_manager);
 
 	framework->LoadCore(moving);
 
