@@ -28,12 +28,15 @@ namespace SpaRcle {
 				}
 				return oss.str();
 			}
-			static std::string ReadToChar(std::string& str, char c) {
+			static std::string ReadToChar(std::string& str, const char c, const size_t start = 0, size_t* end = nullptr) {
 				std::string nstr = std::string();
 
-				for (size_t t = 0; t < str.size(); t++) {
-					if (str[t] == c)
+				for (size_t t = start; t < str.size(); t++) {
+					if (str[t] == c) {
+						if (end)
+							(*end) = t;
 						break;
+					}
 					else
 						nstr.push_back(str[t]);
 				}
@@ -66,7 +69,57 @@ namespace SpaRcle {
 
 				return arr;
 			}
-			
+			static std::string BetweenCharacters(const std::string text, const char first, const char second, const size_t start = 0, size_t* end = nullptr) {
+				std::string result = std::string();
+
+				bool f = false;
+
+				for (size_t t = start; t < text.size(); t++) {
+					//std::cout << "t = " << t << std::endl;
+					if (!f) {
+						if (text[t] == first)
+							f = true;
+					}
+					else {
+						if (text[t] != second)
+							result += text[t];
+						else {
+							if (end)
+								(*end) = t;
+
+							break;
+						}
+					}
+				}
+				return result;
+			}
+			static int IndexOf(const std::string str, const char c) {
+				for (size_t t = 0; t < str.size(); t++) {
+					if (str[t] == c)
+						return (int)t;
+				}
+
+				return -1;
+			}
+			static std::string Remove(std::string& text, const char c) {
+				std::string result = std::string();
+				size_t end = 0;
+
+				for (size_t t = 0; t < text.size(); t++) {
+					if (text[t] == c) {
+						end = t;
+						break;
+					}
+					else
+						result += text[t];
+				}
+
+				if(text.size() > end)
+					text = text.substr(end + 1);
+
+				return result;
+			}
+
 			/* WARNING : Can return nullptr! */
 			static std::string* FixedSplit(std::string text, std::string chr, size_t count_elements) {
 				std::string* fixed = new std::string[count_elements];

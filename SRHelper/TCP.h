@@ -18,7 +18,12 @@ namespace SpaRcle {
 
 		using namespace Helper;
 
-		__interface IPackage  {
+		__interface IPackage  { //__interface
+		 //private:
+			 //char* str;
+		 //public:
+			 //IPackage() { };
+			 //~IPackage() { if (str) delete[] str; };
 			/*
 				Данный интерфейс предназначен для харнения данных, которые необходимо отправить/получить через интернет
 				Класс, который реализует этот интерфейс, может быть передан в метод Send, и отправлен клиенту, благодаря методу GetData,
@@ -26,7 +31,19 @@ namespace SpaRcle {
 			*/
 			virtual std::string GetSendData() = 0;
 			virtual bool SetData(std::string data) = 0;
+			//operator char*() { return str; }
 		};
+		/*
+		class PackageString : public IPackage {
+		public:
+			std::string str;
+			std::string GetSendData() override { return ""; }
+			bool SetData(std::string data) override { return false; }
+		public:
+			PackageString(std::string str) : str(str) { };
+			PackageString() : str(std::string()) { };
+			~PackageString() { str.clear(); }
+		};*/
 
 		class TCP {
 		public:
@@ -57,21 +74,40 @@ namespace SpaRcle {
 			void Server();
 		private:
 			bool isRun;
+			bool isSend;
+			bool isRecv;
 		public:
 			void Send(IPackage* data);
+			//std::string Recv();
+			//!------------------------------------------
 			template <typename T> IPackage* Recv() {
-				if (recive_data.size() > 0) {
-					T* data = new T();
-					if (!data->SetData(recive_data[0])) {
-						debug->Error("Failed recv message from [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(client_sock) + "]");
+			ret:
+				if (!isSend) {
+					isRecv = true;
+					//std::cout << recive_data.size() << std::endl;
+					
+					if (recive_data.size() > 0) {
+						T* data = new T();
+						if (!data->SetData(recive_data[0])) {
+							debug->Error("Failed recv message from [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(client_sock) + "]");
+							recive_data.erase(recive_data.begin());
+							delete data;
+							return nullptr;
+						}
+
 						recive_data.erase(recive_data.begin());
+
+						isRecv = false;
+						return data;
+					}
+					else {
+						isRecv = false;
 						return nullptr;
 					}
-
-					recive_data.erase(recive_data.begin());
-
-					return data;
-				} else return nullptr;
+				}
+				else {
+					goto ret;
+				}
 			}
 		private:
 			std::vector<std::string> recive_data;

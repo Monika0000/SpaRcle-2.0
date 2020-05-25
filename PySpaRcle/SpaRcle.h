@@ -1,8 +1,14 @@
 #pragma once
 #include <SRHelper.h>
 #include <boost/python.hpp>
-#include <boost/python/class.hpp>
-#include <Python.h>
+#include "PyClass.h"
+
+void RegisterPythonClass(IPyClass* pyclass, PyObject* module) {
+    PyTypeObject* type = pyclass->GetType();
+    PyType_Ready(type);
+    Py_INCREF(type);
+    PyModule_AddObject(module, pyclass->class_name.c_str() , (PyObject*)type);
+}
 
 typedef struct {
     PyObject_HEAD

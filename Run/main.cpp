@@ -8,6 +8,7 @@ using namespace SpaRcle;
 using namespace SpaRcle::Helper;
 
 int main() {
+	/*
 	//Vector3* vector = Vector3::FromString("(2,sf3 d25 1.3)");
 	//std::cout << vector->GetString() << std::endl;
 
@@ -22,6 +23,13 @@ int main() {
 			std::cout << "\n";
 	}
 
+	*/
+
+	//std::string str = "123123[LOL]flkdgfgds;lk"; size_t end = 0;
+	//std::cout << String::BetweenCharacters(str, '[', ']', 0, &end) << " " << end << std::endl;
+
+	//std::string str = "12345|qqqqq";
+	//std::cout << String::Remove(str, '|') << "\n" << str << std::endl;
 
 	Settings* settings = new Settings();
 	Debug* debug = new Debug(settings->GetPath());

@@ -3,8 +3,10 @@
 #include <iostream>
 #include <time.h>
 
-SpaRcle::Helper::Debug::Debug(std::string path) {
-    InitColorTherme();
+bool SpaRcle::Helper::Debug::ColorThermeIsEnabled = false;
+SpaRcle::Helper::Debug::Debug(std::string path, bool init_color_therme) {
+    if(init_color_therme)
+        InitColorTherme();
     setlocale(LC_ALL, "rus");
     srand(static_cast<unsigned int>(time(0)));
 
@@ -37,7 +39,7 @@ void SpaRcle::Helper::Debug::Print(std::string& msg, Type type) {
             case SpaRcle::Helper::Debug::Type::_Log:        { prefix = "[Log] ";      color = ConsoleColor::Cyan;       } break;
             case SpaRcle::Helper::Debug::Type::_Info:       { prefix = "[Info] ";     color = ConsoleColor::Magenta;    } break;
             case SpaRcle::Helper::Debug::Type::_System:     { prefix = "[System] ";   color = ConsoleColor::Blue;       } break;
-            case SpaRcle::Helper::Debug::Type::_Warning:    { prefix = "[Warn] ";     color = ConsoleColor::Yellow;     } break;
+            case SpaRcle::Helper::Debug::Type::_Warning:    { prefix = "[Warn] ";     color = ConsoleColor::Brown;     } break;
             case SpaRcle::Helper::Debug::Type::_Error:      { prefix = "[Error] ";    color = ConsoleColor::Red;        } break;
             case SpaRcle::Helper::Debug::Type::_Fatal:      { prefix = "[Fatal] ";    color = ConsoleColor::Red;        } break;
             case SpaRcle::Helper::Debug::Type::_Debug:      { prefix = "[Debug] ";    color = ConsoleColor::Brown;      } break;

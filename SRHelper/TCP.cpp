@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "TCP.h"
 #include <thread>
+#include "SRString.h"
 
 namespace SpaRcle {
 	namespace Network {
@@ -15,6 +16,8 @@ namespace SpaRcle {
 
 			client_thread = std::thread();
 			server_thread = std::thread();
+
+			recive_data = std::vector<std::string>();
 		}
 
 		SpaRcle::Network::TCP::~TCP() { Close(); }
@@ -75,9 +78,9 @@ namespace SpaRcle {
 					}
 					
 					//int k = ::recv(client_sock, buffer, BUFFER_SIZE, 0);
+					memset(buffer, 0x00, BUFFER_SIZE);
 					int k = recv(client_sock, buffer, sizeof(buffer), NULL);
 					message = buffer;
-					memset(buffer, 0x00, BUFFER_SIZE);
 
 					if (k == 0) {
 						debug->Network("TCP client [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(client_sock) + "] has been disconnected!");
@@ -85,14 +88,40 @@ namespace SpaRcle {
 					}
 					else if (!message.empty()) {
 						//debug->Network("From [" + ip + ":" + std::to_string(port) + "] recive => "+ message);
-						recive_data.push_back(message); ///$TODO
+						std::string rm = std::string();
+
+					ret:
+						rm = Helper::String::Remove(message, '|');
+						if (!rm.empty()) {
+						ret_recv:
+							if (!isRecv) {
+								this->isSend = true;
+
+								recive_data.push_back(rm);
+
+								this->isSend = false;
+							}
+							else
+								goto ret_recv;
+
+							goto ret;
+						}
+
 					}
 					 
-					Sleep(300);
+					message.clear();
+
+					Sleep(100);
 				}
 			}
+			catch (std::runtime_error err) {
+				debug->Error("Runtime internal error in TCP client!\n\tIp   : " + ip + "\n\tPort : " + std::to_string(port) + "\n\tWhat : " + err.what());
+			}
+			catch (std::exception err) {
+				debug->Error("Exception as occurred! in TCP client!\n\tIp   : " + ip + "\n\tPort : " + std::to_string(port) + "\n\tWhat : " + err.what());
+			}
 			catch (...) {
-				debug->Error("Internal error in TCP client!\n\tIp   : " + ip + "\n\tPort : " + std::to_string(port));
+				debug->Error("Unknown internal error in TCP client!\n\tIp   : " + ip + "\n\tPort : " + std::to_string(port));
 			}
 		}
 
@@ -105,5 +134,22 @@ namespace SpaRcle {
 		void TCP::Send(IPackage* data) {
 
 		}
+
+		/*
+		std::string TCP::Recv() {
+		ret:
+			if (!isSend) {
+				isRecv = true;
+				if (recive_data.size() > 0) {
+					std::string data = recive_data[0];
+					recive_data.erase(recive_data.begin());
+					isRecv = false;
+					return data;
+				} else return std::string();
+			}
+			else {
+				goto ret;
+			}
+		}*/
 	}
 }
