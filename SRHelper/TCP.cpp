@@ -17,6 +17,8 @@ namespace SpaRcle {
 			client_thread = std::thread();
 			server_thread = std::thread();
 
+			this->state = PackState::NoneData;
+
 			recive_data = std::vector<std::string>();
 		}
 
@@ -111,7 +113,7 @@ namespace SpaRcle {
 					 
 					message.clear();
 
-					Sleep(100);
+					//Sleep(100);
 				}
 			}
 			catch (std::runtime_error err) {

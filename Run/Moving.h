@@ -21,7 +21,29 @@ public:
 	}
 
 	bool Start() override;
+	IKernel* KernelPackagesReciveMethod() override {
+		MoveKernel* mkernel = new MoveKernel();
+		if (tcp->Recv(mkernel)) {
+			return mkernel;
+		}
+		delete mkernel;
+		return nullptr;
+	}
+	void FreeKernel(IKernel* kernel) override { delete (MoveKernel*)kernel; }
 
+	/*
+	void ClearRecivePackages() {
+		for (size_t t = 0; t < recive_data.size(); t++)
+			if (recive_data[t]) {
+				std::cout << "free " << recive_data[t] << std::endl;
+				//delete recive_data[0];
+				delete (MoveKernel*)recive_data[t];
+			}
+		if(recive_data.size() > 0)
+			recive_data.clear();
+		isWaitPackage = true;
+	}
+	*/
 	bool Update() override;
 
 	bool Completed() override {	// Close

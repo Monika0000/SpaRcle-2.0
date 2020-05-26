@@ -1,4 +1,5 @@
 #pragma once
+#define _CRT_SECURE_NO_WARNINGS
 #include <Windows.h>
 #include <thread>	
 #include <random>
@@ -118,6 +119,17 @@ namespace SpaRcle {
 					text = text.substr(end + 1);
 
 				return result;
+			}
+
+			static char* CopyStringToCharPointer(std::string str) {
+				char* rs = new char[str.size() + 1];
+				strcpy(rs, str.c_str());
+				return rs;
+			}
+			static char* CopyStringToCharPointer(std::string& str) {
+				char* rs = new char[str.size() + 1];
+				strcpy(rs, str.c_str());
+				return rs;
 			}
 
 			/* WARNING : Can return nullptr! */

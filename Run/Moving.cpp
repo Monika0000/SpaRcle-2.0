@@ -9,6 +9,7 @@ using namespace Network;
 using namespace Helper;
 
 bool Moving::Start() { // Initializing
+	this->isCanGetKernelPackages = true;
 
 	return true;
 }
@@ -18,33 +19,26 @@ bool Moving::Update() {	// Running
 	//!	Получить данные движения из tcp сервера
 	//!	Воздействовать на нейронные связи относящиеся к данному сектору
 
-	//MoveKernel* mkernel = static_cast<MoveKernel*>(tcp->Recv<MoveKernel>());
-	MoveKernel* mkernel = (MoveKernel*)(tcp->Recv<MoveKernel>());
+	if (HasPackages()) {
+		for (size_t t = 0; t < this->recive_data.size(); t++){
+			if (((MoveKernel*)recive_data[t])->isNew) {
+				///	Если нейрон отвечающий за кость не существует в нейронной сети, то регистрируем эту кость.
+				///	Если он не существует, это не значит, что файла не существует!
+				RegisterBone((MoveKernel*)recive_data[t]);
+			} else {
+				///	Если нейрон отвечающий за кость существует, 
+				debug->Log("Changed : "+((MoveKernel*)recive_data[t])->Save());
 
-	if (mkernel) {
-		if (mkernel->isNew) {
-			RegisterBone(mkernel);
 
-			MoveKernel* k = (MoveKernel *)((Neuron*)(file_manager->Load<Neuron>(mkernel->boneName)))->kernel;
-			debug->Info(k->boneName);
+				/*
+					//TODO: do someting...
+				*/
+			}
 		}
-		else
-			debug->Log(mkernel->Save());
-
-		delete mkernel;
+		//std::cout << recive_data.size() << std::endl;
+		ClearRecivePackages();
 	}
-	//if (!data.empty()) { //! Если данные присутствуют
-		//std::cout << mkernel->boneName << std::endl;
-		//debug->Log("sdsad");
-		//std::cout << debug << std::endl;
-	//}
 	//!-----------------------------------------------------------------------------------------
-	
-	std::string name = "";
-	if (Input::GetKey(KeyCode::W))
-	{
-		name = String::RandomString(10);
-	}
 
 	return true;
 }
@@ -55,13 +49,13 @@ bool Moving::RegisterBone(MoveKernel* kernel, Neuron* bone_neuron) {
 		return false;
 	}
 
-	if (!Array::Contains<std::string>(NBones, kernel->boneName)) {
-		/*
-			TODO:  Здесь вероятно нужно попытаться загрузить нейрон, если не загрузится - создать новый
-			При загрузке устанавливаем ядро нейрону, по дефолту ядра не будет в нейроне, загружаться будут только аксоны, синапсы и дендриты
+	std::string boneName = kernel->boneName;
 
-			Нейроны будут зраниться в одной папке, а ядра, в другой
-		*/
+	if (!Array::Contains<std::string>(NBones, boneName)) {
+		//	TODO:  Здесь вероятно нужно попытаться загрузить нейрон, если не загрузится - создать новый
+		//	При загрузке устанавливаем ядро нейрону, по дефолту ядра не будет в нейроне, загружаться будут только аксоны, синапсы и дендриты
+		//
+		//	Нейроны будут зраниться в одной папке, а ядра, в другой
 		bone_neuron = static_cast<Neuron*>(file_manager->Load<Neuron>(kernel->boneName));
 
 		if (bone_neuron) {
@@ -70,17 +64,19 @@ bool Moving::RegisterBone(MoveKernel* kernel, Neuron* bone_neuron) {
 			bone_neuron->kernel = kernel;
 			NAdress.push_back(bone_neuron);
 
-			debug->Log("Moving : register new bone \"" + kernel->boneName + "\" has been successfully!");
+			debug->Log("Moving : register new bone \"" + boneName + "\" has been successfully!");
 		}
 		else {
 			Neuron* n = new Neuron(kernel);
 			if (file_manager->Save<Neuron>(n, kernel->boneName)) {
-				debug->Log("Moving : register and saving new bone \"" + kernel->boneName + "\" has been successfully!");
+				debug->Log("Moving : register and saving new bone \"" + boneName + "\" has been successfully!");
 			} else {
-				debug->Warn("Moving : register new bone \"" + kernel->boneName + "\" has been failed!");
+				debug->Warn("Moving : register new bone \"" + boneName + "\" has been failed!");
 				return false;
 			}
 		}
 	}
+
+	boneName.clear();
 	return true;
 }

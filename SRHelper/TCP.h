@@ -14,7 +14,16 @@
 
 namespace SpaRcle {
 	namespace Network {
-		const int BUFFER_SIZE = 4096;
+		//const int BUFFER_SIZE = 4096;
+		//const int BUFFER_SIZE = 8192;
+		const int BUFFER_SIZE = 1024;
+
+		enum class PackState {
+			Begin, Reciving, End, NoneData
+		};
+
+		const std::string begin_name = "begin_pack";
+		const std::string end_name =   "end_pack";
 
 		using namespace Helper;
 
@@ -58,13 +67,17 @@ namespace SpaRcle {
 			void Client();
 			void Server();
 		private:
+			PackState state;
+		private:
 			bool isRun;
 			bool isSend;
 			bool isRecv;
 		public:
 			void Send(IPackage* data);
+			PackState GetState() { return state; }
 			//std::string Recv();
 			//!------------------------------------------
+			/*
 			template <typename T> IPackage* Recv() {
 			ret:
 				if (!isSend) {
@@ -72,12 +85,19 @@ namespace SpaRcle {
 					//std::cout << recive_data.size() << std::endl;
 					
 					if (recive_data.size() > 0) {
-						T* data = new T();
-						if (!data->SetData(recive_data[0])) {
-							debug->Error("Failed recv message from [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(client_sock) + "]");
-							recive_data.erase(recive_data.begin());
-							delete data;
-							return nullptr;
+						T* data = nullptr;
+
+						if (recive_data[0] == begin_name) {
+							state = PackState::Begin;
+						} else if (recive_data[0] == end_name) {
+							state = PackState::End;
+						} else {
+							state = PackState::Reciving;
+							data = new T();
+							if (!data->SetData(recive_data[0])) {
+								debug->Error("Failed recv message from [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(client_sock) + "]");
+								delete data;
+							}
 						}
 
 						recive_data.erase(recive_data.begin());
@@ -86,8 +106,47 @@ namespace SpaRcle {
 						return data;
 					}
 					else {
+						state = PackState::NoneData;
 						isRecv = false;
 						return nullptr;
+					}
+				}
+				else {
+					goto ret;
+				}
+			}
+			*/
+			bool Recv(IPackage* pack) {
+			ret:
+				if (!isSend) {
+					isRecv = true;
+					if (recive_data.size() > 0) {
+						if (recive_data[0] == begin_name) {
+							state = PackState::Begin;
+						}
+						else if (recive_data[0] == end_name) {
+							state = PackState::End;
+						}
+						else {
+							state = PackState::Reciving;
+							if (!pack->SetData(recive_data[0])) {
+								debug->Error("Failed recv message from [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(client_sock) + "]");
+							}
+							else {
+								recive_data.erase(recive_data.begin());
+								return true;
+							}
+						}
+
+						recive_data.erase(recive_data.begin());
+
+						isRecv = false;
+						return false;
+					}
+					else {
+						state = PackState::NoneData;
+						isRecv = false;
+						return false;
 					}
 				}
 				else {

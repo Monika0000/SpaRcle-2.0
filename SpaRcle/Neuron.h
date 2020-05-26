@@ -22,33 +22,36 @@ namespace SpaRcle {
 		virtual bool Load(std::string data) = 0;
 	};
 
-	class Synapse {
+	struct Synapse {
 	public:
-		Synapse(std::string name, Neuron* neuron) { 
+		Synapse(char* name, Neuron* neuron) {
 			this->name = name;
 			this->neuron = neuron;
 		};
 		~Synapse() { 
-			this->name.clear();
+			delete[] name;
 			this->neuron = nullptr;
 		};
 	public:
-		std::string name;
+		char* name;
 		Neuron* neuron;
 	};
 	
 	class Akson {
 	public:
 		Akson() {
-			this->names = std::vector<std::string>();
+			this->names = std::vector<char*>();
 			this->neurons = std::vector<Neuron*>();
 		}
 		~Akson() {
+			for (size_t t = 0; t < names.size(); t++) {
+				delete[] names[t];
+			}
 			this->names.clear();
 			this->neurons.clear();
 		}
 	public:
-		std::vector<std::string> names;
+		std::vector<char*>		 names;
 		std::vector<Neuron*>	 neurons;
 	};
 

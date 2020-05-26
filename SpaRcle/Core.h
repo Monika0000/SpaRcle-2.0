@@ -8,6 +8,7 @@
 #include "Causality.h"
 #include <FileManager.h>
 #include "Neuron.h"
+#include <functional>
 
 namespace SpaRcle {
 	using namespace Network;
@@ -16,8 +17,24 @@ namespace SpaRcle {
 	private:
 		std::thread task;
 		bool isRun;
+		bool isWaitPackage;
+	protected:
+		bool isCanGetKernelPackages;
+		std::vector<IKernel*> recive_data;
+		void ClearRecivePackages() {
+			for (size_t t = 0; t < recive_data.size(); t++) {
+				//std::cout << "free " << recive_data[t] << std::endl;
+				FreeKernel(recive_data[t]);
+			}
+			recive_data.clear();
+			isWaitPackage = true;
+		}
+		bool HasPackages() { return !isWaitPackage; }
 	protected:
 		bool IsRun() const { return isRun; }
+
+		virtual IKernel* KernelPackagesReciveMethod() { return nullptr; }
+		virtual void FreeKernel(IKernel* kernel) { delete kernel; }
 
 		TCP* tcp;
 		Debug* debug;
@@ -31,10 +48,12 @@ namespace SpaRcle {
 	public:
 		Core(std::string core_name, TCP* tcp, Debug* debug, Settings* settings, FileManager*file_manager) 
 			: core_name(core_name), tcp(tcp), settings(settings), debug(debug), file_manager(file_manager)
+			,recive_data(std::vector<IKernel*>()) //new IKernel*[1000] std::vector<IKernel*>()
 		{
 			isRun = false; 
 			task = std::thread();
 			logic = nullptr;
+			isWaitPackage = true;
 		}
 		~Core() { Close(); }
 		const std::string GetName() const { return core_name; }
@@ -58,13 +77,24 @@ namespace SpaRcle {
 				debug->Info("Running core \"" + core_name + "\"...");
 
 				isRun = true;
-
 				tcp->Run();
 
 				task = std::thread([this]() {
-					while (isRun)
+					while (isRun) {
+						if (isWaitPackage) {
+							IKernel* mkernel = KernelPackagesReciveMethod();
+							if (mkernel) {
+								if (isCanGetKernelPackages)
+									recive_data.push_back(mkernel);
+								else FreeKernel(mkernel);
+							}
+
+							if(tcp->GetState() == PackState::End && isCanGetKernelPackages) isWaitPackage = false;
+						}
+
 						if (!Update())
 							break;
+					}
 					debug->Info("Core \"" + core_name + "\" has been completed working.");
 				});
 

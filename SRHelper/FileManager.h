@@ -23,7 +23,7 @@ namespace SpaRcle {
 				debug->System("Destroying file manager...");
 
 				for (size_t t = 0; t < data_adress.size(); t++)
-					delete data_adress[t];
+					if(data_adress[t]) delete data_adress[t];
 
 				this->data_names.clear();
 				this->isStart = false;
