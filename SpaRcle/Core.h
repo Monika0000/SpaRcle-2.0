@@ -9,6 +9,7 @@
 #include <FileManager.h>
 #include "Neuron.h"
 #include <functional>
+#include "Hippocampus.h"
 
 namespace SpaRcle {
 	using namespace Network;
@@ -43,6 +44,7 @@ namespace SpaRcle {
 
 		Logicality* logic;
 		Causality* causality;
+		Hippocampus* hippocampus;
 
 		std::string core_name;
 	public:
@@ -52,6 +54,7 @@ namespace SpaRcle {
 		{
 			isRun = false; 
 			task = std::thread();
+			hippocampus = nullptr;
 			logic = nullptr;
 			isWaitPackage = true;
 		}
@@ -64,11 +67,13 @@ namespace SpaRcle {
 		virtual bool Update() { return false; };
 		virtual bool Completed() { return false; };
 	public:
-		bool Init(Logicality* logic, Causality* causality) {
+		bool Init(Logicality* logic, Causality* causality, Hippocampus* hippocampus) {
 			debug->Info("Initializing core \"" + core_name + "\"...");
 
 			if (!logic) { debug->Error("Logicality in core \"" + core_name + "\" is nullprt!"); return false; } else this->logic = logic;
 			if (!causality) { debug->Error("Causality in core \"" + core_name + "\" is nullprt!"); return false; } else this->causality = causality;
+
+			this->hippocampus = hippocampus;
 
 			return Start();
 		};

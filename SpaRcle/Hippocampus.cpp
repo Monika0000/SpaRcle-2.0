@@ -11,10 +11,6 @@ SpaRcle::Hippocampus::Hippocampus() {
 
 SpaRcle::Hippocampus::~Hippocampus() { Close(); }
 
-void SpaRcle::Hippocampus::SaveDataPack(void* data)
-{
-}
-
 bool SpaRcle::Hippocampus::Create(Debug* debug, Settings* settings, FileManager* file_manager) {
 	if (!debug) { Debug::InternalError("Hippocampus::Create() : debug is nullptr!"); return false; } else this->debug = debug;
 

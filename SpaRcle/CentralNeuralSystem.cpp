@@ -37,8 +37,12 @@ namespace SpaRcle {
 		if (!this->hippocampus->Init()) { debug->Error("CNS : failed initialize hippocampus!"); return false; }
 
 		for (Core* core : cores) 
-			if (!core->Init(LSystem, CSystem)) {
+			if (!core->Init(LSystem, CSystem, hippocampus)) {
 				debug->Error("Failed initializing core \"" + core->GetName() + "\"!");
+				return false;
+			}
+			else if(!hippocampus->RegisterCore(core->GetName())) {
+				debug->Error("Failed register core \"" + core->GetName() + "\"!");
 				return false;
 			}
 

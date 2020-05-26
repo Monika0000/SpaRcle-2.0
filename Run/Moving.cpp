@@ -36,6 +36,9 @@ bool Moving::Update() {	// Running
 			}
 		}
 		//std::cout << recive_data.size() << std::endl;
+
+		hippocampus->Synchronize(core_name, recive_data);
+
 		ClearRecivePackages();
 	}
 	//!-----------------------------------------------------------------------------------------

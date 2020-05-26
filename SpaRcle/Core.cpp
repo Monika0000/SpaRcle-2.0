@@ -14,6 +14,8 @@ namespace SpaRcle {
 
 		if(tcp) tcp->Close();
 
+		ClearRecivePackages();
+
 		return Completed();
 	}
 }
