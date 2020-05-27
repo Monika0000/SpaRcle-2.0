@@ -82,5 +82,14 @@ public:
 	//!---------------------[IKernel]--------------------
 	std::string Save() override { return Get(); }
 	bool Load(std::string data) override { return Set(data); }
+	MoveKernel* Copy() {
+		MoveKernel* new_kernel_move = new MoveKernel();
+
+		if (this->boneName) new_kernel_move->boneName = String::CopyChars(this->boneName);
+		if (this->boneRotation) new_kernel_move->boneRotation = Vector3::Copy(this->boneRotation);
+		new_kernel_move->isNew = this->isNew;
+
+		return new_kernel_move;
+	}
 	//!---------------------[IKernel]--------------------
 };

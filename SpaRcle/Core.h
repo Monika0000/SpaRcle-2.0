@@ -82,9 +82,12 @@ namespace SpaRcle {
 				debug->Info("Running core \"" + core_name + "\"...");
 
 				isRun = true;
-				tcp->Run();
+				
+				if (!tcp->Run()) { debug->Error("Failed running core \"" + core_name + "\"! TCP client-server return false."); return false; }
 
 				task = std::thread([this]() {
+					Sleep(1);
+
 					while (isRun) {
 						if (isWaitPackage) {
 							IKernel* mkernel = KernelPackagesReciveMethod();

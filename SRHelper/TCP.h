@@ -64,7 +64,7 @@ namespace SpaRcle {
 				return true;
 			}
 
-			void Client();
+			//void Client();
 			void Server();
 		private:
 			PackState state;
@@ -73,10 +73,35 @@ namespace SpaRcle {
 			bool isSend;
 			bool isRecv;
 		public:
-			void Send(IPackage* data);
 			PackState GetState() { return state; }
-			//std::string Recv();
 			//!------------------------------------------
+			bool Send(IPackage* data) {
+				if (!data) {
+					debug->Error("Failed send message to [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(server_sock) + "] Data is nullptr!");
+					return false;
+				}
+				bool result = false;
+			ret:
+				if (!isRecv) {
+					isSend = true;
+
+					std::string msg = data->GetSendData();
+
+					debug->Network("Send : " + msg);
+
+					if (send(server_sock, msg.c_str(), sizeof(msg.c_str()), 0) == SOCKET_ERROR) {
+						debug->Error("Failed send message to [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(server_sock) + "]");
+					}
+
+					msg.clear();
+
+					result = true;
+
+					isSend = false;
+				} else goto ret;
+
+				return result;
+			}
 			/*
 			template <typename T> IPackage* Recv() {
 			ret:
@@ -130,7 +155,8 @@ namespace SpaRcle {
 						else {
 							state = PackState::Reciving;
 							if (!pack->SetData(recive_data[0])) {
-								debug->Error("Failed recv message from [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(client_sock) + "]");
+								//debug->Error("Failed recv message from [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(client_sock) + "]");
+								debug->Error("Failed recv message from [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(server_sock) + "]");
 							}
 							else {
 								recive_data.erase(recive_data.begin());
@@ -149,9 +175,7 @@ namespace SpaRcle {
 						return false;
 					}
 				}
-				else {
-					goto ret;
-				}
+				else goto ret;
 			}
 		private:
 			std::vector<std::string> recive_data;
@@ -161,10 +185,10 @@ namespace SpaRcle {
 
 			Debug* debug;
 
-			SOCKET client_sock;
+			//SOCKET client_sock;
 			SOCKET server_sock;
 
-			std::thread client_thread;
+			//std::thread client_thread;
 			std::thread server_thread;
 		};
 	}

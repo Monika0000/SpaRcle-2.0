@@ -16,7 +16,7 @@ namespace SpaRcle {
 			template <typename T> static const int IndexOf(std::vector<T>& Vec, const T& Element) {
 				const size_t size = Vec.size();
 				for (size_t t = 0; t < size; t++) {
-					if (Vec[t] == Element) return t;
+					if (Vec[t] == Element) return (size_t)t;
 				}
 				return -1;
 			};

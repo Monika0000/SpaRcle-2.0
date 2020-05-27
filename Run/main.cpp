@@ -33,6 +33,8 @@ int main() {
 
 	Settings* settings = new Settings();
 	Debug* debug = new Debug(settings->GetPath());
+	debug->SetShowMemoryLoad(true);
+
 	FileManager* file_manager = new FileManager();
 
 	SRFramework* framework = new SRFramework(debug, settings, file_manager);

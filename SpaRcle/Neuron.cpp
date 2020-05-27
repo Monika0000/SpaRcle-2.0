@@ -2,11 +2,11 @@
 #include "Neuron.h"
 
 namespace SpaRcle {
-	SpaRcle::Neuron::Neuron(IKernel* kernel) {
+	SpaRcle::Neuron::Neuron() {
 		dendr = new Dendrite(0.f, 0.f);
 		//position = Vector3 { 0.f, 0.f , 0.f };
 		akson = nullptr;
-		this->kernel = kernel;
+		this->kernel = nullptr;
 		this->Synapses = std::vector<Synapse*>();
 	}
 	

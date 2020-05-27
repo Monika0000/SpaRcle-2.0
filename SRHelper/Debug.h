@@ -5,6 +5,7 @@
 #include <fstream>
 #include <consoleapi2.h>
 #include <WinBase.h>
+#include <Psapi.h>
 
 namespace SpaRcle {
 	namespace Helper {
@@ -36,6 +37,7 @@ namespace SpaRcle {
 			~Debug();
 		public:
 			inline void SetConsoleEnable(bool v) { isConsole = v; }
+			void SetShowMemoryLoad(bool v) { show_use_memory = v; }
 		public:
 			inline void Log(std::string msg) { Print(msg, Type::_Log); }
 			inline void Info(std::string msg) { Print(msg, Type::_Info); }
@@ -74,6 +76,7 @@ namespace SpaRcle {
 		private:
 			static bool ColorThermeIsEnabled;
 			bool use = false;
+			bool show_use_memory;
 			HANDLE hConsole = 0;
 		private:
 			std::ofstream log_file;

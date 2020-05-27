@@ -43,6 +43,11 @@ namespace SpaRcle {
 
 				return vec;
 			}
+
+			static Vector3* Copy(Vector3* vec) {
+				Vector3* _new = new Vector3{ vec->x, vec->y, vec->z };
+				return _new;
+			}
 		};
 	}
 }

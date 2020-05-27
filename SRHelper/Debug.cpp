@@ -2,6 +2,7 @@
 #include "Debug.h"
 #include <iostream>
 #include <time.h>
+#include "SRHelper.h"
 
 bool SpaRcle::Helper::Debug::ColorThermeIsEnabled = false;
 SpaRcle::Helper::Debug::Debug(std::string path, bool init_color_therme) {
@@ -12,6 +13,7 @@ SpaRcle::Helper::Debug::Debug(std::string path, bool init_color_therme) {
 
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
+    show_use_memory = false;
     isConsole = true;
     path_log = path;
     prefix = "";
@@ -39,7 +41,7 @@ void SpaRcle::Helper::Debug::Print(std::string& msg, Type type) {
             case SpaRcle::Helper::Debug::Type::_Log:        { prefix = "[Log] ";      color = ConsoleColor::Cyan;       } break;
             case SpaRcle::Helper::Debug::Type::_Info:       { prefix = "[Info] ";     color = ConsoleColor::Magenta;    } break;
             case SpaRcle::Helper::Debug::Type::_System:     { prefix = "[System] ";   color = ConsoleColor::Blue;       } break;
-            case SpaRcle::Helper::Debug::Type::_Warning:    { prefix = "[Warn] ";     color = ConsoleColor::Brown;     } break;
+            case SpaRcle::Helper::Debug::Type::_Warning:    { prefix = "[Warn] ";     color = ConsoleColor::Brown;      } break;
             case SpaRcle::Helper::Debug::Type::_Error:      { prefix = "[Error] ";    color = ConsoleColor::Red;        } break;
             case SpaRcle::Helper::Debug::Type::_Fatal:      { prefix = "[Fatal] ";    color = ConsoleColor::Red;        } break;
             case SpaRcle::Helper::Debug::Type::_Debug:      { prefix = "[Debug] ";    color = ConsoleColor::Brown;      } break;
@@ -49,6 +51,8 @@ void SpaRcle::Helper::Debug::Print(std::string& msg, Type type) {
                 break;
             }
 
+            if(show_use_memory)
+                std::cout << "<" << ((float)Utils::GetCurrentMemoryLoad()) / 1024.f << " KB> ";
             SetConsoleTextAttribute(hConsole, (WORD)((ConsoleColor::LightGray << 4) | color));
             std::cout << prefix;
             SetConsoleTextAttribute(hConsole, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Black));

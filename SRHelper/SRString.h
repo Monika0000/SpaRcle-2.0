@@ -121,6 +121,11 @@ namespace SpaRcle {
 				return result;
 			}
 
+			static char* CopyChars(char* str) {
+				char* rs = new char[strlen(str) + 1];
+				strcpy(rs, str);
+				return rs;
+			}
 			static char* CopyStringToCharPointer(std::string str) {
 				char* rs = new char[str.size() + 1];
 				strcpy(rs, str.c_str());

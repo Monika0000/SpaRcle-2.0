@@ -81,6 +81,7 @@ namespace SpaRcle {
 		return true;
 	}
 	void CentralNeuralSystem::TaskFunc() {
+		Sleep(1);
 		while (this->IsRun()) {
 			for (Core* core : this->cores) {
 				//core->GetData();

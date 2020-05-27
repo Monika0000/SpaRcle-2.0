@@ -18,8 +18,8 @@ namespace SpaRcle {
 			Load - принимает ту самую строку и расшифровывает ее, "запихивая" данные внутрь себя
 		*/
 	public:
-		virtual std::string Save() = 0;
-		virtual bool Load(std::string data) = 0;
+		virtual std::string Save() = 0;// { return ""; }
+		virtual bool  Load(std::string data) = 0;// { return 0; }
 	};
 
 	struct Synapse {
@@ -66,7 +66,7 @@ namespace SpaRcle {
 
 	class Neuron : public ISavable {
 	public:
-		Neuron(IKernel* kernel);
+		Neuron();
 		~Neuron();
 	public:
 		bool Save(std::ofstream file) override { return false; }

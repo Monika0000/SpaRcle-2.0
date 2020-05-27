@@ -36,6 +36,16 @@ namespace SpaRcle {
 				std::wstring ws(&cwd[0]);
 				return std::string(ws.begin(), ws.end());
 			}
+			static long int GetCurrentMemoryLoad() {
+				PROCESS_MEMORY_COUNTERS pmc;
+				BOOL result = GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+				//	&memCounter,
+				//	sizeof(memCounter));
+				if (result)
+					return (long int)pmc.PeakWorkingSetSize;
+				else
+					return -1;
+			}
 		};
 	}
 }
