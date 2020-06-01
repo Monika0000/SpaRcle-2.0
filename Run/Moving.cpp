@@ -20,10 +20,7 @@ bool Moving::Update() {	// Running
 	//!	Воздействовать на нейронные связи относящиеся к данному сектору
 
 	if (HasPackages()) {
-		for (int i = 0; i < NAdress.size(); i++) {
-			IKernel* kernel = NAdress[i]->kernel;
-			debug->Info(kernel->Save());
-		}
+		tcp->Begin();
 
 		for (size_t t = 0; t < this->recive_data.size(); t++){
 			if (((MoveKernel*)recive_data[t])->isNew) {
@@ -31,27 +28,25 @@ bool Moving::Update() {	// Running
 				///	Если он не существует, это не значит, что файла не существует!
 				RegisterBone((MoveKernel*)recive_data[t]);
 			} else {
-				///	Если нейрон отвечающий за кость существует, 
-				MoveKernel* move = (MoveKernel*)recive_data[t];
-				Neuron* bone = static_cast<Neuron*>(this->file_manager->Load<Neuron>(move->boneName));
+				MoveKernel* new_move = (MoveKernel*)recive_data[t];
+				Neuron* bone = static_cast<Neuron*>(this->file_manager->Load<Neuron>(new_move->boneName));
 				if (!bone) {
-					debug->Error("Move : bone \"" + std::string(move->boneName) + "\" is not register!");
+					debug->Error("Move : bone \"" + std::string(new_move->boneName) + "\" is not register!");
 					return false;
 				}
+				//todo	Если нейрон отвечающий за кость существует
 				else {
-					delete (MoveKernel*)bone->kernel;
-					bone->kernel = move->Copy();
+					MoveKernel* old_move = (MoveKernel*)bone->kernel;
+					//!--------------[Обрабатываем значения со старой кости, заменяя потом их на новые]--------------
+
+					new_move->boneRotation->x += 0.5f;
+
+					tcp->Send(new_move);
+
+					//!----------------------------------------------------------------------------------------------
+					delete old_move;
+					bone->kernel = new_move->Copy();
 				}
-
-				//MoveKernel* old_data = (MoveKernel*)bone->kernel;
-
-				//debug->Log("Old : "+ old_data->Save());
-				//debug->Log("New : "+ move->Save());
-
-				/*
-					//TODO: do someting...
-				*/
-
 			}
 		}
 		//std::cout << recive_data.size() << std::endl;
@@ -68,6 +63,8 @@ bool Moving::Update() {	// Running
 		//}
 
 		ClearRecivePackages();
+
+		tcp->End();
 	}
 	//!-----------------------------------------------------------------------------------------
 
@@ -92,11 +89,11 @@ bool Moving::RegisterBone(MoveKernel* kernel, Neuron* bone_neuron) { ///\see bon
 		if (bone_neuron) {
 			NBones.push_back(kernel->boneName);
 
-			//bone_neuron->SetKernel(kernel);
-			NAdress.push_back(bone_neuron);
+			if(bone_neuron->kernel)
+				delete (MoveKernel*)bone_neuron->kernel;
+			bone_neuron->kernel = kernel->Copy();
 
-			//if (bone_neuron->kernel) delete bone_neuron->kernel;
-			//bone_neuron->kernel = kernel;
+			NAdress.push_back(bone_neuron);
 
 			debug->Log("Moving : register new bone \"" + boneName + "\" has been successfully!");
 		}
@@ -106,15 +103,12 @@ bool Moving::RegisterBone(MoveKernel* kernel, Neuron* bone_neuron) { ///\see bon
 
 			if (file_manager->Save<Neuron>((ISavable*)n, kernel->boneName)) {
 				debug->Log("Moving : register and saving new bone \"" + boneName + "\" has been successfully!");
-				
-				//std::cout << kernel << std::endl;
 
 				NBones.push_back(kernel->boneName);
 				NAdress.push_back(n);
 
 				//if (n->kernel) delete n->kernel;
 				//n->kernel = kernel;
-
 				//NAdress.push_back(n);
 				//debug->Info(n->kernel->Save());
 				//debug->Info(NAdress[NAdress.size() - 1]->kernel->Save());
@@ -124,7 +118,7 @@ bool Moving::RegisterBone(MoveKernel* kernel, Neuron* bone_neuron) { ///\see bon
 			}
 		}
 	}
-	//else { debug->Warn("Moving::RegisterBone() : bone \"" + boneName + " already registred!"); boneName.clear(); return false; }
+	else { debug->Warn("Moving::RegisterBone() : bone \"" + boneName + "\" already registred!"); boneName.clear(); return false; }
 
 	boneName.clear();
 	return true;

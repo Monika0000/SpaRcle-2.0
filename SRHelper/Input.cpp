@@ -5,7 +5,13 @@
 
 namespace SpaRcle {
 	namespace Helper {
+        bool* Input::pressed_keys = nullptr;
 		bool Input::GetKey(KeyCode key) {
+            if (!pressed_keys) {
+                pressed_keys = new bool[256];
+                for (size_t t = 0; t < 256; t++)
+                    pressed_keys[t] = false;
+            }
 			//BYTE arr[256];
 			BYTE* arr = new BYTE[256];
             bool result = false;
@@ -24,7 +30,6 @@ namespace SpaRcle {
 
 			return result;
 		}
-
         std::vector<int> Input::GetPressKeyIndexes() {
             std::vector<int> r = std::vector<int>();
 
@@ -48,5 +53,16 @@ namespace SpaRcle {
 
             return r;
         }
+		void Input::PrintPressIndexes(){
+            std::vector<int> indexes = GetPressKeyIndexes();
+            if (indexes.size() > 0)
+            {
+                std::cout << "Pressed keys : ";
+                for (int i : indexes)
+                    std::cout << i << " ";
+                std::cout << std::endl;
+            }
+            indexes.clear();
+		}
 	}
 }

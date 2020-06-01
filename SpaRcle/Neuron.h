@@ -11,12 +11,16 @@ namespace SpaRcle {
 
 	class Neuron;
 
-	__interface IKernel {
+	//__interface IKernel {
+		class IKernel {
 		/*
 			Данный интерфейс предназначен для описания хранимых данных внутри нейрона
 			Save - возвращает содержимое в виде строки, которую можно сохранить в файл
 			Load - принимает ту самую строку и расшифровывает ее, "запихивая" данные внутрь себя
 		*/
+	public:
+		IKernel() { };
+		~IKernel() { };
 	public:
 		virtual std::string Save() = 0;// { return ""; }
 		virtual bool  Load(std::string data) = 0;// { return 0; }

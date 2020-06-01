@@ -46,6 +46,7 @@ void SpaRcle::Helper::Debug::Print(std::string& msg, Type type) {
             case SpaRcle::Helper::Debug::Type::_Fatal:      { prefix = "[Fatal] ";    color = ConsoleColor::Red;        } break;
             case SpaRcle::Helper::Debug::Type::_Debug:      { prefix = "[Debug] ";    color = ConsoleColor::Brown;      } break;
             case SpaRcle::Helper::Debug::Type::_Network:    { prefix = "[Network] ";  color = ConsoleColor::LightBlue;  } break;
+            case SpaRcle::Helper::Debug::Type::_Graph:      { prefix = "[Graph] ";    color = ConsoleColor::Green;      } break;
             default:
                 Debug::InternalError("Debug : unknown type!");
                 break;
@@ -61,7 +62,7 @@ void SpaRcle::Helper::Debug::Print(std::string& msg, Type type) {
             log_file.flush();
             std::cout << msg + "\n";
         } else
-            Debug::InternalError("Log file is not open!");
+            Debug::InternalError("Log file is not open!\n\tMsg : "+msg);
         use = false;
     } else goto ret;
 }

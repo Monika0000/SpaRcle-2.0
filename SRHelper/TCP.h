@@ -44,6 +44,8 @@ namespace SpaRcle {
 			TCP(std::string ip, int port, Debug* debug);
 			~TCP();
 		public:
+			bool End() { return Send(end_name.c_str()); }
+			bool Begin() { return Send(begin_name.c_str()); }
 			bool Run();
 			bool Close();
 		private:
@@ -89,7 +91,8 @@ namespace SpaRcle {
 
 					debug->Network("Send : " + msg);
 
-					if (send(server_sock, msg.c_str(), sizeof(msg.c_str()), 0) == SOCKET_ERROR) {
+					//if (send(server_sock, msg.c_str(), sizeof(msg.c_str()), 0) == SOCKET_ERROR) {
+					if (send(server_sock, msg.c_str(), msg.size(), 0) == SOCKET_ERROR) {
 						debug->Error("Failed send message to [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(server_sock) + "]");
 					}
 
@@ -99,6 +102,26 @@ namespace SpaRcle {
 
 					isSend = false;
 				} else goto ret;
+
+				return result;
+			}
+			bool Send(const char* data) {
+				if (!data) {
+					debug->Error("Failed send message to [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(server_sock) + "] Data is nullptr!");
+					return false;
+				}
+				bool result = false;
+			ret:
+				if (!isRecv) {
+					isSend = true;
+
+					if (send(server_sock, data, strlen(data), 0) == SOCKET_ERROR) {
+						debug->Error("Failed send message to [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(server_sock) + "]");
+					}
+
+					result = true; isSend = false;
+				}
+				else goto ret;
 
 				return result;
 			}

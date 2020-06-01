@@ -10,6 +10,7 @@
 #include <string>
 #include <sstream>
 #include <cstdio>
+#include "GraphUtils.h"
 
 #include "SRString.h"
 
@@ -23,6 +24,34 @@ namespace SpaRcle {
 			~Math() {};
 		public:
 			inline static double Round(double x) { return ((x * 100) / 100); /*return floor(x * 100) / 100;*/ }
+		};
+
+		class EventsManager {
+		private:
+			EventsManager() {};
+			~EventsManager() {};
+		public:
+			enum class Events {
+				Exit
+			};
+		private:
+			static std::vector<Events> events;
+		public:
+			static void PushEvent(Events _event) {
+				if (Array::Contains<EventsManager::Events>(events, _event))
+					return;
+				else
+					events.push_back(_event);
+			}
+			static bool PopEvent(Events _event) {
+				int index = Array::IndexOf<EventsManager::Events>(events, _event);
+				if (index != -1) {
+					events.erase(events.begin() + index);
+					return true;
+				}
+				else
+					return false;
+			}
 		};
 
 		class Utils {

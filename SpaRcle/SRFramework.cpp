@@ -55,7 +55,14 @@ namespace SpaRcle {
 		isRun = true;
 
 		while (isRun) {
-			if (Input::GetKey(KeyCode::Esc)) break;
+			if (Input::GetKeyDown(KeyCode::Esc) || EventsManager::PopEvent(EventsManager::Events::Exit))
+				break;
+			else if (Input::GetKeyDown(KeyCode::M)) {
+				std::cout << "[Framework] Current memory load is " << Utils::GetCurrentMemoryLoad() / 1024 << "Kb" << std::endl;
+			}
+			else if (Input::GetKeyUp(KeyCode::M)) {
+
+			}
 		}
 
 		debug->Info("Completed framework!");
@@ -73,8 +80,6 @@ namespace SpaRcle {
 
 		debug->System("All system completed successfully!");
 
-		if (debug) delete debug;
-
 		return true;
 	}
-}
+} 

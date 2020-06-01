@@ -1,13 +1,17 @@
 ﻿#include <iostream>
 #include <SRFramework.h>
 #include <SRHelper.h>
+#include <SRGraphics.h>
 
 #include "Moving.h"
 
 using namespace SpaRcle;
 using namespace SpaRcle::Helper;
+using namespace SpaRcle::Graphics;
 
-int main() {
+
+
+int main(int argcp, char** argv) {
 	/*
 	//Vector3* vector = Vector3::FromString("(2,sf3 d25 1.3)");
 	//std::cout << vector->GetString() << std::endl;
@@ -24,18 +28,32 @@ int main() {
 	}
 
 	*/
-
 	//std::string str = "123123[LOL]flkdgfgds;lk"; size_t end = 0;
 	//std::cout << String::BetweenCharacters(str, '[', ']', 0, &end) << " " << end << std::endl;
-
 	//std::string str = "12345|qqqqq";
 	//std::cout << String::Remove(str, '|') << "\n" << str << std::endl;
+
+	//while(true) Input::PrintPressIndexes();
+	while (false) {
+		if(Input::GetKeyDown(KeyCode::Enter))
+			std::cout << "Down\n";
+		if (Input::GetKeyUp(KeyCode::Enter))
+			std::cout << "Up\n";
+		//std::cout << Input::GetKeyDown(KeyCode::Enter) << " " << Input::GetKeyUp(KeyCode::Enter) << "\n";
+	}
 
 	Settings* settings = new Settings();
 	Debug* debug = new Debug(settings->GetPath());
 	debug->SetShowMemoryLoad(true);
 
 	FileManager* file_manager = new FileManager();
+
+	//!-------------------------------------------------
+
+	SRGraphics* graph = new SRGraphics(argcp, argv, debug);
+	graph->Init();
+
+	//!-------------------------------------------------
 
 	SRFramework* framework = new SRFramework(debug, settings, file_manager);
 	framework->Create();
@@ -53,5 +71,11 @@ int main() {
 	framework->Init();
 	framework->Run();
 	framework->Close();
-	
+
+	graph->Close();
+
+	if (debug) delete debug;
 }
+
+
+

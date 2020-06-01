@@ -19,6 +19,9 @@
     <Filter Include="Helper">
       <UniqueIdentifier>{971cb270-ea2f-4ab4-abb2-ccdffc264c87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{0d6b819d-1fb5-4505-915f-6a3885e6372d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KeyCodes.h">
@@ -53,6 +56,9 @@
     </ClInclude>
     <ClInclude Include="IPackage.h">
       <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphUtils.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
