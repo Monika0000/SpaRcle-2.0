@@ -55,7 +55,9 @@ namespace SpaRcle {
 		isRun = true;
 
 		while (isRun) {
-			if (Input::GetKeyDown(KeyCode::Esc) || EventsManager::PopEvent(EventsManager::Events::Exit))
+			if (Input::GetKeyDown(KeyCode::Esc) 
+				|| EventsManager::PopEvent(EventsManager::Events::Exit)
+				|| EventsManager::PopEvent(EventsManager::Events::Error))
 				break;
 			else if (Input::GetKeyDown(KeyCode::M)) {
 				std::cout << "[Framework] Current memory load is " << Utils::GetCurrentMemoryLoad() / 1024 << "Kb" << std::endl;

@@ -9,8 +9,6 @@ using namespace SpaRcle;
 using namespace SpaRcle::Helper;
 using namespace SpaRcle::Graphics;
 
-
-
 int main(int argcp, char** argv) {
 	/*
 	//Vector3* vector = Vector3::FromString("(2,sf3 d25 1.3)");

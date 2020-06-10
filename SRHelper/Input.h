@@ -8,8 +8,9 @@ namespace SpaRcle {
 		enum class KeyboardLayout { EN, RU, UNKNOWN };
 
 		enum class KeyCode {
-			MouseLeft = 1, MouseRight = 2, MouseMiddle = 4, Tab = 9, Enter = 13, Esc = 27, 
-			E = 69, I = 73, M = 77, O = 79, P = 80, Q = 81, R = 82, T = 84, U = 85, W = 87, Y = 89
+			MouseLeft = 1, MouseRight = 2, MouseMiddle = 4, Tab = 9, Enter = 13, LShift = 16, Ctrl = 17, Alt = 18,
+			Esc = 27, Space = 32, A = 65, D = 68,
+			E = 69, F = 70, I = 73, M = 77, O = 79, P = 80, Q = 81, S = 83, R = 82, T = 84, U = 85, W = 87, Y = 89
 		};
 
 		class Input {
@@ -36,6 +37,11 @@ namespace SpaRcle {
 					if (b) pressed_keys[size_t(key)] = true;
 					return false;
 				}*/
+			}
+			static bool FixedGetKeyDown(KeyCode key) {
+				bool b = GetKeyDown(key);
+				GetKeyUp(key);
+				return b;
 			}
 			static bool GetKeyDown(KeyCode key) {
 				bool b = GetKey(key);

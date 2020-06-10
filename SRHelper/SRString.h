@@ -121,6 +121,13 @@ namespace SpaRcle {
 				return result;
 			}
 
+			static LPCWSTR CharsToLPWSTR(const char* str) {
+				size_t size = strlen(str);
+				wchar_t* wArr = new wchar_t[size];
+				for (size_t i = 0; i < size; ++i)
+					wArr[i] = str[i];
+				return wArr;
+			}
 			static char* CopyChars(char* str) {
 				char* rs = new char[strlen(str) + 1];
 				strcpy(rs, str);

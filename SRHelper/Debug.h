@@ -39,13 +39,13 @@ namespace SpaRcle {
 			inline void SetConsoleEnable(bool v) { isConsole = v; }
 			void SetShowMemoryLoad(bool v) { show_use_memory = v; }
 		public:
-			inline void Log(std::string msg) { Print(msg, Type::_Log); }
-			inline void Info(std::string msg) { Print(msg, Type::_Info); }
-			inline void Warn(std::string msg) { Print(msg, Type::_Warning); }
-			inline void Error(std::string msg) { Print(msg, Type::_Error); }
-			inline void System(std::string msg) { Print(msg, Type::_System); }
-			inline void Network(std::string msg) { Print(msg, Type::_Network); }
-			inline void Graph(std::string msg) { Print(msg, Type::_Graph); }
+			inline void Log(std::string msg, int deep_level = 0) { Print(msg, Type::_Log, deep_level); }
+			inline void Info(std::string msg, int deep_level = 0) { Print(msg, Type::_Info, deep_level); }
+			inline void Warn(std::string msg, int deep_level = 0) { Print(msg, Type::_Warning, deep_level); }
+			inline void Error(std::string msg, int deep_level = 0) { Print(msg, Type::_Error, deep_level); }
+			inline void System(std::string msg, int deep_level = 0) { Print(msg, Type::_System, deep_level); }
+			inline void Network(std::string msg, int deep_level = 0) { Print(msg, Type::_Network, deep_level); }
+			inline void Graph(std::string msg, int deep_level = 0) { Print(msg, Type::_Graph, deep_level); }
 
 			static inline void InternalWarning(std::string msg) { 
 				HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -85,7 +85,7 @@ namespace SpaRcle {
 			std::string prefix;
 			std::string path_log;
 		private:
-			void Print(std::string& msg, Type type);
+			void Print(std::string& msg, Type type, int deep_level = 0);
 		};
 	}
 }

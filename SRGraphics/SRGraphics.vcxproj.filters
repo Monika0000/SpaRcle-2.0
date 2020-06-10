@@ -18,6 +18,12 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{d1eb5486-3eec-4354-945a-76de38060fd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RenderSystem">
+      <UniqueIdentifier>{6b89ac74-d058-4619-b64a-cddaa490c2d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object3D">
+      <UniqueIdentifier>{188829f5-a984-4560-8dbe-41e45037178e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -29,6 +35,33 @@
     <ClInclude Include="Window.h">
       <Filter>Window</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Object3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Render.h">
+      <Filter>RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowEvents.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Object3D.h">
+      <Filter>Object3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Object3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Vectors.h">
+      <Filter>Object3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>UIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SRGraphics.cpp">
@@ -39,6 +72,15 @@
     </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Render.cpp">
+      <Filter>RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>UIElements</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

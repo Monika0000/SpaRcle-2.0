@@ -160,6 +160,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="IPackage.h" />
     <ClInclude Include="KeyCodes.h" />
+    <ClInclude Include="ScreenFormats.h" />
     <ClInclude Include="SRArray.h" />
     <ClInclude Include="SRHelper.h" />
     <ClInclude Include="pch.h" />

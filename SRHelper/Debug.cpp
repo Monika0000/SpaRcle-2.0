@@ -6,8 +6,9 @@
 
 bool SpaRcle::Helper::Debug::ColorThermeIsEnabled = false;
 SpaRcle::Helper::Debug::Debug(std::string path, bool init_color_therme) {
-    if(init_color_therme)
+    if (init_color_therme) {
         InitColorTherme();
+    }
     setlocale(LC_ALL, "rus");
     srand(static_cast<unsigned int>(time(0)));
 
@@ -20,16 +21,16 @@ SpaRcle::Helper::Debug::Debug(std::string path, bool init_color_therme) {
     //this->log_file = std::ofstream(path + "\\log.txt");
     this->log_file.open(path + "\\log.txt");
     std::string msg = "Debugger is run!";
-    Print(msg, Type::_Debug);
+    Print(msg, Type::_Debug, 0);
 }
 
 SpaRcle::Helper::Debug::~Debug() {
     std::string msg = "Debugger has been closed!";
-    Print(msg, Type::_Debug);
+    Print(msg, Type::_Debug, 0);
     this->log_file.close();
 }
 
-void SpaRcle::Helper::Debug::Print(std::string& msg, Type type) {
+void SpaRcle::Helper::Debug::Print(std::string& msg, Type type, int deep_level) {
    ret:
     if(!use) {
         use = true;
@@ -37,6 +38,9 @@ void SpaRcle::Helper::Debug::Print(std::string& msg, Type type) {
         ConsoleColor color = ConsoleColor::Black;
 
         if (log_file.is_open()) {
+            for (int i = 0; i < deep_level; i++)
+                std::cout << "\t";
+
             switch (type) {
             case SpaRcle::Helper::Debug::Type::_Log:        { prefix = "[Log] ";      color = ConsoleColor::Cyan;       } break;
             case SpaRcle::Helper::Debug::Type::_Info:       { prefix = "[Info] ";     color = ConsoleColor::Magenta;    } break;

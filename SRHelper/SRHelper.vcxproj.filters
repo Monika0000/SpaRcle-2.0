@@ -60,6 +60,9 @@
     <ClInclude Include="GraphUtils.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="ScreenFormats.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">

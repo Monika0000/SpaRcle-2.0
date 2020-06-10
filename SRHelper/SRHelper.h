@@ -32,7 +32,7 @@ namespace SpaRcle {
 			~EventsManager() {};
 		public:
 			enum class Events {
-				Exit
+				Exit, Error
 			};
 		private:
 			static std::vector<Events> events;

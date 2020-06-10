@@ -3,6 +3,10 @@
 
 namespace SpaRcle {
 	namespace Helper {
+		struct Vector2 {
+			int x, y;
+		};
+
 		struct Vector3 {
 			float x = 0.f, y = 0.f, z = 0.f;
 
@@ -47,6 +51,16 @@ namespace SpaRcle {
 			static Vector3* Copy(Vector3* vec) {
 				Vector3* _new = new Vector3{ vec->x, vec->y, vec->z };
 				return _new;
+			}
+			static Vector3* Normalize(Vector3* v) {
+				float len = std::sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
+
+				if (len != 0.) {
+					v->x /= len;
+					v->y /= len;
+					v->z /= len;
+				}
+				return v;
 			}
 		};
 	}
