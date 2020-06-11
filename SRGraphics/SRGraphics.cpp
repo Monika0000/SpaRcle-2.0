@@ -19,11 +19,17 @@ namespace SpaRcle {
 				}
 
 				//this->render = new Render(debug);
-				if (camera) camera->Create();
+				if (camera) camera->Create(
+					win->x_size,
+					win->y_size,
+					win->x_pos,
+					win->y_pos
+				);
 
 				win->SetCamera(camera);
 				win->SetRender(render);
 				this->win = win;//new Window(debug, camera);
+				this->win->Create();
 
 				isCreate = true;
 				return true;
@@ -48,8 +54,10 @@ namespace SpaRcle {
 			isClose = true;
 
 			debug->Graph("Close graphics engine...");
-			if (camera) delete camera;
-			delete this->win;
+			delete this->win;			// 1
+			if (camera) delete camera;	// 2
+
+			delete this->render;		// 3
 
 			return true;
 		}

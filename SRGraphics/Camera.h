@@ -33,23 +33,35 @@ namespace SpaRcle {
 		private:
 			bool isCreate;
 			bool isRun;
+			bool* isMouseLock;
+		private:
+			unsigned short* x_size;
+			unsigned short* y_size;
+			int* x_pos; int* y_pos;
 		private:
 			Debug* debug;
 			//std::thread task;
 		public:
 			Camera(Debug*debug) {
+				x_size = NULL;
+				y_size = NULL;
+				x_pos = NULL;
+				y_pos = NULL;
 				this->debug = debug;
 				isCreate = false;
 				isRun = false;
 			};
 			~Camera() { Close(); };
 		public:
-			bool Create();
-			bool Init();
+			bool Create(
+				unsigned short& x_size, unsigned short& y_size,
+				int& x_pos, int& y_pos
+			);
+			bool Init(bool& isMouseLock);
 			bool Run();
 			bool Close();
 			void Move();
-		private:
+		public:
 			//void CameraFunc();
 			void ResetCameraPos() {
 				posx = 0; posy = 0; posz = 0;

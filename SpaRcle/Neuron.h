@@ -12,7 +12,7 @@ namespace SpaRcle {
 	class Neuron;
 
 	//__interface IKernel {
-		class IKernel {
+	class IKernel {
 		/*
 			Данный интерфейс предназначен для описания хранимых данных внутри нейрона
 			Save - возвращает содержимое в виде строки, которую можно сохранить в файл
@@ -33,7 +33,7 @@ namespace SpaRcle {
 			this->neuron = neuron;
 		};
 		~Synapse() { 
-			delete[] name;
+			delete[] name; //TODO: Может вызвать ошибки!!!
 			this->neuron = nullptr;
 		};
 	public:

@@ -4,6 +4,10 @@
 #include <thread>	
 #include <random>
 #include <ostream>
+
+#include <locale>
+#include <iostream>
+
 #include <string>
 #include <sstream>
 #include "SRArray.h"
@@ -121,6 +125,13 @@ namespace SpaRcle {
 				return result;
 			}
 
+			static const wchar_t* CharsToWchars(const char* str) {
+				std::wostringstream wstm;
+				const  std::ctype<wchar_t>& ctfacet = std::use_facet<std::ctype<wchar_t>>(wstm.getloc());
+				for (size_t i = 0; i < strlen(str); ++i)
+					wstm << ctfacet.widen(str[i]);
+				return wstm.str().c_str();
+			}
 			static LPCWSTR CharsToLPWSTR(const char* str) {
 				size_t size = strlen(str);
 				wchar_t* wArr = new wchar_t[size];

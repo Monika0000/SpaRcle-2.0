@@ -33,10 +33,20 @@ namespace SpaRcle {
 				}
 			}
 		public:
+			Window* GetWindow() {
+				if (win) return win;
+				else {
+					debug->Error("SRGraphics : window is nullptr!");
+					EventsManager::PushEvent(EventsManager::Events::Error);
+					Sleep(3000);
+					return nullptr;
+				}
+			}
 			Render* GetRender() {
 				if (render) return render;
 				else {
 					debug->Error("SRGraphics : render is nullptr!");
+					EventsManager::PushEvent(EventsManager::Events::Error);
 					Sleep(3000);
 					return nullptr;
 				}

@@ -30,45 +30,48 @@ namespace SpaRcle {
 			friend class SRGraphics;
 		private:
 			bool isRun = false;
+			bool isMouseLock = true;
 		private:
 			unsigned short x_size;
 			unsigned short y_size;
+
+			int x_pos; 
+			int y_pos;
+
 			const char* name;
 			GLFWwindow* window;
 			Camera* camera;
 			Render* render;
-			Font* font;
+			//Font* font;
+			HFONT font;
+			HCURSOR cursor;
 		private:
 			char** argv;
 			int argcp;
 		public:
-			void SetCamera(Camera* camera) { this->camera = camera; }
-			void SetRender(Render* render) { this->render = render; }
-			Window(Debug* debug, Camera* camera = NULL, const char*name = "SpaRcle Engine", unsigned short w = 400, unsigned short h = 300) {
-				if (global) {
-					debug->Error("Window already create!");
-					return;
-				}
+			void SetXPos(int x_pos) { this->x_pos = x_pos; }
+			void SetYPos(int y_pos) { this->y_pos = y_pos; }
+			void SetXSize(int x_size) { this->x_size = x_size; }
+			void SetYSize(int y_size) { this->y_size = y_size; }
+		public:
+			void MouseLock(bool val) { 
+				if(val)
+					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+				else
+					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				isMouseLock = val; 
+			};
+			bool MouseLock() { return isMouseLock; };
+			void SetCamera(Camera* camera) { this->camera = camera; };
+			void SetRender(Render* render) { this->render = render; };
+			HWND GetHWND() {
+				if (hWnd) return hWnd;
 				else {
-					this->screen_size = GraphUtils::GetDesktopResolution();
-					this->debug = debug;
-					this->global = this;
-
-					this->camera = camera;
-
-					this->font = new Font();
-
-					this->x_size = w;
-					this->y_size = h;
-
-					this->name = name;
-					this->hwnd = NULL;
-
-					isInitGlut = false;
-					isInitDisplay = false;
-					isInitGlew = false;
+					Debug::InternalError("Window::GetHWND() : window is not create!");
+					return nullptr;
 				}
 			}
+			Window(Debug* debug, Camera* camera = NULL, const char*name = "SpaRcle Engine", unsigned short w = 400, unsigned short h = 300);
 			~Window() { Close(); }
 		private:
 			bool isInitGlut;
@@ -99,17 +102,24 @@ namespace SpaRcle {
 			Vector2* screen_size;
 			std::thread task;
 
-			HWND hwnd;
+			HWND hWnd;
+			HDC hDC;
 			//int handle;
+		private:
+			//!======== UI ======== 
+			UI* fps;
+			//!======== UI ======== 
 		public:
+			void Draw();
 			static Window* Get() {
 				if (global) return global;
 				else {
-					Debug::InternalError("Window is not create!");
+					Debug::InternalError("Window::Get() : window is not create!");
 					return nullptr;
 				}
 			}
 			bool Close();
+			bool Create();
 			bool Init();
 			/*
 			void Resize(GLsizei width, GLsizei height) {

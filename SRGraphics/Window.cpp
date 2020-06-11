@@ -55,10 +55,57 @@ namespace SpaRcle {
 		}
 		*/
 
+		void Position(GLFWwindow* window, int x, int y) {
+			Window* win = Window::Get();
+			win->SetXPos(x);
+			win->SetYPos(y);
+			glfwSetWindowPos(window, x, y);
+		}
 		void Resize(GLFWwindow* window, int width, int height) {
-			//By defualt rearranges OpenGL viewport to the current framebuffer size.
-			std::cout << width << " " << height << std::endl;
-			glViewport(0, 0, width, height);
+			if (height == 0)
+				height = 1;
+			float ratio = 1.0 * width / height;
+			glMatrixMode(GL_PROJECTION);// используем матрицу проекции
+			glLoadIdentity();// Reset матрицы
+			glViewport(0, 0, width, height);// определяем окно просмотра
+			gluPerspective(45, ratio, 0.1, 1000);// установить корректную перспективу.
+			glMatrixMode(GL_MODELVIEW);// вернуться к модели
+
+			Window* win = Window::Get();
+			win->SetXSize(width);
+			win->SetYSize(height);
+			
+			win->Draw();
+		}
+
+		Window::Window(Debug* debug, Camera* camera, const char* name, unsigned short w, unsigned short h) {
+			if (global) {
+				debug->Error("Window already create!");
+				return;
+			}
+			else {
+				this->screen_size = GraphUtils::GetDesktopResolution();
+				this->debug = debug;
+				this->global = this;
+
+				this->camera = camera;
+
+				this->x_pos = screen_size->x / 2;
+				this->y_pos = screen_size->y / 2;
+
+				//this->font = new Font();
+				this->cursor = GetCursor();
+
+				this->x_size = w;
+				this->y_size = h;
+
+				this->name = name;
+				this->hWnd = NULL;
+
+				isInitGlut = false;
+				isInitDisplay = false;
+				isInitGlew = false;
+			}
 		}
 		void Window::PollEvents() {
 			MSG msg;			// события окна	
@@ -68,7 +115,7 @@ namespace SpaRcle {
 
 				switch (WindowEvents::GetEvent(msg.message, msg.wParam)) {
 				case WindowEvents::Close: {
-					if (MessageBox(hwnd, L"Do You Want To Exit?", L"Exit?", MB_YESNO) == IDYES) {
+					if (MessageBox(NULL, L"Do You Want To Exit?", L"Exit?", MB_YESNO) == IDYES) {
 						//DestroyWindow(hwnd);
 						EventsManager::PushEvent(EventsManager::Events::Exit);
 						glfwTerminate();
@@ -87,6 +134,19 @@ namespace SpaRcle {
 			}
 		}
 
+		bool Window::Create() {
+			debug->Info("Creating window...");
+			font = CreateFont(
+				18, 0, 0, 0, 300,
+				false, false, false,
+				DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH,
+				L"Arial");
+
+			fps = new UI("FPS : " + std::to_string(GraphUtils::GetFPS()), 0.5f, 0.25f);
+			render->AddUI(fps);
+
+			return true;
+		}
 		bool Window::Init() {
 			task = std::thread([this]() {
 				if (!InitGlfw()) {
@@ -106,7 +166,7 @@ namespace SpaRcle {
 
 				InitParametrs();
 
-				camera->Init();
+				camera->Init(isMouseLock);
 
 				if (!InitWindow()) {
 					debug->Error("Failed initializing window!");
@@ -138,6 +198,7 @@ namespace SpaRcle {
 				glfwSetWindowPos(window, 
 					screen_size->x / 2 - x_size / 2, 
 					screen_size->y / 2 - y_size / 2);
+				GraphUtils::CheckSystemErrors("Init glfw : ");
 
 				return true;
 			}
@@ -194,8 +255,10 @@ namespace SpaRcle {
 			GLenum err = glewInit();
 			if (err != GLEW_OK) {
 				debug->Error("glewInit is failure!");
+				GraphUtils::CheckSystemErrors("Init glew : ");
 				return false;
 			}
+
 			//glfwSwapInterval(1);
 			//glfwSetWindowSizeCallback(window, windowSizeCallback);
 			//glfwShowWindow(window);
@@ -210,19 +273,21 @@ namespace SpaRcle {
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			glEnable(GL_COLOR_SUM);
-			glEnable(GL_FOG); // Туман
+			//glEnable(GL_FOG); // Туман
 
 			///\%info ПРОВЕРЯЕМ ГЛУБИНУ, ЧТОБЫ ИЗБАВИТЬСЯ ОТ "ЭФФЕКТИА ПЕРЕКРЫТИЯ" ДАЛЬНИМИ ОБЪЕКТАМИ
 			glDepthFunc(GL_LEQUAL); // GL_GEQUAL - is not work
 			glDepthRange(0.0, 1.0);
 			glEnable(GL_DEPTH_TEST);
-			//glClearDepth(1.f);
+			///!glClearDepth(1.f);
 			glEnable(GL_CULL_FACE); // Отсечение граней
 
 			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Действительно хорошие вычисления перспективы
-			glShadeModel(GL_SMOOTH);    // Разрешить плавное затенение
+			//glShadeModel(GL_SMOOTH);    // Разрешить плавное затенение
 
-			font->Build(debug);
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+			//font->Build(debug);
 
 			return true;
 		}
@@ -232,10 +297,19 @@ namespace SpaRcle {
 
 			debug->Graph("Initializing glut...");
 
-			glfwSwapInterval(1);
-			glfwSetFramebufferSizeCallback(window, Resize);
-			glfwShowWindow(window);
+			/*
+			typedef BOOL(WINAPI* PFNWGLSWAPINTERVALEXTPROC)(int interval);
+			PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = NULL;
+			wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
+			if (wglSwapIntervalEXT)
+				wglSwapIntervalEXT(1);
+			*/
 
+			glfwSwapInterval(true); // v-sync
+			glfwSetFramebufferSizeCallback(window, Resize);
+			glfwSetWindowPosCallback(window, Position);
+			glfwShowWindow(window);
+				
 			glutInit(&argcp, argv); 
 			//glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 			//glutInitWindowSize((int)x_size, (int)y_size);
@@ -243,11 +317,33 @@ namespace SpaRcle {
 			//	screen_size->x / 2 - x_size / 2,
 			//	screen_size->y / 2 - y_size / 2);
 
-
+			if(false)
+				GraphUtils::CheckSystemErrors("Init glut : ");
 
 			isInitGlut = true;
-
 			return true;
+		}
+
+		void Window::Draw() {
+			///glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+			glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Без этого ничего не будет работать (очистка буфера)
+
+			//if (Input::FixedGetKeyDown(KeyCode::P))
+			//	camera->ResetCameraPos();
+
+			glPushMatrix(); // Сохранение матрици
+				render->DrawAllObjects();
+			glPopMatrix();
+			//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+
+			glFlush();
+
+			render->DrawAllUI();
+
+			camera->Move();
+
+			glfwSwapBuffers(window);
 		}
 		bool Window::InitWindow() {
 			debug->Graph("Initializing window...");
@@ -261,39 +357,27 @@ namespace SpaRcle {
 				return false;
 			}
 
-			isRun = true;
-			//glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
+			hWnd = GraphUtils::FindWindowFromName(name);
+			if (!hWnd) {
+				debug->Error("Failed find window : window hWnd is nullptr!");
+				return false;
+			}
+			hDC = GetDC(hWnd);
 
-			//glfwSetCharCallback(window, character_callback);
+			Resize(window, x_size, y_size);
+			Position(window, 
+				screen_size->x / 2 - x_size / 2,
+				screen_size->y / 2 - y_size / 2);
+
+			isRun = true;
 			while(isRun && !glfwWindowShouldClose(window)) {
 				this->PollEvents();
-				//std::cout << GraphUtils::GetFPS() << std::endl;
 
-				glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Без этого ничего не будет работать (очистка буфера)
-					
-				glPushMatrix(); // Сохранение матрици
-					//glBegin(GL_TRIANGLES);
-					//	glColor3f(0.0, 1.0, 0.0);
-					//	glVertex3f(0.0f, 1.0f, 0.0f);
-					//	glVertex3f(1.0f, -1.0f, 0.0f);
-					//	glVertex3f(-1.0f, -1.0f, 0.0f);
-					//glEnd();
-					render->DrawAllObjects();
+				this->fps->SetString("FPS : " + std::to_string(GraphUtils::GetFPS()));
 
-					glColor3f(1.0f, 255.0f, 1.0f);
-					glRasterPos2f(1, 1);
-					UI::glPrint("Active OpenGL Text With NeHe - %7.2f");
+				this->Draw();
 
-					//UI::RenderString3D("Example");
-				glPopMatrix();
-
-				glFlush();
-				
-
-				camera->Move();
-
-				glfwSwapBuffers(window);
+				//GraphUtils::CheckSystemErrors("Draw : ");
 			} 
 
 			debug->Info("Window has been completed work!");
@@ -305,8 +389,6 @@ namespace SpaRcle {
 
 			isRun = false;
 			if (task.joinable()) task.join();
-
-			delete font;
 
 			return true;
 		}

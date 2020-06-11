@@ -6,6 +6,9 @@ namespace SpaRcle {
 		struct Vector2 {
 			int x, y;
 		};
+		struct Vector2f {
+			float x, y;
+		};
 
 		struct Vector3 {
 			float x = 0.f, y = 0.f, z = 0.f;

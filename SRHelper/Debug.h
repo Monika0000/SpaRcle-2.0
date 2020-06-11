@@ -46,7 +46,14 @@ namespace SpaRcle {
 			inline void System(std::string msg, int deep_level = 0) { Print(msg, Type::_System, deep_level); }
 			inline void Network(std::string msg, int deep_level = 0) { Print(msg, Type::_Network, deep_level); }
 			inline void Graph(std::string msg, int deep_level = 0) { Print(msg, Type::_Graph, deep_level); }
-
+			
+			static inline void SysGraphError(std::string msg) { 
+				HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Red));
+				std::cout << "[SysGraphError] ";
+				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Black));
+				std::cout << msg + "\n";
+			}
 			static inline void InternalWarning(std::string msg) { 
 				HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Brown));
