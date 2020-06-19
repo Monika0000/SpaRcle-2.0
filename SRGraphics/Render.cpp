@@ -9,6 +9,7 @@ SpaRcle::Graphics::Render::Render(Debug* debug) {
 	this->_3d_objects = std::vector<Object3D*>();
 }
 
+static size_t t = 0;
 void SpaRcle::Graphics::Render::DrawAllObjects() {
 ret: if (clear) goto ret;
 	render = true;
@@ -17,19 +18,15 @@ ret: if (clear) goto ret;
 	else
 		glDisable(GL_FOG);
 
+	glBegin(GL_TRIANGLES);
 	for (Object3D* obj : this->_3d_objects) {
-	//size_t count = this->_3d_objects.size();
-	//for(size_t t = 0; t < count; t++) {
 		if ((unsigned long long)obj == 0xdddddddddddddddd) {
 			debug->Error("Render::DrawAllObjects() : object has adress 0xdddddddddddddddd!");
 			break;
 		}
-		//Object3D* obj = _3d_objects[t];
 
-		glBegin(GL_TRIANGLES);
-		//glColor3f(0.0, 1.0, 0.0);
-		Vector3* pos = obj->pos;
-		for (size_t t = 0; t < obj->_mesh->count; t++) {
+		/*Vector3* pos = obj->pos;
+		for (t = 0; t < obj->_mesh->count; t++) {
 			glColor3f(1.0, 0.0, 0.0);
 			glVertex3f(
 				obj->_mesh->tris[t].pos[0].x + pos->x,
@@ -49,8 +46,30 @@ ret: if (clear) goto ret;
 				obj->_mesh->tris[t].pos[2].z + pos->z
 			);
 		}
-		glEnd();
+		*/
+		for (t = 0; t < obj->_mesh->count; t++) {
+			glColor3f(1.0, 0.0, 0.0);
+			glVertex3f(
+				obj->_mesh->tris[t].pos[0].x,
+				obj->_mesh->tris[t].pos[0].y,
+				obj->_mesh->tris[t].pos[0].z
+			);
+			glColor3f(0.0, 1.0, 0.0);
+			glVertex3f(
+				obj->_mesh->tris[t].pos[1].x,
+				obj->_mesh->tris[t].pos[1].y,
+				obj->_mesh->tris[t].pos[1].z
+			);
+			glColor3f(0.0, 0.0, 1.0);
+			glVertex3f(
+				obj->_mesh->tris[t].pos[2].x,
+				obj->_mesh->tris[t].pos[2].y,
+				obj->_mesh->tris[t].pos[2].z
+			);
+		}
 	}
+	glEnd();
+
 	render = false;
 	/*
 	float size = 2.5f;
@@ -70,31 +89,15 @@ ret: if (clear) goto ret;
 }
 void SpaRcle::Graphics::Render::DrawAllUI() {
 	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-	gluLookAt( // visual bugs
+	gluLookAt(
 		0, 1, 3,
 		0, 1, 2,
 		0, 1, 0);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_FOG); // Туман
 	for (UI* ui : this->_ui_objects) {
-		glRasterPos3f(
-			ui->pos->x,
-			ui->pos->y,
-			*ui->size);
-
-		for (int i = 0; i < *ui->t_len; i++) {
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, (int)ui->text[i]);
-		}
+		ui->Draw();
 	}
-	/*
-	glRasterPos3f(
-		0.5,
-		1,
-		1);
-	std::string text = "Hello";
-	for (int i = 0; i < text.size(); i++) {
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, (int)text[i]);
-	}*/
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_FOG); // Туман
 }

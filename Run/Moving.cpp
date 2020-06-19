@@ -39,7 +39,7 @@ bool Moving::Update() {	// Running
 					MoveKernel* old_move = (MoveKernel*)bone->kernel;
 					//!--------------[ќбрабатываем значени€ со старой кости, замен€€ потом их на новые]--------------
 
-					new_move->boneRotation->x += 0.5f;
+					new_move->boneRotation->x += 0.555f;
 
 					tcp->Send(new_move);
 

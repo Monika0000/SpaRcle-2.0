@@ -51,6 +51,7 @@ namespace SpaRcle {
 					return nullptr;
 				}
 			}
+			/*
 			void SetCamera(Camera* camera) {
 				if (!isCreate)
 					this->camera = camera;
@@ -62,7 +63,7 @@ namespace SpaRcle {
 					this->render = render;
 				else
 					debug->Error("The render can only be set before creation!");
-			}
+			}*/
 			Camera* GetCamera() {
 				if (!camera) {
 					debug->Error("Camera is nullptr!");
@@ -95,7 +96,7 @@ namespace SpaRcle {
 			}
 			~SRGraphics() { if (!isClose) Close(); }
 
-			bool Create(Window* win);
+			bool Create(Window* win, Render* render, Camera* camera);
 			bool Init();
 			bool Run();
 

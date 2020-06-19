@@ -152,7 +152,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Font.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Object3D.h" />
     <ClInclude Include="Camera.h" />
@@ -161,6 +160,8 @@
     <ClInclude Include="Render.h" />
     <ClInclude Include="SRGraphics.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="UIString.h" />
+    <ClInclude Include="UIWindow.h" />
     <ClInclude Include="Vectors.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowEvents.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="SRGraphics.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="UIWindow.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -49,7 +49,27 @@ int main(int argcp, char** argv) {
 	//!-------------------------------------------------
 
 	SRGraphics* graph = new SRGraphics(argcp, argv, debug);
-	graph->Init();
+	if (!graph->Create(
+		new Window(
+			debug,
+			new Camera(debug),
+			"SpaRcle",
+			600, 500,
+			false),
+		new Render(debug),
+		new Camera(debug))
+	) {
+		debug->Error("Failed running application! Graph create return's false.");
+		return false;
+	}
+	if (!graph->Init()) {
+		debug->Error("Failed running application! Graph init return's false.");
+		return false;
+	}
+	if (!graph->Run()) {
+		debug->Error("Failed running application! Graph run return's false.");
+		return false;
+	}
 
 	//!-------------------------------------------------
 

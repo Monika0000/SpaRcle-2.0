@@ -55,6 +55,12 @@ namespace SpaRcle {
 		}
 		*/
 
+		/*
+		
+		второе / первое x 100
+		
+		*/
+
 		void Position(GLFWwindow* window, int x, int y) {
 			Window* win = Window::Get();
 			win->SetXPos(x);
@@ -62,8 +68,28 @@ namespace SpaRcle {
 			glfwSetWindowPos(window, x, y);
 		}
 		void Resize(GLFWwindow* window, int width, int height) {
+			Window* win = Window::Get();
+
+			int x_size = win->GetXSize();
+			int y_size = win->GetYSize();
+
+			glfwSetWindowSize(window, x_size, y_size);
+
+			float ratio = 1.0 * x_size / y_size;
+			glMatrixMode(GL_PROJECTION);// используем матрицу проекции
+			glLoadIdentity();// Reset матрицы
+			glViewport(0, 0, x_size, y_size);// определяем окно просмотра
+			gluPerspective(45, ratio, 0.1, 1000);// установить корректную перспективу.
+			glMatrixMode(GL_MODELVIEW);// вернуться к модели
+
+			/*
 			if (height == 0)
 				height = 1;
+
+			width = (height + 34) * (16.f / 9.f);
+			
+			glfwSetWindowSize(window, width, height);
+
 			float ratio = 1.0 * width / height;
 			glMatrixMode(GL_PROJECTION);// используем матрицу проекции
 			glLoadIdentity();// Reset матрицы
@@ -71,19 +97,37 @@ namespace SpaRcle {
 			gluPerspective(45, ratio, 0.1, 1000);// установить корректную перспективу.
 			glMatrixMode(GL_MODELVIEW);// вернуться к модели
 
+			std::cout << width << " " << height << std::endl;
+
 			Window* win = Window::Get();
 			win->SetXSize(width);
 			win->SetYSize(height);
-			
+			*/
 			win->Draw();
 		}
 
-		Window::Window(Debug* debug, Camera* camera, const char* name, unsigned short w, unsigned short h) {
+		Vector2d* Window::GetMousePosition() {
+			Vector2d* vec = new Vector2d{ 0, 0 };
+			if(window)
+				glfwGetCursorPos(window, &vec->x, &vec->y);
+			//vec->Normalize();
+			vec->x = vec->x / this->format->size_x;
+			vec->y = vec->y / this->format->size_y;
+			//if(vec->x < 0.5)
+			return vec;
+		}
+
+		Window::Window(Debug* debug, Camera* camera, const char* name, WindowFormat* window_format, bool isMouseLock, bool vsync) {
 			if (global) {
 				debug->Error("Window already create!");
+				EventsManager::PushEvent(EventsManager::Events::Error);
+				Sleep(1000);
 				return;
 			}
 			else {
+				this->isMouseLock = isMouseLock;
+				this->vsync = vsync;
+
 				this->screen_size = GraphUtils::GetDesktopResolution();
 				this->debug = debug;
 				this->global = this;
@@ -96,8 +140,10 @@ namespace SpaRcle {
 				//this->font = new Font();
 				this->cursor = GetCursor();
 
-				this->x_size = w;
-				this->y_size = h;
+				//this->x_size = screen_format.x;
+				//this->y_size = screen_format.y;
+
+				this->format = window_format;
 
 				this->name = name;
 				this->hWnd = NULL;
@@ -134,15 +180,24 @@ namespace SpaRcle {
 			}
 		}
 
-		bool Window::Create() {
+		bool Window::Create(int argcp, char** argv) {
 			debug->Info("Creating window...");
+
+			if (String::Contains(name, ' ')) {
+				debug->Error("Window name contains empty symbol (space)! \n\t\tWindow name : \"" + std::string(name) + "\"");
+				return false;
+			}
+
+			this->argcp = argcp;
+			this->argv  = argv;
+
 			font = CreateFont(
 				18, 0, 0, 0, 300,
 				false, false, false,
 				DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH,
 				L"Arial");
 
-			fps = new UI("FPS : " + std::to_string(GraphUtils::GetFPS()), 0.5f, 0.25f);
+			fps = new UIString("FPS : " + std::to_string(GraphUtils::GetFPS()), 0.5f, 0.25f, new color { 0.f, 1.f, 0.1f, 0.7f });
 			render->AddUI(fps);
 
 			return true;
@@ -187,7 +242,7 @@ namespace SpaRcle {
 				//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //нам не нужен старый OpenGL
 				// Откроем окно и создадим контекст
 
-				window = glfwCreateWindow(x_size, y_size, name, nullptr, nullptr);
+				window = glfwCreateWindow(format->size_x, format->size_y, name, nullptr, nullptr);
 				if (!window) {
 					fprintf(stderr, "Failed to open GLFW window\n");
 					glfwTerminate();
@@ -196,8 +251,8 @@ namespace SpaRcle {
 				glfwMakeContextCurrent(window);
 
 				glfwSetWindowPos(window, 
-					screen_size->x / 2 - x_size / 2, 
-					screen_size->y / 2 - y_size / 2);
+					screen_size->x / 2 - format->size_x / 2,
+					screen_size->y / 2 - format->size_y / 2);
 				GraphUtils::CheckSystemErrors("Init glfw : ");
 
 				return true;
@@ -285,7 +340,8 @@ namespace SpaRcle {
 			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Действительно хорошие вычисления перспективы
 			//glShadeModel(GL_SMOOTH);    // Разрешить плавное затенение
 
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+			if(isMouseLock)
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
 			//font->Build(debug);
 
@@ -305,7 +361,7 @@ namespace SpaRcle {
 				wglSwapIntervalEXT(1);
 			*/
 
-			glfwSwapInterval(true); // v-sync
+			glfwSwapInterval(vsync); // v-sync
 			glfwSetFramebufferSizeCallback(window, Resize);
 			glfwSetWindowPosCallback(window, Position);
 			glfwShowWindow(window);
@@ -358,16 +414,18 @@ namespace SpaRcle {
 			}
 
 			hWnd = GraphUtils::FindWindowFromName(name);
+			//hWnd = FindWindow(NULL, String::CharsToWchars(name));
 			if (!hWnd) {
-				debug->Error("Failed find window : window hWnd is nullptr!");
+				debug->Error("Failed find window : window hWnd is nullptr! Win name : "+std::string(name));
+				Sleep(5000);
 				return false;
 			}
 			hDC = GetDC(hWnd);
 
-			Resize(window, x_size, y_size);
+			Resize(window, format->size_x, format->size_y);
 			Position(window, 
-				screen_size->x / 2 - x_size / 2,
-				screen_size->y / 2 - y_size / 2);
+				screen_size->x / 2 - format->size_x / 2,
+				screen_size->y / 2 - format->size_y / 2);
 
 			isRun = true;
 			while(isRun && !glfwWindowShouldClose(window)) {

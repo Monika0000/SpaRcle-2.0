@@ -3,7 +3,8 @@
 #include <string>
 #include <SRHelper.h>
 #include "Object3D.h"
-#include "UI.h"
+#include "UIString.h"
+#include "UIWindow.h"
 
 namespace SpaRcle {
 	namespace Graphics {

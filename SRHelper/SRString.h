@@ -125,6 +125,14 @@ namespace SpaRcle {
 				return result;
 			}
 
+			static bool Contains(const char* str, char symb) {
+				for (size_t t = 0; t < strlen(str); t++)
+					if (str[t] == symb) {
+						return true;
+					}
+				return false;
+			}
+
 			static const wchar_t* CharsToWchars(const char* str) {
 				std::wostringstream wstm;
 				const  std::ctype<wchar_t>& ctfacet = std::use_facet<std::ctype<wchar_t>>(wstm.getloc());

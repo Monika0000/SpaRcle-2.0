@@ -20,9 +20,17 @@
 #include <SRHelper.h>
 #include <GraphUtils.h>
 #include "Render.h"
+#include "ScreenFormats.h"
 
 namespace SpaRcle {
 	namespace Graphics {
+
+		//class ScreenFormat {
+		//public:
+		//	const static Vector2d Minimize;
+		//};
+		//const Vector2d ScreenFormat::Minimize = { 1127, 600 };
+
 
 		class Camera;
 		using namespace SpaRcle::Helper;
@@ -31,9 +39,8 @@ namespace SpaRcle {
 		private:
 			bool isRun = false;
 			bool isMouseLock = true;
+			bool vsync = true;
 		private:
-			unsigned short x_size;
-			unsigned short y_size;
 
 			int x_pos; 
 			int y_pos;
@@ -49,11 +56,16 @@ namespace SpaRcle {
 			char** argv;
 			int argcp;
 		public:
+			WindowFormat* format;
+		public:
+			int GetXSize() { return format->size_x; }
+			int GetYSize() { return format->size_y; }
 			void SetXPos(int x_pos) { this->x_pos = x_pos; }
 			void SetYPos(int y_pos) { this->y_pos = y_pos; }
-			void SetXSize(int x_size) { this->x_size = x_size; }
-			void SetYSize(int y_size) { this->y_size = y_size; }
+			//void SetXSize(int x_size) { this->x_size = x_size; }
+			//void SetYSize(int y_size) { this->y_size = y_size; }
 		public:
+			Vector2d* GetMousePosition();
 			void MouseLock(bool val) { 
 				if(val)
 					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -71,7 +83,12 @@ namespace SpaRcle {
 					return nullptr;
 				}
 			}
-			Window(Debug* debug, Camera* camera = NULL, const char*name = "SpaRcle Engine", unsigned short w = 400, unsigned short h = 300);
+			Window(
+				Debug* debug, Camera* camera = NULL, 
+				const char*name = "SpaRcle Engine", 
+				WindowFormat* window_format = new WindowMinimize(),
+				bool isMouseLock = true, bool vsync = true
+			);
 			~Window() { Close(); }
 		private:
 			bool isInitGlut;
@@ -99,7 +116,7 @@ namespace SpaRcle {
 		private:
 			static Window* global;
 			Debug* debug;
-			Vector2* screen_size;
+			Vector2i* screen_size;
 			std::thread task;
 
 			HWND hWnd;
@@ -107,7 +124,7 @@ namespace SpaRcle {
 			//int handle;
 		private:
 			//!======== UI ======== 
-			UI* fps;
+			UIString* fps;
 			//!======== UI ======== 
 		public:
 			void Draw();
@@ -119,7 +136,7 @@ namespace SpaRcle {
 				}
 			}
 			bool Close();
-			bool Create();
+			bool Create(int argcp, char** argv);
 			bool Init();
 			/*
 			void Resize(GLsizei width, GLsizei height) {

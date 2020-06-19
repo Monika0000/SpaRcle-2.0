@@ -3,11 +3,21 @@
 
 namespace SpaRcle {
 	namespace Helper {
-		struct Vector2 {
+		struct Vector2i {
 			int x, y;
 		};
 		struct Vector2f {
 			float x, y;
+		};
+		struct Vector2d {
+			double x, y;
+			void Normalize() {
+				float length = std::sqrt(x * x + y *y);
+
+				// normalize vector
+				x /= length;
+				y /= length;
+			}
 		};
 
 		struct Vector3 {

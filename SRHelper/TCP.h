@@ -87,7 +87,7 @@ namespace SpaRcle {
 				if (!isRecv) {
 					isSend = true;
 
-					std::string msg = data->GetSendData();
+					std::string msg = data->GetSendData() + "|";
 
 					debug->Network("Send : " + msg);
 
@@ -115,7 +115,7 @@ namespace SpaRcle {
 				if (!isRecv) {
 					isSend = true;
 
-					if (send(server_sock, data, strlen(data), 0) == SOCKET_ERROR) {
+					if (send(server_sock, (std::string(data) + "|").c_str(), strlen(data) + 1, 0) == SOCKET_ERROR) {
 						debug->Error("Failed send message to [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(server_sock) + "]");
 					}
 

@@ -41,9 +41,6 @@
     <ClInclude Include="Render.h">
       <Filter>RenderSystem</Filter>
     </ClInclude>
-    <ClInclude Include="UI.h">
-      <Filter>UIElements</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>RenderSystem</Filter>
     </ClInclude>
@@ -59,7 +56,13 @@
     <ClInclude Include="Vectors.h">
       <Filter>Object3D</Filter>
     </ClInclude>
-    <ClInclude Include="Font.h">
+    <ClInclude Include="UIString.h">
+      <Filter>UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="UIWindow.h">
       <Filter>UIElements</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,6 +83,9 @@
       <Filter>RenderSystem</Filter>
     </ClCompile>
     <ClCompile Include="UI.cpp">
+      <Filter>UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="UIWindow.cpp">
       <Filter>UIElements</Filter>
     </ClCompile>
   </ItemGroup>

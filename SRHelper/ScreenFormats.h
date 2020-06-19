@@ -4,22 +4,46 @@
 namespace SpaRcle {
 	using namespace Helper;
 
-	namespace Graphisc {
-		enum ScreenFormat {
-			Unknown, _16x9
-		};
+	namespace Graphics {
+		//enum ScreenFormat {
+		//	Unknown, _16x9
+		//};
 
-		class Screen {
-		private:
-			Screen() {};
-			~Screen() {};
+		class WindowFormat {
 		public:
-			static ScreenFormat GetScreenFormat(Vector2* screen_size) {
-				if (screen_size->x == 1600 && screen_size->y == 900) {
-					return _16x9;
-				}
-				else return ScreenFormat::Unknown;
+			unsigned short size_x;
+			unsigned short size_y;
+
+			float x_side_magic_number;
+			float y_side_magic_number;
+
+			float x_mouse_magic_number;
+			float y_mouse_magic_number;
+
+			WindowFormat(unsigned short size_x, unsigned short size_y, 
+				float x_side_magic_number, float y_side_magic_number,
+				float x_mouse_magic_number, float y_mouse_magic_number
+			) {
+				this->size_x = size_x;
+				this->size_y = size_y;
+
+				this->x_side_magic_number = x_side_magic_number;
+				this->y_side_magic_number = y_side_magic_number;
+
+				this->x_mouse_magic_number = x_mouse_magic_number;
+				this->y_mouse_magic_number = y_mouse_magic_number;
 			}
 		};
+
+		class WindowMinimize : public WindowFormat {
+		public:
+			WindowMinimize() : WindowFormat(1127, 600, 
+				2.34, 1.21f,
+				0.214f, 0.4f
+			) {
+
+			}
+		};
+
 	}
 }

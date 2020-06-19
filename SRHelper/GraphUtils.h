@@ -8,8 +8,8 @@ namespace SpaRcle {
 	namespace Graphics {
         class GraphUtils {
         public:
-            static Vector2* GetDesktopResolution() {
-                Vector2* size = new Vector2();
+            static Vector2i* GetDesktopResolution() {
+                Vector2i* size = new Vector2i();
 
                 RECT desktop;
                 // Get a handle to the desktop window
@@ -24,8 +24,8 @@ namespace SpaRcle {
 
                 return size;
             }
-            static Vector2* GetWindowSize(HWND hwnd) {
-                Vector2* size = new Vector2();
+            static Vector2i* GetWindowSize(HWND hwnd) {
+                Vector2i* size = new Vector2i();
                 RECT rect;
                 if (GetWindowRect(hwnd, &rect)) {
                     size->x = rect.right - rect.left;
@@ -33,8 +33,8 @@ namespace SpaRcle {
                 }
                 return size;
             }
-            static Vector2* GetWindowPos(HWND hwnd) {
-                Vector2* pos = new Vector2();
+            static Vector2i* GetWindowPos(HWND hwnd) {
+                Vector2i* pos = new Vector2i();
                 RECT rect = { NULL };
                 if (GetWindowRect(hwnd, &rect)) {
                     pos->x = rect.left;

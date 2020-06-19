@@ -83,5 +83,8 @@
     <ClCompile Include="TCP.cpp">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="ScreenFormats.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
