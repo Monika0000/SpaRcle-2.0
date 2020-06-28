@@ -31,20 +31,22 @@ namespace SpaRcle {
 			float prevX;
 			float prevY;
 		private:
+			void FixedMove();
+		private:
 			bool isCreate;
 			bool isRun;
 			bool* isMouseLock;
 		private:
-			unsigned short* x_size;
-			unsigned short* y_size;
+			WindowFormat* format;
 			int* x_pos; int* y_pos;
 		private:
 			Debug* debug;
-			//std::thread task;
+			std::thread move_thread;
 		public:
 			Camera(Debug*debug) {
-				x_size = NULL;
-				y_size = NULL;
+				//x_size = NULL;
+				//y_size = NULL;
+				this->format = NULL;
 				x_pos = NULL;
 				y_pos = NULL;
 				this->debug = debug;
@@ -54,7 +56,8 @@ namespace SpaRcle {
 			~Camera() { Close(); };
 		public:
 			bool Create(
-				unsigned short& x_size, unsigned short& y_size,
+				WindowFormat* format,
+				//unsigned short& x_size, unsigned short& y_size,
 				int& x_pos, int& y_pos
 			);
 			bool Init(bool& isMouseLock);

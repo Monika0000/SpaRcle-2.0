@@ -12,6 +12,8 @@
 #include <cstdio>
 #include "GraphUtils.h"
 
+#include "File.h"
+
 #include "SRString.h"
 
 #define WIN32_LEAN_AND_MEAN             // Исключите редко используемые компоненты из заголовков Windows

@@ -13,26 +13,41 @@ namespace SpaRcle {
 			unsigned short i;
 			color* _color;
 		public:
+			void SetPosition(const float x, const float y) {
+				this->x_pos = x;
+				this->y_pos = y;
+			}
 			void SetString(std::string str) {
 				if (text) delete[] this->text;
 				this->text = String::CopyStringToCharPointer(str.c_str());
 				*t_len = strlen(text);
 			}
 			void Draw() override {
+
+				glPushMatrix();
 				glColor4f(
 					_color->r,
 					_color->g,
 					_color->b,
 					_color->a);
 
-				glRasterPos3f(
-					pos->x,
-					pos->y,
-					size->x);
-
-				for (i = 0; i < *t_len; i++) {
-					glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, (int)text[i]);
+				glTranslatef(this->x_pos, y_pos, 0);
+				glScalef(x_size / 1000.f, y_size / 1000.f, x_size / 1000.f);
+				for (char* p = text; *p; p++) {
+					glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, *p);
 				}
+				glPopMatrix();
+
+				//glRasterPos3f(
+				//	x_pos,
+				//	y_pos,
+				//	x_size);
+
+				//for (i = 0; i < *t_len; i++) {
+					//GLUT_BITMAP_8_BY_13
+					//GLUT_BITMAP_TIMES_ROMAN_24
+					//glutBitmapCharacter(GLUT_BITMAP_8_BY_13, (int)text[i]);
+				//}
 			}
 		public:
 			UIString(

@@ -9,7 +9,7 @@
 
 namespace SpaRcle {
 	namespace Helper {
-		enum ConsoleColor{
+		enum class ConsoleColor{
 			Black = 0,
 			Blue = 1,
 			Green = 2,
@@ -49,30 +49,30 @@ namespace SpaRcle {
 			
 			static inline void SysGraphError(std::string msg) { 
 				HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Red));
+				SetConsoleTextAttribute(console, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)ConsoleColor::Red));
 				std::cout << "[SysGraphError] ";
-				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Black));
+				SetConsoleTextAttribute(console, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)ConsoleColor::Black));
 				std::cout << msg + "\n";
 			}
 			static inline void InternalWarning(std::string msg) { 
 				HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Brown));
+				SetConsoleTextAttribute(console, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)ConsoleColor::Brown));
 				std::cout << "[Internal warning] ";
-				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Black));
+				SetConsoleTextAttribute(console, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)ConsoleColor::Black));
 				std::cout << msg + "\n"; 
 			}
 			static inline void InternalError(std::string msg) {
 				HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Red));
+				SetConsoleTextAttribute(console, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)ConsoleColor::Red));
 				std::cout << "[Internal error] ";
-				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Black));
+				SetConsoleTextAttribute(console, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)ConsoleColor::Black));
 				std::cout << msg + "\n";
 			}
 			static inline void Library(std::string msg) {
 				HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Green));
+				SetConsoleTextAttribute(console, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)ConsoleColor::Green));
 				std::cout << "[Library] ";
-				SetConsoleTextAttribute(console, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Black));
+				SetConsoleTextAttribute(console, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)ConsoleColor::Black));
 				std::cout << msg + "\n";
 			}
 

@@ -6,6 +6,7 @@
 SpaRcle::Graphics::Render::Render(Debug* debug) {
 	this->fog = true;
 	this->debug = debug;
+	this->texManager = NULL;
 	this->_3d_objects = std::vector<Object3D*>();
 }
 
@@ -47,6 +48,7 @@ ret: if (clear) goto ret;
 			);
 		}
 		*/
+
 		for (t = 0; t < obj->_mesh->count; t++) {
 			glColor3f(1.0, 0.0, 0.0);
 			glVertex3f(

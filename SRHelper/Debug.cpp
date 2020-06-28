@@ -58,9 +58,9 @@ void SpaRcle::Helper::Debug::Print(std::string& msg, Type type, int deep_level) 
 
             if(show_use_memory)
                 std::cout << "<" << ((float)Utils::GetCurrentMemoryLoad()) / 1024.f << " KB> ";
-            SetConsoleTextAttribute(hConsole, (WORD)((ConsoleColor::LightGray << 4) | color));
+            SetConsoleTextAttribute(hConsole, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)color));
             std::cout << prefix;
-            SetConsoleTextAttribute(hConsole, (WORD)((ConsoleColor::LightGray << 4) | ConsoleColor::Black));
+            SetConsoleTextAttribute(hConsole, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)ConsoleColor::Black));
 
             log_file << msg + "\n";
             log_file.flush();

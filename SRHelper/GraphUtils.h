@@ -69,7 +69,8 @@ namespace SpaRcle {
             static HWND FindWindowFromName(const char* name) {
                 //return FindWindow(NULL, L"SpaRcle");
                // LPCWSTR str = String::CharsToLPWSTR(name);
-                return FindWindow(NULL, String::CharsToWchars(name));
+                //return FindWindow(NULL, String::CharsToWchars(name));
+                return FindWindowW(NULL, String::CharsToLPWSTR(name));
             }
             static void CheckSystemErrors(const char* from = "") {
                 DWORD err = GetLastError();

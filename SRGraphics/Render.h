@@ -5,6 +5,7 @@
 #include "Object3D.h"
 #include "UIString.h"
 #include "UIWindow.h"
+#include "Texture.h"
 
 namespace SpaRcle {
 	namespace Graphics {
@@ -13,6 +14,9 @@ namespace SpaRcle {
 			Render(Debug* debug);
 			~Render() { Close(); }
 		public:
+			void Create() {
+				this->texManager = new TextureManager(debug);
+			}
 			void Close() {
 				Clear();
 				for (UI* ui : this->_ui_objects)
@@ -44,6 +48,7 @@ namespace SpaRcle {
 			}
 			void SetFog(bool val) { this->fog = val; }
 			bool GetFog() { return this->fog; }
+
 			void Clear() {
 			ret: if (render) goto ret;
 				clear = true;
@@ -56,6 +61,7 @@ namespace SpaRcle {
 			bool fog;
 		private:
 			Debug* debug;
+			TextureManager* texManager;
 		private:
 			std::vector<Object3D*> _3d_objects;
 			std::vector<UI*> _ui_objects;

@@ -65,6 +65,9 @@
     <ClInclude Include="UIWindow.h">
       <Filter>UIElements</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Object3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SRGraphics.cpp">
@@ -87,6 +90,9 @@
     </ClCompile>
     <ClCompile Include="UIWindow.cpp">
       <Filter>UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Object3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

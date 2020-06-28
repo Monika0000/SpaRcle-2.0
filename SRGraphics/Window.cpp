@@ -138,7 +138,7 @@ namespace SpaRcle {
 				this->y_pos = screen_size->y / 2;
 
 				//this->font = new Font();
-				this->cursor = GetCursor();
+				//this->cursor = GetCursor();
 
 				//this->x_size = screen_format.x;
 				//this->y_size = screen_format.y;
@@ -191,11 +191,11 @@ namespace SpaRcle {
 			this->argcp = argcp;
 			this->argv  = argv;
 
-			font = CreateFont(
-				18, 0, 0, 0, 300,
-				false, false, false,
-				DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH,
-				L"Arial");
+			//font = CreateFont(
+			//	18, 0, 0, 0, 300,
+			//	false, false, false,
+			//	DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH,
+			//	L"Arial");
 
 			fps = new UIString("FPS : " + std::to_string(GraphUtils::GetFPS()), 0.5f, 0.25f, new color { 0.f, 1.f, 0.1f, 0.7f });
 			render->AddUI(fps);

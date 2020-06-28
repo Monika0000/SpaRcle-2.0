@@ -11,27 +11,24 @@ namespace SpaRcle {
 
 		class WindowFormat {
 		public:
-			unsigned short size_x;
-			unsigned short size_y;
+			const unsigned short size_x;
+			const unsigned short size_y;
 
-			float x_side_magic_number;
-			float y_side_magic_number;
+			const float x_side_magic_number;
+			const float y_side_magic_number;
 
-			float x_mouse_magic_number;
-			float y_mouse_magic_number;
+			const float x_mouse_magic_number;
+			const float y_mouse_magic_number;
 
 			WindowFormat(unsigned short size_x, unsigned short size_y, 
 				float x_side_magic_number, float y_side_magic_number,
 				float x_mouse_magic_number, float y_mouse_magic_number
-			) {
-				this->size_x = size_x;
-				this->size_y = size_y;
+			) 
+				: size_x(size_x), size_y(size_y),
+				x_side_magic_number(x_side_magic_number), y_side_magic_number(y_side_magic_number),
+				x_mouse_magic_number(x_mouse_magic_number), y_mouse_magic_number(y_mouse_magic_number)
+			{
 
-				this->x_side_magic_number = x_side_magic_number;
-				this->y_side_magic_number = y_side_magic_number;
-
-				this->x_mouse_magic_number = x_mouse_magic_number;
-				this->y_mouse_magic_number = y_mouse_magic_number;
 			}
 		};
 

@@ -18,8 +18,16 @@ namespace SpaRcle {
 	namespace Graphics {
 		class UI {
 		protected:
-			Vector2f* pos;
-			Vector2f* size;
+			float x_mouse;
+			float y_mouse;
+
+			float x_pos;
+			float y_pos;
+
+			float x_size;
+			float y_size;
+			//Vector2f* pos;
+			//Vector2f* size;
 		public:
 			virtual void Draw() = 0;
 		public:
@@ -27,13 +35,21 @@ namespace SpaRcle {
 				float x_pos, float y_pos,
 				float x_size, float y_size) 
 			{
-				pos  = new Vector2f { x_pos, y_pos };
-				size = new Vector2f{ x_size, y_size };
+				this->x_pos = x_pos;
+				this->y_pos = y_pos;
+
+				this->x_size = x_size;
+				this->y_size = y_size;
+
+				this->x_mouse = 0.f;
+				this->y_mouse = 0.f;
+				//pos  = new Vector2f { x_pos, y_pos };
+				//size = new Vector2f{ x_size, y_size };
 			}
 
 			~UI() {
-				delete pos;
-				delete size;
+				//delete pos;
+				//delete size;
 			}
 		};
 	}

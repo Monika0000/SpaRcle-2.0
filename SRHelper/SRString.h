@@ -60,6 +60,11 @@ namespace SpaRcle {
 
 				return nstr;
 			}
+			static std::string ReadWords(const std::string& str, size_t count) {
+				std::string result = str;
+				result.resize(count);
+				return result;
+			}
 			static std::vector<std::string> Split(std::string text, std::string chr) {
 				std::vector<std::string> arr;
 				std::size_t prev = 0;
@@ -124,6 +129,50 @@ namespace SpaRcle {
 
 				return result;
 			}
+			static bool Substring(std::string& str, const char c) {
+				for (size_t t = 0; t < str.size(); t++)
+					if (str[t] == c)
+					{
+						str.erase(0, t + 1);
+						return true;
+					}
+				return false;
+			}
+			static bool Substring(std::string& str, const char c, const char c2) {
+				for (size_t t = 0; t < str.size(); t++)
+					if (str[t] == c || str[t] == c2) {
+						str.erase(0, t + 1);
+						return true;
+					}
+				return false;
+			}
+
+			inline static char* FastSubstring(const char* str, const char c, const char c2) {
+				size_t len = strlen(str);
+
+				for (size_t fast_sub_t = 0; fast_sub_t < len; fast_sub_t++)
+					if (str[fast_sub_t] == c || str[fast_sub_t] == c2) {
+						char* to = (char*)malloc(len - (fast_sub_t + 1) + 1);
+						strncpy(to, str + (fast_sub_t + 1), len - (fast_sub_t + 1));
+						to[len - (fast_sub_t + 1)] = '\0';
+						return to;
+					}
+				return nullptr;
+				/*
+				static size_t fast_sub_t = 0;
+				static size_t len = strlen(str);
+
+				for (fast_sub_t = 0; fast_sub_t < len; fast_sub_t++)
+					if (str[fast_sub_t] == c || str[fast_sub_t] == c2) {
+						char* buffer = (char*)malloc(fast_sub_t - 0 + 1);
+						strncpy(buffer, str + 0, fast_sub_t - 0);
+						buffer[fast_sub_t - 0] = '\0';
+
+						return buffer;
+					}
+				return nullptr;
+					*/
+			}
 
 			static bool Contains(const char* str, char symb) {
 				for (size_t t = 0; t < strlen(str); t++)
@@ -133,20 +182,49 @@ namespace SpaRcle {
 				return false;
 			}
 
+			inline static bool isCon(std::string str) {
+				for (auto& a : str)
+					a = tolower(a);
+				return (str == "con");
+			}
+
+			//!===================================================================
 			static const wchar_t* CharsToWchars(const char* str) {
+				Debug::InternalWarning("String::CharsToWchars() : It can work wrong! Use : CharsToLPWSTR()");
+
 				std::wostringstream wstm;
 				const  std::ctype<wchar_t>& ctfacet = std::use_facet<std::ctype<wchar_t>>(wstm.getloc());
 				for (size_t i = 0; i < strlen(str); ++i)
 					wstm << ctfacet.widen(str[i]);
 				return wstm.str().c_str();
 			}
-			static LPCWSTR CharsToLPWSTR(const char* str) {
+			
+			//static LPCWSTR CharsToLPCWSTR(const char* str) { }
+			static LPWSTR CharsToLPWSTR(const char* str) {
 				size_t size = strlen(str);
 				wchar_t* wArr = new wchar_t[size];
-				for (size_t i = 0; i < size; ++i)
-					wArr[i] = str[i];
+				mbstowcs(wArr, str, size + 1);//Plus null
 				return wArr;
 			}
+			static std::string LPWSTRToChars(const wchar_t* str) {
+				size_t size = wcslen(str);
+				std::cout << size << std::endl;
+
+				std::string chs = std::string(size, ' ');
+				for (size_t i = 0; i < size; ++i)
+					chs[i] = str[i];
+				return chs;
+			}
+
+			static std::string LPCWSTRToChars(LPCWSTR str) {
+				size_t size = wcslen(str);
+				std::string chs = std::string(size, ' ');
+				for (size_t i = 0; i < size; ++i)
+					chs[i] = str[i];
+				return chs;
+			}
+			//!===================================================================
+
 			static char* CopyChars(char* str) {
 				char* rs = new char[strlen(str) + 1];
 				strcpy(rs, str);

@@ -24,24 +24,16 @@
 
 namespace SpaRcle {
 	namespace Graphics {
-
-		//class ScreenFormat {
-		//public:
-		//	const static Vector2d Minimize;
-		//};
-		//const Vector2d ScreenFormat::Minimize = { 1127, 600 };
-
-
 		class Camera;
 		using namespace SpaRcle::Helper;
 		class Window {
 			friend class SRGraphics;
+			friend class UI;
 		private:
 			bool isRun = false;
 			bool isMouseLock = true;
 			bool vsync = true;
 		private:
-
 			int x_pos; 
 			int y_pos;
 
@@ -50,30 +42,30 @@ namespace SpaRcle {
 			Camera* camera;
 			Render* render;
 			//Font* font;
-			HFONT font;
-			HCURSOR cursor;
+			//HFONT font;
+			//HCURSOR cursor;
 		private:
 			char** argv;
 			int argcp;
 		public:
 			WindowFormat* format;
 		public:
-			int GetXSize() { return format->size_x; }
-			int GetYSize() { return format->size_y; }
-			void SetXPos(int x_pos) { this->x_pos = x_pos; }
-			void SetYPos(int y_pos) { this->y_pos = y_pos; }
+			const int GetXSize() const { return format->size_x; }
+			const int GetYSize() const { return format->size_y; }
+			const void SetXPos(const int x_pos) { this->x_pos = x_pos; }
+			const void SetYPos(const int y_pos) { this->y_pos = y_pos; }
 			//void SetXSize(int x_size) { this->x_size = x_size; }
 			//void SetYSize(int y_size) { this->y_size = y_size; }
 		public:
 			Vector2d* GetMousePosition();
-			void MouseLock(bool val) { 
+			void MouseLock(const bool val) {
 				if(val)
 					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 				else
 					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 				isMouseLock = val; 
 			};
-			bool MouseLock() { return isMouseLock; };
+			const bool MouseLock() const { return isMouseLock; };
 			void SetCamera(Camera* camera) { this->camera = camera; };
 			void SetRender(Render* render) { this->render = render; };
 			HWND GetHWND() {
