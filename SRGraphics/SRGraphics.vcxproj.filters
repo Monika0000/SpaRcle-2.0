@@ -47,9 +47,6 @@
     <ClInclude Include="WindowEvents.h">
       <Filter>Window</Filter>
     </ClInclude>
-    <ClInclude Include="Object3D.h">
-      <Filter>Object3D</Filter>
-    </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Object3D</Filter>
     </ClInclude>
@@ -66,6 +63,9 @@
       <Filter>UIElements</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
+      <Filter>Object3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
       <Filter>Object3D</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,6 +92,9 @@
       <Filter>UIElements</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
+      <Filter>Object3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
       <Filter>Object3D</Filter>
     </ClCompile>
   </ItemGroup>

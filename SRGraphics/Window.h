@@ -7,7 +7,7 @@
 //#pragma comment(lib, "glfw.lib")
 #pragma comment(lib, "glfw3.lib")
 //#pragma comment(lib, "glew32.lib")
-#pragma comment(lib, "glew64.lib")
+#pragma comment(lib, "glew32s.lib")
 //#pragma comment(lib, "glut32.lib")
 #pragma comment(lib, "SOIL.lib")
 
@@ -30,6 +30,7 @@ namespace SpaRcle {
 			friend class SRGraphics;
 			friend class UI;
 		private:
+			bool isInitWindow = false;
 			bool isRun = false;
 			bool isMouseLock = true;
 			bool vsync = true;

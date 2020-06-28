@@ -181,7 +181,7 @@ namespace SpaRcle {
 		}
 
 		bool Window::Create(int argcp, char** argv) {
-			debug->Info("Creating window...");
+			debug->Graph("Creating window...");
 
 			if (String::Contains(name, ' ')) {
 				debug->Error("Window name contains empty symbol (space)! \n\t\tWindow name : \"" + std::string(name) + "\"");
@@ -190,12 +190,6 @@ namespace SpaRcle {
 
 			this->argcp = argcp;
 			this->argv  = argv;
-
-			//font = CreateFont(
-			//	18, 0, 0, 0, 300,
-			//	false, false, false,
-			//	DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH,
-			//	L"Arial");
 
 			fps = new UIString("FPS : " + std::to_string(GraphUtils::GetFPS()), 0.5f, 0.25f, new color { 0.f, 1.f, 0.1f, 0.7f });
 			render->AddUI(fps);
@@ -228,6 +222,9 @@ namespace SpaRcle {
 					return false;
 				}
 			});
+
+			while (!this->isInitWindow) { /* wait oppened winodw...*/ }
+
 			return true;
 		}
 
@@ -313,10 +310,6 @@ namespace SpaRcle {
 				GraphUtils::CheckSystemErrors("Init glew : ");
 				return false;
 			}
-
-			//glfwSwapInterval(1);
-			//glfwSetWindowSizeCallback(window, windowSizeCallback);
-			//glfwShowWindow(window);
 
 			isInitGlew = true;
 
@@ -427,6 +420,12 @@ namespace SpaRcle {
 				screen_size->x / 2 - format->size_x / 2,
 				screen_size->y / 2 - format->size_y / 2);
 
+			if (!render->Init()) {
+				debug->Error("Failed initializing of render!");
+				return false;
+			}
+
+			isInitWindow = true;
 			isRun = true;
 			while(isRun && !glfwWindowShouldClose(window)) {
 				this->PollEvents();
@@ -438,7 +437,7 @@ namespace SpaRcle {
 				//GraphUtils::CheckSystemErrors("Draw : ");
 			} 
 
-			debug->Info("Window has been completed work!");
+			debug->Info("Window has been completed work! isRun = " + std::to_string(isRun));
 
 			return true;
 		}

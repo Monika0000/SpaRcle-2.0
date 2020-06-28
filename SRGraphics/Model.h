@@ -3,6 +3,7 @@
 
 namespace SpaRcle {
 	namespace Graphics {
+		/*
 		struct Object3D {
 		public:
 			Object3D() {
@@ -14,7 +15,7 @@ namespace SpaRcle {
 				if (_mesh) delete _mesh;
 				delete pos;
 			};
-			mesh* _mesh;
+			Mesh* _mesh;
 			void SetPosition(float x, float y, float z) {
 				pos->x = x;
 				pos->y = y;
@@ -58,7 +59,7 @@ namespace SpaRcle {
 				//pos->y = y;
 				//pos->z = z;
 
-				_mesh = new mesh();
+				_mesh = new Mesh();
 				_mesh->count = 12;
 
 				//triangle t = { 0.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,    1.0f, 1.0f, 0.0f };
@@ -92,5 +93,6 @@ namespace SpaRcle {
 				SetPosition(x, y, z);
 			};
 		};
+		*/
 	}
 }

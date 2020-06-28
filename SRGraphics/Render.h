@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include <SRHelper.h>
-#include "Object3D.h"
+#include "Model.h"
 #include "UIString.h"
 #include "UIWindow.h"
 #include "Texture.h"
@@ -12,17 +12,22 @@ namespace SpaRcle {
 		class Render {
 		public:
 			Render(Debug* debug);
-			~Render() { Close(); }
+			~Render() { }
+		private:
+			bool isCreate = false;
+			bool isInit = false;
+			bool isRun = false;
+			bool useOldSlowRender = false;
 		public:
-			void Create() {
-				this->texManager = new TextureManager(debug);
-			}
-			void Close() {
-				Clear();
-				for (UI* ui : this->_ui_objects)
-					if (ui) delete ui;
-				_ui_objects.clear();
-			}
+			bool Create();
+			bool Init();
+			bool Run();
+			void Close();
+		private: //! ====== [Meshes sector] ======
+			//?=====================================
+			std::vector<Mesh*> meshes;
+			size_t count_meshes;
+			//?=====================================
 		private:
 			bool clear;
 			bool render;
@@ -32,7 +37,7 @@ namespace SpaRcle {
 			void DrawAllObjects();
 			void DrawAllUI();
 
-			void AddObject3D(Object3D* obj);
+			void AddModel(Mesh* model);
 			void AddUI(UI* ui);
 
 			void InitFog() {
@@ -49,12 +54,20 @@ namespace SpaRcle {
 			void SetFog(bool val) { this->fog = val; }
 			bool GetFog() { return this->fog; }
 
+			TextureManager* GetTextureManager() {
+				if (!this->texManager) {
+					debug->Error("Texture manager is nullptr!");
+					Sleep(1000);
+					return nullptr;
+				} else return this->texManager;
+			}
+
 			void Clear() {
 			ret: if (render) goto ret;
 				clear = true;
-				for (Object3D* obj : this->_3d_objects)
-					if (obj) delete obj;
-				_3d_objects.clear();
+				//for (Object3D* obj : this->_3d_objects)
+				//	if (obj) delete obj;
+				//_3d_objects.clear();
 				clear = false;
 			}
 		private:
@@ -63,7 +76,6 @@ namespace SpaRcle {
 			Debug* debug;
 			TextureManager* texManager;
 		private:
-			std::vector<Object3D*> _3d_objects;
 			std::vector<UI*> _ui_objects;
 		};
 	}

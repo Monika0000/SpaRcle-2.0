@@ -11,6 +11,7 @@
 #include <sstream>
 #include <cstdio>
 #include "GraphUtils.h"
+#include "SRRandom.h"
 
 #include "File.h"
 

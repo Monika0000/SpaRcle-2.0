@@ -18,7 +18,10 @@ namespace SpaRcle {
 					return false;
 				} else { 
 					this->render = render; 
-					this->render->Create();
+					if (!this->render->Create()) {
+						debug->Error("Failed creating of render!");
+						return false;
+					}
 				}
 
 				if (!camera) {
@@ -42,7 +45,7 @@ namespace SpaRcle {
 					this->argcp,
 					this->argv)) 
 				{
-					debug->Error("Failed create engine!");
+					debug->Error("Failed creating of engine!");
 					return false;
 				}
 
@@ -61,7 +64,15 @@ namespace SpaRcle {
 
 			debug->Graph("Initializing graphics engine...");
 
-			win->Init(); // init and create window
+			if (!win->Init()) { // init and create window
+				debug->Error("Failed initializing of window!");
+				return false;
+			}
+
+			//if (!render->Init()) {
+			//	debug->Error("Failed initializing of render!");
+			//	return false;
+			//}
 
 			isInit = true;
 
@@ -77,7 +88,15 @@ namespace SpaRcle {
 
 			debug->Graph("Running graphics engine...");
 
-			if (camera) camera->Run();
+			if (!render->Run()) {
+				debug->Error("Failed running of render!");
+				return false;
+			}
+
+			if (camera) if (!camera->Run()) {
+				debug->Error("Failed running of camera!");
+				return false;
+			}
 
 			isRun = true;
 
@@ -90,7 +109,8 @@ namespace SpaRcle {
 			delete this->win;			// 1
 			if (camera) delete camera;	// 2
 
-			delete this->render;		// 3
+			//delete this->render;		// 3
+			this->render->Close();		// 3
 
 			return true;
 		}

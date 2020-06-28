@@ -66,6 +66,9 @@
     <ClInclude Include="File.h">
       <Filter>Files</Filter>
     </ClInclude>
+    <ClInclude Include="SRRandom.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">

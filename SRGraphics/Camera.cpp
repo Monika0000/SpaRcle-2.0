@@ -4,7 +4,7 @@
 #include <time.h>
 
 bool SpaRcle::Graphics::Camera::Create(WindowFormat* format, int& x_pos, int& y_pos)  {
-	debug->Info("Creating camera...");
+	debug->Graph("Creating camera...");
 
 	//this->x_size = &x_size;
 	//this->y_size = &y_size;
@@ -40,7 +40,7 @@ bool SpaRcle::Graphics::Camera::Init(bool& isMouseLock){
 
 bool SpaRcle::Graphics::Camera::Run() {
 	if (isCreate) {
-		debug->Info("Running camera...");
+		debug->Graph("Running camera...");
 
 		isRun = true;
 		move_thread = std::thread(&Camera::FixedMove, this);
@@ -53,7 +53,7 @@ bool SpaRcle::Graphics::Camera::Run() {
 }
 
 bool SpaRcle::Graphics::Camera::Close() {
-	debug->Info("Close camera...");
+	debug->Graph("Close camera...");
 	isRun = false;
 	if (move_thread.joinable()) move_thread.join();
 	return true;
