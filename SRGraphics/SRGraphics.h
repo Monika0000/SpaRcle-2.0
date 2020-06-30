@@ -9,6 +9,8 @@ namespace SpaRcle {
 	namespace Graphics {
 		class SRGraphics {
 		private:
+			std::string resources_folder;
+		private:
 			bool isCreate;
 			bool isInit;
 			bool isRun;
@@ -73,27 +75,9 @@ namespace SpaRcle {
 				else
 					return camera;
 			}
+			std::string GetResourcesFolder() const { return resources_folder; };
 		public:
-			SRGraphics(int argcp, char** argv, Debug* debug) {
-				if (global) {
-					debug->Error("Graphics engine already create!");
-					return;
-				}
-				else {
-					this->argcp = argcp;
-					this->argv = argv;
-
-					this->render = nullptr;
-					this->win = nullptr;
-
-					this->global = this;
-					this->debug = debug;
-
-					this->camera = nullptr;
-
-					isClose = false;
-				}
-			}
+			SRGraphics(int argcp, char** argv, Debug* debug);
 			~SRGraphics() { if (!isClose) Close(); }
 
 			bool Create(Window* win, Render* render, Camera* camera);

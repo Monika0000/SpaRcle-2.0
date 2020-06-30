@@ -10,6 +10,12 @@ SpaRcle::Graphics::Render::Render(Debug* debug) {
 	this->fog = true;
 	this->debug = debug;
 	this->texManager = NULL;
+	this->count_models = 0;
+	this->models = std::vector<Model*>();
+	this->clear = false;
+	this->isCreate = false;
+	this->isInit = false;
+	this->isRun = false;
 	//this->_3d_objects = std::vector<Object3D*>();
 }
 
@@ -17,6 +23,8 @@ bool SpaRcle::Graphics::Render::Create() {
 	debug->Graph("Creating render...");
 	this->texManager = new TextureManager(debug);
 	isCreate = true;
+
+	this->shader = new Shader("shader", debug);
 
 	return true;
 }
@@ -28,7 +36,9 @@ bool SpaRcle::Graphics::Render::Init() {
 
 	debug->Graph("Initializing render...");
 
-	//this->mesh = new Mesh(Cube);
+	this->shader->Compile();
+
+	//this->InitFog();
 
 	isInit = true;
 	return true;
@@ -60,13 +70,15 @@ void SpaRcle::Graphics::Render::DrawAllObjects() {
 	if (!isRun) return;
 ret: if (clear) goto ret;
 	render = true;
-	//if (fog)
-	//	InitFog();
-	//else
-	//	glDisable(GL_FOG);
+	if (fog)
+		InitFog();
+	else
+		glDisable(GL_FOG);
 
-	for (Mesh* mesh : meshes)
-		mesh->Draw();
+	//glRotatef(90, 0, 0, 1);
+
+	for (Model* model : models)
+		model->Draw(shader);
 
 	/*
 	if (useOldSlowRender) {
@@ -104,7 +116,6 @@ ret: if (clear) goto ret;
 
 	render = false;
 }
-
 void SpaRcle::Graphics::Render::DrawAllUI() {
 	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 	gluLookAt(
@@ -120,16 +131,14 @@ void SpaRcle::Graphics::Render::DrawAllUI() {
 	glEnable(GL_FOG); // Туман
 }
 
-void SpaRcle::Graphics::Render::AddModel(Mesh* model) {
+void SpaRcle::Graphics::Render::AddModel(Model* model) {
 	if ((unsigned long long)model == 0xdddddddddddddddd) {
 		debug->Error("Render::AddModel() : model has adress 0xdddddddddddddddd!");
 		return;
 	}
-	this->meshes.push_back(model);
-	this->count_meshes++;
+	this->models.push_back(model);
+	this->count_models++;
 }
-
-
 void SpaRcle::Graphics::Render::AddUI(UI* ui) {
 	if ((unsigned long long)ui == 0xdddddddddddddddd) {
 		debug->Error("Render::AddObject3D() : object has adress 0xdddddddddddddddd!");

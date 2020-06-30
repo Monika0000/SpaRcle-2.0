@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "Texture.h"
 #include <Debug.h>
+#include "Shader.h"
 
 namespace SpaRcle {
 	using namespace Helper;
@@ -29,9 +30,39 @@ namespace SpaRcle {
 				return nullptr; 
 			}
 
+			if (fread(bmp->header, 1, 54, file) != 54) { // У нас проблемы, если не смогли прочитать 54 байта
+				debug->Error("LoadBMP() : Not a correct BMP file!\n\tPath : " + std::string(path));
+				Sleep(1000);
+				return nullptr;
+			}
+
+			if (bmp->header[0] != 'B' || bmp->header[1] != 'M') {
+				debug->Error("LoadBMP() : Not a correct BMP file!\n\tPath : " + std::string(path));
+				Sleep(1000);
+				return nullptr;
+			}
+
+			// Читаем int из массива байтов
+			bmp->dataPos = *(int*)&(bmp->header[0x0A]);
+			bmp->imageSize = *(int*)&(bmp->header[0x22]);
+			bmp->width = *(int*)&(bmp->header[0x12]);
+			bmp->height = *(int*)&(bmp->header[0x16]);
+
+			if (bmp->imageSize == 0) bmp->imageSize = bmp->width * bmp->height * 3; // 3 : Один байт на каждую Red, Green, Blue компоненты
+			if (bmp->dataPos == 0)	 bmp->dataPos = 54; // Тут заканчивается заголовок, и по идее, должны начаться данные
+
+			bmp->data = new unsigned char[bmp->imageSize]; // Создаем буфер
+
+			fread(bmp->data, 1, bmp->imageSize, file); // Читаем данные из файла в буфер
+			fclose(file);					 //Теперь все данные в памяти, и можно закрыть файл
+
 			return bmp;
 		}
-		GLuint TextureManager::LoadTexture(const char* file) {
+		Texture* TextureManager::LoadTexture(const char* file) {
+			auto find = Textures.find(file);
+			if (find != Textures.end())
+				return find->second;
+
 			/*
 			SOIL_load_OGL_texture(
 				file, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
@@ -40,8 +71,44 @@ namespace SpaRcle {
 			texture_number++; // The counter of the current texture is increased
 			*/
 
+			Texture* texture = new Texture();
+			BMP* bmp = LoadBMP(file);
+			if (!bmp) {
+				debug->Error("Failed loading texture!");
+				Sleep(1000);
+				return nullptr;
+			}
 
-			return 0; // Returns the current texture OpenGL ID
+			//?=====================================
+
+			// Создаем одну OpenGL текстуру
+
+			/*
+			// Биндим текстуру, и теперь все функции по работе с текстурами будут работать с этой
+			glBindTexture(GL_TEXTURE_2D, textureID);
+			// Отправляем картинку в OpenGL текстуру
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bmp->width, bmp->height, 0, GL_BGR, GL_UNSIGNED_BYTE, bmp->data);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			*/
+
+			texture->id = 0;
+			texture->path = file;
+			texture->type = Texture::Type::BMP;
+			texture->image = bmp;
+
+			Textures.insert(std::make_pair(file, texture));
+
+			//?=====================================
+
+			//delete bmp;
+			return texture; 
 		}
+		//void Texture::Use(GLuint program) {
+		//	if (!isGenerate) Generate();
+		//	glActiveTexture(GL_TEXTURE0);
+		//	glBindTexture(GL_TEXTURE_2D, id);
+		//	glUniform1i(glGetUniformLocation(program, "img"), 0);
+		//}
 	}
 }

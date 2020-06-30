@@ -124,7 +124,7 @@ namespace SpaRcle {
 						result += text[t];
 				}
 
-				if(text.size() > end)
+				if (text.size() > end)
 					text = text.substr(end + 1);
 
 				return result;
@@ -145,6 +145,11 @@ namespace SpaRcle {
 						return true;
 					}
 				return false;
+			}
+
+			inline static std::string FromCharVector(const std::vector<char>& vs) {
+				std::string result(begin(vs), end(vs));
+				return result;
 			}
 
 			inline static char* FastSubstring(const char* str, const char c, const char c2) {

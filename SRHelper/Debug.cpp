@@ -42,27 +42,31 @@ void SpaRcle::Helper::Debug::Print(std::string& msg, Type type, int deep_level) 
                 std::cout << "\t";
 
             switch (type) {
-            case SpaRcle::Helper::Debug::Type::_Log:        { prefix = "[Log] ";      color = ConsoleColor::Cyan;       } break;
-            case SpaRcle::Helper::Debug::Type::_Info:       { prefix = "[Info] ";     color = ConsoleColor::Magenta;    } break;
-            case SpaRcle::Helper::Debug::Type::_System:     { prefix = "[System] ";   color = ConsoleColor::Blue;       } break;
-            case SpaRcle::Helper::Debug::Type::_Warning:    { prefix = "[Warn] ";     color = ConsoleColor::Brown;      } break;
-            case SpaRcle::Helper::Debug::Type::_Error:      { prefix = "[Error] ";    color = ConsoleColor::Red;        } break;
-            case SpaRcle::Helper::Debug::Type::_Fatal:      { prefix = "[Fatal] ";    color = ConsoleColor::Red;        } break;
-            case SpaRcle::Helper::Debug::Type::_Debug:      { prefix = "[Debug] ";    color = ConsoleColor::Brown;      } break;
-            case SpaRcle::Helper::Debug::Type::_Network:    { prefix = "[Network] ";  color = ConsoleColor::LightBlue;  } break;
-            case SpaRcle::Helper::Debug::Type::_Graph:      { prefix = "[Graph] ";    color = ConsoleColor::Green;      } break;
+                case SpaRcle::Helper::Debug::Type::_Log:        { prefix = "[Log] ";      color = ConsoleColor::Cyan;       } break;
+                case SpaRcle::Helper::Debug::Type::_Info:       { prefix = "[Info] ";     color = ConsoleColor::Magenta;    } break;
+                case SpaRcle::Helper::Debug::Type::_System:     { prefix = "[System] ";   color = ConsoleColor::Blue;       } break;
+                case SpaRcle::Helper::Debug::Type::_Warning:    { prefix = "[Warn] ";     color = ConsoleColor::Brown;      } break;
+                case SpaRcle::Helper::Debug::Type::_Error:      { prefix = "[Error] ";    color = ConsoleColor::Red;        } break;
+                case SpaRcle::Helper::Debug::Type::_Fatal:      { prefix = "[Fatal] ";    color = ConsoleColor::Red;        } break;
+                case SpaRcle::Helper::Debug::Type::_Debug:      { prefix = "[Debug] ";    color = ConsoleColor::Brown;      } break;
+                case SpaRcle::Helper::Debug::Type::_Network:    { prefix = "[Network] ";  color = ConsoleColor::LightBlue;  } break;
+                case SpaRcle::Helper::Debug::Type::_Graph:      { prefix = "[Graph] ";    color = ConsoleColor::Green;      } break;
+                case SpaRcle::Helper::Debug::Type::_Shader:     { prefix = "[Shader] ";    color = ConsoleColor::LightCyan; } break;
             default:
                 Debug::InternalError("Debug : unknown type!");
                 break;
             }
 
-            if(show_use_memory)
-                std::cout << "<" << ((float)Utils::GetCurrentMemoryLoad()) / 1024.f << " KB> ";
+            if (show_use_memory) {
+                float mem = ((float)Utils::GetCurrentMemoryLoad()) / 1024.f;
+                std::cout << "<" << mem << " KB> ";
+                log_file << "<" << mem << " KB> ";
+            }
             SetConsoleTextAttribute(hConsole, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)color));
             std::cout << prefix;
             SetConsoleTextAttribute(hConsole, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)ConsoleColor::Black));
 
-            log_file << msg + "\n";
+            log_file << prefix << msg + "\n";
             log_file.flush();
             std::cout << msg + "\n";
         } else

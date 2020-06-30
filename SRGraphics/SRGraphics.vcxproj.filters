@@ -68,6 +68,9 @@
     <ClInclude Include="Model.h">
       <Filter>Object3D</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>RenderSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SRGraphics.cpp">
@@ -95,6 +98,12 @@
       <Filter>Object3D</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
+      <Filter>Object3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
       <Filter>Object3D</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,6 @@
 #pragma once
 #include "Mesh.h"
+#include "Texture.h"
 
 namespace SpaRcle {
 	namespace Graphics {
@@ -94,5 +95,23 @@ namespace SpaRcle {
 			};
 		};
 		*/
+
+		class Shader;
+		class Model {
+		public:
+			Texture* texture;
+			Mesh* mesh;
+		public:
+			void Draw(Shader* shader);
+		public:
+			Model(Mesh* mesh, Texture* texture) {
+				this->texture = texture;
+				this->mesh = mesh;
+			}
+			~Model() {
+				delete texture;
+				delete mesh;
+			}
+		};
 	}
 }

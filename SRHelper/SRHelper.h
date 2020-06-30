@@ -26,6 +26,7 @@ namespace SpaRcle {
 			Math() {};
 			~Math() {};
 		public:
+			inline static const size_t size_t_max = 18446744073709551615;
 			inline static double Round(double x) { return ((x * 100) / 100); /*return floor(x * 100) / 100;*/ }
 		};
 

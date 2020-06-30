@@ -9,6 +9,52 @@ namespace SpaRcle {
 	namespace Graphics {
 		SRGraphics* SRGraphics::global = nullptr;
 
+		SRGraphics::SRGraphics(int argcp, char** argv, Debug* debug) {
+			if (global) {
+				debug->Error("Graphics engine already create!");
+				return;
+			}
+			else {
+				this->argcp = argcp;
+				this->argv = argv;
+
+				this->render = nullptr;
+				this->win = nullptr;
+
+				this->global = this;
+				this->debug = debug;
+
+				this->camera = nullptr;
+
+				for (auto& a : File::GetFilesInDirectory(Utils::GetPathToExe().c_str())) {
+					int id = String::IndexOf(a, '.');
+					if (id != -1) {
+						a = a.substr(id + 1);
+						//std::cout << a << std::endl;
+						if (a == "vcxproj") {
+							#ifdef _WIN64
+								resources_folder = Utils::GetPathToExe() + "\\..\\Resources";
+							#else
+								resources_folder = Utils::GetPathToExe() + "\\..\\Resources";
+							#endif	
+							debug->System("Resource folder is : " + resources_folder);
+							break;
+						} else {
+							#ifdef _WIN64
+								resources_folder = Utils::GetPathToExe() + "\\..\\Resources";
+							#else
+								resources_folder = Utils::GetPathToExe() + "\\..\\Resources";
+							#endif	
+							debug->System("Resource folder is : " + resources_folder);
+							break;
+						}
+					}
+				}
+
+				isClose = false;
+			}
+		}
+
 		bool SRGraphics::Create(Window* win, Render* render, Camera* camera) {
 			if (!isCreate) {
 				debug->Graph("Creating graphics engine...");

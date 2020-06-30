@@ -6,6 +6,7 @@
 #include "UIString.h"
 #include "UIWindow.h"
 #include "Texture.h"
+#include "Shader.h"
 
 namespace SpaRcle {
 	namespace Graphics {
@@ -25,10 +26,13 @@ namespace SpaRcle {
 			void Close();
 		private: //! ====== [Meshes sector] ======
 			//?=====================================
-			std::vector<Mesh*> meshes;
-			size_t count_meshes;
+			//std::vector<Mesh*> meshes;
+			//size_t count_meshes;
+			std::vector<Model*> models;
+			size_t count_models;
 			//?=====================================
 		private:
+			bool fog;
 			bool clear;
 			bool render;
 			GLuint fogMode[3] = { GL_EXP, GL_EXP2, GL_LINEAR };	 // Хранит три типа тумана
@@ -37,7 +41,7 @@ namespace SpaRcle {
 			void DrawAllObjects();
 			void DrawAllUI();
 
-			void AddModel(Mesh* model);
+			void AddModel(Model* model);
 			void AddUI(UI* ui);
 
 			void InitFog() {
@@ -71,8 +75,7 @@ namespace SpaRcle {
 				clear = false;
 			}
 		private:
-			bool fog;
-		private:
+			Shader* shader;
 			Debug* debug;
 			TextureManager* texManager;
 		private:

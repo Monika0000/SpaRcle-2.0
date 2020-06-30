@@ -30,7 +30,7 @@ namespace SpaRcle {
 
 		class Debug {
 		 	enum class Type {
-				_Log, _Info, _System, _Warning, _Error, _Fatal, _Debug, _Network, _Library, _Graph
+				_Log, _Info, _System, _Warning, _Error, _Fatal, _Debug, _Network, _Library, _Graph, _Shader
 			};
 		public:
 			Debug(std::string path, bool init_color_therme = true);
@@ -46,7 +46,8 @@ namespace SpaRcle {
 			inline void System(std::string msg, int deep_level = 0) { Print(msg, Type::_System, deep_level); }
 			inline void Network(std::string msg, int deep_level = 0) { Print(msg, Type::_Network, deep_level); }
 			inline void Graph(std::string msg, int deep_level = 0) { Print(msg, Type::_Graph, deep_level); }
-			
+			inline void Shader(std::string msg, int deep_level = 0) { Print(msg, Type::_Shader, deep_level); }
+
 			static inline void SysGraphError(std::string msg) { 
 				HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 				SetConsoleTextAttribute(console, (WORD)(((int)ConsoleColor::LightGray << 4) | (int)ConsoleColor::Red));

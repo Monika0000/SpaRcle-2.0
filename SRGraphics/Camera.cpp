@@ -131,6 +131,6 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 void SpaRcle::Graphics::Camera::Move() {
 	if (isRun) {
 		glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-		gluLookAt(posx + dxx, posy + dyy, posz - dxz, posx, posy, posz, 0.0, 1.0, 0.0);
+		gluLookAt(posx + dxx, posy + dyy, posz - dxz, posx, posy, posz, 0.0, 0.1, 0.0);
 	}
 }

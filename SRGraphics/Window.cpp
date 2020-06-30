@@ -223,7 +223,7 @@ namespace SpaRcle {
 				}
 			});
 
-			while (!this->isInitWindow) { /* wait oppened winodw...*/ }
+			while (!this->isInitWindow) { Sleep(1); /* wait oppened winodw...*/ }
 
 			return true;
 		}
@@ -251,6 +251,14 @@ namespace SpaRcle {
 					screen_size->x / 2 - format->size_x / 2,
 					screen_size->y / 2 - format->size_y / 2);
 				GraphUtils::CheckSystemErrors("Init glfw : ");
+
+				GLFWimage icons[1];
+				unsigned char* pxs = SOIL_load_image((Utils::GetPathToExe() + "../../Resources/icon.png").c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
+				if (pxs) {
+					icons[0].pixels = pxs;
+					glfwSetWindowIcon(window, 1, icons);
+					SOIL_free_image_data(icons[0].pixels);
+				} else debug->Error("Failed loading ico image! Continue...");
 
 				return true;
 			}
@@ -303,7 +311,7 @@ namespace SpaRcle {
 			*/
 
 			// Èíèöèàëèçèðóåì GLEW
-			//glewExperimental = TRUE;
+			glewExperimental = TRUE;
 			GLenum err = glewInit();
 			if (err != GLEW_OK) {
 				debug->Error("glewInit is failure!");
@@ -320,7 +328,14 @@ namespace SpaRcle {
 			glEnable(GL_BLEND); // Ïðîçðà÷íîñòü ñòåêëà
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			glEnable(GL_COLOR_SUM);
+			glEnable(GL_TEXTURE_2D);
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glEnable(GL_ALPHA_TEST);
+			glEnable(GL_COLOR_MATERIAL);
+
+			glEnable(GL_MULTISAMPLE);
+
+			//glEnable(GL_COLOR_SUM);  https://stackoverflow.com/questions/8265636/how-to-get-specular-color-in-opengl
 			//glEnable(GL_FOG); // Òóìàí
 
 			///\%info ÏÐÎÂÅÐßÅÌ ÃËÓÁÈÍÓ, ×ÒÎÁÛ ÈÇÁÀÂÈÒÜÑß ÎÒ "ÝÔÔÅÊÒÈÀ ÏÅÐÅÊÐÛÒÈß" ÄÀËÜÍÈÌÈ ÎÁÚÅÊÒÀÌÈ
@@ -390,9 +405,10 @@ namespace SpaRcle {
 
 			render->DrawAllUI();
 
-			camera->Move();
-
 			glfwSwapBuffers(window);
+
+			//if(Input::GetKey(KeyCode::Q))
+				camera->Move();
 		}
 		bool Window::InitWindow() {
 			debug->Graph("Initializing window...");
