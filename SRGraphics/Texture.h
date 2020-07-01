@@ -28,6 +28,9 @@ namespace SpaRcle {
 			unsigned int imageSize;   // = ширина*высота*3
 			// Сами RGB данные
 			unsigned char* data;
+			~Image() {
+				free(data);
+			}
 		};
 		struct BMP : public Image {
 		public:
@@ -76,6 +79,8 @@ namespace SpaRcle {
 
 				//std::cout << "New texture has been generated; id = " << textureID << std::endl;
 				
+				delete image;
+
 				this->id = textureID;	
 
 				isGenerate = true;

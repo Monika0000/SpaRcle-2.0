@@ -24,7 +24,7 @@ namespace SpaRcle {
 			~Shader();
 		public:
 			bool Compile();
-			bool Use(GLuint tex1);
+			bool Use(GLuint tex1, GLuint vbo, GLuint uv);
 			bool Release();
 		};
 	}

@@ -6,7 +6,7 @@ void SpaRcle::Graphics::Model::Draw(Shader* shader) {
 	//mesh->Bind();
 	if (texture) {
 		if (!texture->isGenerate) texture->Generate();
-		shader->Use(texture->id);
+		shader->Use(texture->id, mesh->VBO, mesh->UV);
 	}
 	mesh->Draw();
 
