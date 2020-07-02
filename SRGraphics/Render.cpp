@@ -75,10 +75,10 @@ ret: if (clear) goto ret;
 	else
 		glDisable(GL_FOG);
 
-	//glRotatef(90, 0, 0, 1);
-
 	for (Model* model : models)
 		model->Draw(shader);
+
+	glUseProgram(0);
 
 	/*
 	if (useOldSlowRender) {

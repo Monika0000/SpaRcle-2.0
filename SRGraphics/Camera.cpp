@@ -2,12 +2,16 @@
 #include "Camera.h"
 #include <GL\glut.h>
 #include <time.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-bool SpaRcle::Graphics::Camera::Create(WindowFormat* format, int& x_pos, int& y_pos)  {
+bool SpaRcle::Graphics::Camera::Create(WindowFormat* format, int& x_pos, int& y_pos, glm::mat4& projective)  {
 	debug->Graph("Creating camera...");
 
 	//this->x_size = &x_size;
 	//this->y_size = &y_size;
+
+	this->projective = &projective;
 
 	this->format = format;
 
@@ -51,14 +55,12 @@ bool SpaRcle::Graphics::Camera::Run() {
 		return false;
 	}
 }
-
 bool SpaRcle::Graphics::Camera::Close() {
 	debug->Graph("Close camera...");
 	isRun = false;
 	if (move_thread.joinable()) move_thread.join();
 	return true;
 }
-
 void SpaRcle::Graphics::Camera::FixedMove() {
 	int framelimit = 60; //ограничим FPS до 90
 	int now = 0;
@@ -130,7 +132,22 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 
 void SpaRcle::Graphics::Camera::Move() {
 	if (isRun) {
-		glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-		gluLookAt(posx + dxx, posy + dyy, posz - dxz, posx, posy, posz, 0.0, 0.1, 0.0);
+		if (shader) {
+			//glm::mat4 viewMat = glm::lookAt(glm::vec3(5, 5, 5), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
+			glm::mat4 viewMat = glm::lookAt(glm::vec3(posx + dxx, posy + dyy, posz - dxz), glm::vec3(posx, posy, posz), glm::vec3(0, 1, 0));
+			//glm::mat4 modelMat = glm::mat4(); // identity
+
+			//GLuint modelMatIdx = glGetUniformLocation(shader->ProgramID, "modelMat");
+			//std::cout << projMatIdx << " " << viewMatIdx << " " << modelMatIdx << std::endl;
+
+			glUniformMatrix4fv(projMatIdx, 1, GL_FALSE, glm::value_ptr(*this->projective));
+			glUniformMatrix4fv(viewMatIdx, 1, GL_FALSE, glm::value_ptr(viewMat));
+			//glUniformMatrix4fv(modelMatIdx, 1, GL_FALSE, glm::value_ptr(modelMat));
+		}
+		else {
+			debug->Error("Camera::Move() : shader is nullptr!");
+		}
+		//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+		//gluLookAt(posx + dxx, posy + dyy, posz - dxz, posx, posy, posz, 0.0, 0.1, 0.0);
 	}
 }

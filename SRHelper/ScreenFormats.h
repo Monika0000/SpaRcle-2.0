@@ -11,6 +11,8 @@ namespace SpaRcle {
 
 		class WindowFormat {
 		public:
+			const float Aspect() const { return (float)size_x / (float)size_y; }
+
 			const unsigned short size_x;
 			const unsigned short size_y;
 

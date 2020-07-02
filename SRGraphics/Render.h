@@ -58,6 +58,14 @@ namespace SpaRcle {
 			void SetFog(bool val) { this->fog = val; }
 			bool GetFog() { return this->fog; }
 
+			Shader* GetShader() {
+				if (!this->shader) {
+					debug->Error("Shader is nullptr!");
+					Sleep(1000);
+					return nullptr;
+				}
+				else return this->shader;
+			}
 			TextureManager* GetTextureManager() {
 				if (!this->texManager) {
 					debug->Error("Texture manager is nullptr!");

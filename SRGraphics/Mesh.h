@@ -8,52 +8,12 @@
 
 namespace SpaRcle {
 	namespace Graphics {
-		//struct triangle { vec3f pos[3]; };
 
-		static const GLfloat g_uv_buffer_data[] = {
-			0.000059f, 1.0f - 0.000004f,
-			0.000103f, 1.0f - 0.336048f,
-			0.335973f, 1.0f - 0.335903f,
-			1.000023f, 1.0f - 0.000013f,
-			0.667979f, 1.0f - 0.335851f,
-			0.999958f, 1.0f - 0.336064f,	
-			0.667979f, 1.0f - 0.335851f,
-			0.336024f, 1.0f - 0.671877f,
-			0.667969f, 1.0f - 0.671889f,
-			1.000023f, 1.0f - 0.000013f,
-			0.668104f, 1.0f - 0.000013f,
-			0.667979f, 1.0f - 0.335851f,
-			0.000059f, 1.0f - 0.000004f,
-			0.335973f, 1.0f - 0.335903f,
-			0.336098f, 1.0f - 0.000071f,
-			0.667979f, 1.0f - 0.335851f,
-			0.335973f, 1.0f - 0.335903f,
-			0.336024f, 1.0f - 0.671877f,
-			1.000004f, 1.0f - 0.671847f,
-			0.999958f, 1.0f - 0.336064f,
-			0.667979f, 1.0f - 0.335851f,
-			0.668104f, 1.0f - 0.000013f,
-			0.335973f, 1.0f - 0.335903f,
-			0.667979f, 1.0f - 0.335851f,
-			0.335973f, 1.0f - 0.335903f,
-			0.668104f, 1.0f - 0.000013f,
-			0.336098f, 1.0f - 0.000071f,
-			0.000103f, 1.0f - 0.336048f,
-			0.000004f, 1.0f - 0.671870f,
-			0.336024f, 1.0f - 0.671877f,
-			0.000103f, 1.0f - 0.336048f,
-			0.336024f, 1.0f - 0.671877f,
-			0.335973f, 1.0f - 0.335903f,
-			0.667969f, 1.0f - 0.671889f,
-			1.000004f, 1.0f - 0.671847f,
-			0.667979f, 1.0f - 0.335851f
+		struct Vertex {
+			glm::vec3 Position;
+			glm::vec3 Normal;
+		 	glm::vec2 TexCoords;
 		};
-
-		//struct Vertex {
-		//	glm::vec3 Position;
-		//	glm::vec3 Normal;
-		// 	glm::vec2 TexCoords;
-		//};
 
 		class Render;
 		class Model;
@@ -65,25 +25,37 @@ namespace SpaRcle {
 			friend class Model;
 		private:
 			size_t count_vertices;
-			//std::vector<Vertex> vertices;
-			std::vector<glm::vec3> verts;
-			std::vector<glm::vec2> uvs;
-			GLuint VAO, VBO, EBO, UV;
+			std::vector<Vertex> vertices;
+			//std::vector<glm::vec3> vertices;
+			//std::vector<glm::vec2> uvs;
+			GLuint VAO, VBO;//, EBO, UV;
 
-			bool isCompile;
-			bool isRecompile;
+			bool isGenerate;
+			bool isBind;
 			vec3f position;
 		private:
-			void Recompile() {
+			void Bind() {
 				glBindVertexArray(VAO);
+				glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 				//? [VERTEX]
-				glBindBuffer(GL_ARRAY_BUFFER, VBO);
-				glBufferData(GL_ARRAY_BUFFER, count_vertices * sizeof(glm::vec3), &verts[0], GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, count_vertices * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+				glEnableVertexAttribArray(0);
+				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+				//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+				//? [NORMAL]
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
 
 				//? [TEXTURE]
-				glBindBuffer(GL_ARRAY_BUFFER, UV);
-				glBufferData(GL_ARRAY_BUFFER, count_vertices * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+				glEnableVertexAttribArray(2);
+				glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+
+				glBindVertexArray(0);
+
+				//!glBindBuffer(GL_ARRAY_BUFFER, UV);
+				//!glBufferData(GL_ARRAY_BUFFER, count_vertices * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 
 				//glBufferData(GL_ARRAY_BUFFER, count_vertices * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
@@ -146,19 +118,17 @@ namespace SpaRcle {
 				//glBindVertexArray(0);
 				*/
 
-				isRecompile = true;
+				isBind = true;
 			}
-			void Compile() {
+			void Generate() {
 				glGenVertexArrays(1, &this->VAO);
 				glGenBuffers(1, &this->VBO);
-				glGenBuffers(1, &this->EBO);
-				glGenBuffers(1, &this->UV);
+				//glGenBuffers(1, &this->EBO);
+				//glGenBuffers(1, &this->UV);
 
 				//std::cout << "VAO = " << VAO << std::endl;
 
-				Recompile();
-
-				isCompile = true;
+				isGenerate = true;
 			}
 		public:
 			void SetPosition(vec3f pos) {
@@ -168,40 +138,40 @@ namespace SpaRcle {
 				pos.z -= position.z;
 				position = p_temp;
 
-				for (glm::vec3& v : verts) {
-					v.x += pos.x;
-					v.y += pos.y;
-					v.z += pos.z;
+				for (auto& v : vertices) {
+					v.Position.x += pos.x;
+					v.Position.y += pos.y;
+					v.Position.z += pos.z;
 				}
 
-				isRecompile = false;
+				isBind = false;
 			}
 			void Draw();
 			void Bind() const {
 				glBindVertexArray(this->VAO);
 			}
 		public:
-			//Mesh(std::vector<Vertex> vertices, vec3f pos = { 0.f, 0.f, 0.f }) {
+			Mesh(std::vector<Vertex> vertices, vec3f pos = { 0.f, 0.f, 0.f }) {
 			//Mesh(Data* data, vec3f pos = { 0.f, 0.f, 0.f }) {
-			Mesh(std::vector<glm::vec3> verts, std::vector<glm::vec2> uvs, vec3f pos = { 0.f, 0.f, 0.f }) {
+			//Mesh(std::vector<glm::vec3> vertices, std::vector<glm::vec2> uvs, vec3f pos = { 0.f, 0.f, 0.f }) {
 				this->VAO = 0;
 				this->VBO = 0;
-				this->EBO = 0;
+				//this->EBO = 0;
 
-				this->isCompile = false;
-				this->isRecompile = false;
+				this->isBind = false;
+				this->isGenerate= false;
 
 				position = { 0.f, 0.f, 0.f };
 
-				this->verts = verts;
-				this->uvs= uvs;
+				this->vertices = vertices;
+				//this->uvs= uvs;
 
 				SetPosition(pos);
-				this->count_vertices = verts.size();
+				this->count_vertices = vertices.size();
 				//this->Compile();
 			}
 			~Mesh() {
-				this->verts.clear();
+				//this->verts.clear();
 			}
 		};
 
@@ -261,6 +231,31 @@ namespace SpaRcle {
 				// BOTTOM
 				{ 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f },
 				{ 1.0f, 0.0f }, { 0.0f, 1.0f }, { 0.0f, 0.0f },
+			};
+			inline static std::vector<Vertex> CubeVertex = {
+				// SOUTH
+				{ { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 1.0f } },		{ { 1.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },
+				{ { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 1.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },		{ { 1.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 0.0f } },
+				
+				// EAST
+				{ { 1.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 1.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 1.0f } },		{ { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },
+				{ { 1.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },		{ { 1.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 0.0f } },
+
+				// NORTH
+				{ { 1.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 1.0f } },		{ { 0.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },
+				{ { 1.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },		{ { 0.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 0.0f } },
+
+				// WEST
+				{ { 0.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 1.0f } },		{ { 0.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },
+				{ { 0.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },		{ { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 0.0f } },
+
+				// TOP
+				{ { 0.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 1.0f } },		{ { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },
+				{ { 0.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },		{ { 1.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 0.0f } },
+
+				// BOTTOM
+				{ { 1.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 1.0f } },		{ { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },
+				{ { 1.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },		{ { 1.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 0.0f } },
 			};
 		};
 	}

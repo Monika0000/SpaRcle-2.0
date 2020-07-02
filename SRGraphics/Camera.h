@@ -1,6 +1,8 @@
 #pragma once
 #include <SRHelper.h>
+#include "Shader.h"
 #include <GL\glu.h>
+#include <glm/glm.hpp>
 
 namespace SpaRcle {
 	using namespace Helper;
@@ -33,14 +35,18 @@ namespace SpaRcle {
 		private:
 			void FixedMove();
 		private:
-			bool isCreate;
-			bool isRun;
-			bool* isMouseLock;
+			bool isCreate = false;
+			bool isRun = false;
+			bool* isMouseLock = nullptr;
 		private:
-			WindowFormat* format;
-			int* x_pos; int* y_pos;
+			GLuint projMatIdx;
+			GLuint viewMatIdx;
+			WindowFormat* format = nullptr;
+			glm::mat4* projective = nullptr;
+			int* x_pos = nullptr; int* y_pos = nullptr;
 		private:
-			Debug* debug;
+			Debug* debug = nullptr;
+			Shader* shader = nullptr;
 			std::thread move_thread;
 		public:
 			Camera(Debug*debug) {
@@ -58,10 +64,16 @@ namespace SpaRcle {
 			bool Create(
 				WindowFormat* format,
 				//unsigned short& x_size, unsigned short& y_size,
-				int& x_pos, int& y_pos
+				int& x_pos, int& y_pos, glm::mat4& projective
 			);
 			bool Init(bool& isMouseLock);
 			bool Run();
+			void SetShader(Shader* shader) { 
+				this->shader = shader;
+
+				projMatIdx = glGetUniformLocation(shader->ProgramID, "projMat");
+				viewMatIdx = glGetUniformLocation(shader->ProgramID, "viewMat");
+			}
 			bool Close();
 			void Move();
 		public:

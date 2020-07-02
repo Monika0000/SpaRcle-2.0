@@ -46,18 +46,18 @@ namespace SpaRcle {
 		void Mesh::Draw() {
 			if ((unsigned long long)this == 0xdddddddddddddddd) return;
 
-			if (!isCompile) Compile();
-			if (!isRecompile) Recompile();
+			//if (!isCompile) Compile();
+			//if (!isRecompile) Recompile();
 
 			//glColor4f(0.2f, 0.f, 0.f, 1.f);
-			//glBindVertexArray(this->VAO);
+			glBindVertexArray(this->VAO);
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
 			//glDrawElements(GL_TRIANGLES, count_vertices, GL_UNSIGNED_INT, 0);
 			glDrawArrays(GL_TRIANGLES, 0, count_vertices); //Начиная с вершины 0 и рисуем count_vertices штуки. Всего => count_vertices/3 треугольника
 			//glDisableVertexAttribArray(0);
 
 			//!======================================
 
-			glDisableVertexAttribArray(0);
 			glBindTexture(GL_TEXTURE_2D, 0); //? IMPORTANT
 		}
 	}

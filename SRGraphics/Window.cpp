@@ -6,19 +6,11 @@
 #include <GL/glut.h>
 #include "Camera.h"
 #include "UI.h"
+#include <glm\ext\matrix_clip_space.hpp>
 
 namespace SpaRcle {
 	namespace Graphics {
 		Window* Window::global = nullptr;
-
-		//void character_callback(GLFWwindow* window, unsigned int codepoint)
-		//{
-		//	std::cout << (char)codepoint;
-		//}
-		//void reshape(GLsizei width, GLsizei height) { 
-			//Window::Get()->Resize(width, height); 
-		//}
-		//void windowSizeCallback(GLFWwindow*, int width, int height) { glViewport(0, 0, width, height); }
 		/*
 		static WNDPROC pOrigProc = NULL;
 		LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
@@ -82,6 +74,8 @@ namespace SpaRcle {
 			gluPerspective(45, ratio, 0.1, 1000);// установить корректную перспективу.
 			glMatrixMode(GL_MODELVIEW);// вернуться к модели
 
+			win->projective = glm::perspective(glm::radians(45.f), ratio, 0.1f, 1000.0f);
+
 			/*
 			if (height == 0)
 				height = 1;
@@ -103,7 +97,7 @@ namespace SpaRcle {
 			win->SetXSize(width);
 			win->SetYSize(height);
 			*/
-			win->Draw();
+		 	if(win->GetIsRun()) win->Draw();
 		}
 
 		Vector2d* Window::GetMousePosition() {
@@ -351,8 +345,6 @@ namespace SpaRcle {
 			if(isMouseLock)
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-			//font->Build(debug);
-
 			return true;
 		}
 		bool Window::InitGlut(int argcp, char** argv) {
@@ -389,26 +381,19 @@ namespace SpaRcle {
 		}
 
 		void Window::Draw() {
-			///glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Без этого ничего не будет работать (очистка буфера)
 
-			//if (Input::FixedGetKeyDown(KeyCode::P))
-			//	camera->ResetCameraPos();
+			shader->Use();
+			camera->Move();
 
 			glPushMatrix(); // Сохранение матрици
 				render->DrawAllObjects();
 			glPopMatrix();
-			//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-
-			glFlush();
 
 			render->DrawAllUI();
 
 			glfwSwapBuffers(window);
-
-			//if(Input::GetKey(KeyCode::Q))
-				camera->Move();
 		}
 		bool Window::InitWindow() {
 			debug->Graph("Initializing window...");
@@ -440,6 +425,10 @@ namespace SpaRcle {
 				debug->Error("Failed initializing of render!");
 				return false;
 			}
+			else {
+				this->shader = render->GetShader();
+				this->camera->SetShader(shader);
+			}
 
 			isInitWindow = true;
 			isRun = true;
@@ -449,8 +438,6 @@ namespace SpaRcle {
 				this->fps->SetString("FPS : " + std::to_string(GraphUtils::GetFPS()));
 
 				this->Draw();
-
-				//GraphUtils::CheckSystemErrors("Draw : ");
 			} 
 
 			debug->Info("Window has been completed work! isRun = " + std::to_string(isRun));
@@ -465,35 +452,5 @@ namespace SpaRcle {
 
 			return true;
 		}
-		
-		/*
-		bool Window::RegisterWindowClass() {
-			debug->Graph("Register window class...");
-			
-			WNDCLASSEXW wnd;
-
-			wnd.cbSize = sizeof(WNDCLASSEXW);
-			//wnd.style = CS_HREDRAW | CS_VREDRAW;
-			wnd.style = CS_HREDRAW | CS_VREDRAW;
-			wnd.lpfnWndProc = WindowProc;
-			wnd.cbClsExtra = 0;
-			wnd.cbWndExtra = 0;
-			wnd.hInstance = 0;
-			wnd.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-			wnd.hIconSm = wnd.hIcon;
-			wnd.hCursor = LoadCursor(0, IDC_ARROW);
-			wnd.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-			wnd.lpszMenuName = NULL;
-			wnd.lpszClassName = String::CharsToLPWSTR(name);
-			wnd.cbSize = sizeof(WNDCLASSEX);
-
-			if (!RegisterClassEx(&wnd)) {
-				debug->Error("Failed register window class!");
-				EventsManager::PushEvent(EventsManager::Events::Error);
-				return false;
-			}
-
-			return true;
-		}*/
 	}
 }

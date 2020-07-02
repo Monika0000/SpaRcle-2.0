@@ -80,7 +80,8 @@ namespace SpaRcle {
 					//win->format->size_y,
 					win->format,
 					win->x_pos,
-					win->y_pos
+					win->y_pos,
+					win->projective
 				);
 
 				win->SetCamera(camera);

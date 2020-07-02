@@ -42,6 +42,7 @@ namespace SpaRcle {
 			GLFWwindow* window;
 			Camera* camera;
 			Render* render;
+			Shader* shader;
 			//Font* font;
 			//HFONT font;
 			//HCURSOR cursor;
@@ -49,6 +50,7 @@ namespace SpaRcle {
 			char** argv;
 			int argcp;
 		public:
+			glm::mat4 projective;
 			WindowFormat* format;
 		public:
 			const int GetXSize() const { return format->size_x; }
@@ -58,6 +60,7 @@ namespace SpaRcle {
 			//void SetXSize(int x_size) { this->x_size = x_size; }
 			//void SetYSize(int y_size) { this->y_size = y_size; }
 		public:
+			bool GetIsRun() const { return isRun; };
 			Vector2d* GetMousePosition();
 			void MouseLock(const bool val) {
 				if(val)

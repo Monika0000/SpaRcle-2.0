@@ -121,13 +121,15 @@ bool SpaRcle::Graphics::Shader::Compile() {
 	return isLinked;
 }
 
-bool SpaRcle::Graphics::Shader::Use(GLuint tex1, GLuint vbo, GLuint uv) {
+bool SpaRcle::Graphics::Shader::Use() { //GLuint tex1, GLuint vbo, GLuint uv
     if (isLinked) {
         //glUniform3f(glGetUniformLocation(this->ProgramID, "color"), 0.0, 0.0, 1.0);
         //int index = glGetAttribLocation(this->ProgramID, "atr");
         //glMatrixMode(GL_TEXTURE);
 
         glUseProgram(this->ProgramID);
+
+        /*
         glBindTexture(GL_TEXTURE_2D, tex1);
 
         //?======================================[VERTEXES]========================================
@@ -142,12 +144,11 @@ bool SpaRcle::Graphics::Shader::Use(GLuint tex1, GLuint vbo, GLuint uv) {
         //glBindBuffer(GL_ARRAY_BUFFER, uv);
         //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);    
         //TODO:====================================================================================
-
         //!=====================================[SHADER TEXTURE]===================================
         if (true) {
             GLuint texCoordID = glGetAttribLocation(this->ProgramID, "InTexCoords");
             glEnableVertexAttribArray(texCoordID);
-            /* !????! */ glBindBuffer(GL_ARRAY_BUFFER, uv);
+           glBindBuffer(GL_ARRAY_BUFFER, uv);
             glVertexAttribPointer(texCoordID, 2, GL_FLOAT, GL_FALSE, 0, NULL);
             //glVertexAttribPointer(texCoordID, 3, GL_FLOAT, GL_TRUE, 0, NULL);
             /// glVertexAttribPointer(texCoordID, !!!2!!!, GL_FLOAT, GL_FALSE, 0, NULL);
@@ -155,7 +156,8 @@ bool SpaRcle::Graphics::Shader::Use(GLuint tex1, GLuint vbo, GLuint uv) {
             GLuint texID = glGetUniformLocation(this->ProgramID, "img");
             glActiveTexture(GL_TEXTURE0);
             glUniform1i(texID, 0); // This is GL_TEXTURE0
-        }
+            */
+
         //!========================================================================================
 
         return true;
