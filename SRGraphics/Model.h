@@ -124,10 +124,94 @@ namespace SpaRcle {
 				//TODO: Delete all meshes!
 			}
 		public:
+			std::vector<Vertex> MakeModel(std::vector<glm::vec3>& vetexes, std::vector<vec3ui>& faces) {
+				std::vector<Vertex> final_verts = std::vector<Vertex>();
+				for (size_t t = 0; t < faces.size(); t++) {
+					std::cout << faces[t].x - 1 << std::endl;
+					std::cout << faces[t].y - 1 << std::endl;
+					std::cout << faces[t].z - 1 << std::endl;
+					glm::vec3& vert = vetexes[faces[t].x - 1];
+					final_verts.push_back({ { vert.x, vert.y, vert.z }, { 0,0,0 }, { 0,0 } });
+					vert = vetexes[faces[t].y - 1];
+					final_verts.push_back({ { vert.x, vert.y, vert.z }, { 0,0,0 }, { 0,0 } });
+					vert = vetexes[faces[t].z - 1];
+					final_verts.push_back({ { vert.x, vert.y, vert.z }, { 0,0,0 }, { 0,0 } });
+				}
+				return final_verts;
+			}
+
+			void AddTriangle(std::vector<Vertex>& result, std::vector<glm::vec3> verts, std::vector<glm::vec2>& uvs, std::vector<std::string> faces) {
+				glm::vec3 face;
+				glm::vec3 uv;
+
+				std::string pos_1 = String::ReadToChar(faces[0], '/');
+				std::string pos_2 = String::ReadToChar(faces[1], '/');
+				std::string pos_3 = String::ReadToChar(faces[2], '/');
+
+				for (unsigned char i = 0; i < 3; i++) {
+					face.x = (unsigned int)atoi(pos_1.c_str());
+					face.y = (unsigned int)atoi(pos_2.c_str());
+					face.z = (unsigned int)atoi(pos_3.c_str());
+				}
+
+				pos_1 = String::ReadToChar(pos_1, '/');
+				pos_2 = String::ReadToChar(pos_2, '/');
+				pos_3 = String::ReadToChar(pos_3, '/');
+
+				for (unsigned char i = 0; i < 3; i++) {
+					uv.x = atof(pos_1.c_str());
+					uv.y = atof(pos_2.c_str());
+					uv.z = atof(pos_3.c_str());
+				}
+
+				result.push_back({ { verts[face.x - 1], }, {0,0,0}, uvs[uv.x - 1] }); //uvs[uv.x - 1]
+				result.push_back({ { verts[face.y - 1], }, {0,0,0}, uvs[uv.y - 1] });
+				result.push_back({ { verts[face.z - 1], }, {0,0,0}, uvs[uv.z - 1] });
+			}
+
+			void AddQuad(std::vector<Vertex>& result, std::vector<glm::vec3> verts, std::vector<glm::vec2>& uvs, std::vector<std::string> faces) {
+				glm::vec4 face;
+				glm::vec4 uv;
+
+				std::string pos_1 = String::ReadToChar(faces[0], '/');
+				std::string pos_2 = String::ReadToChar(faces[1], '/');
+				std::string pos_3 = String::ReadToChar(faces[2], '/');
+				std::string pos_4 = String::ReadToChar(faces[3], '/');
+
+				for (unsigned char i = 0; i < 4; i++) {
+					face.x = (unsigned int)atoi(pos_1.c_str());
+					face.y = (unsigned int)atoi(pos_2.c_str());
+					face.z = (unsigned int)atoi(pos_3.c_str());
+					face.w = (unsigned int)atoi(pos_4.c_str());
+				}
+
+				pos_1 = String::ReadToChar(pos_1, '/');
+				pos_2 = String::ReadToChar(pos_2, '/');
+				pos_3 = String::ReadToChar(pos_3, '/');
+				pos_4 = String::ReadToChar(pos_4, '/');
+
+				for (unsigned char i = 0; i < 4; i++) {
+					uv.x = atof(pos_1.c_str());
+					uv.y = atof(pos_2.c_str());
+					uv.z = atof(pos_3.c_str());
+					uv.w = atof(pos_4.c_str());
+				}
+
+				result.push_back({ { verts[face.x - 1], }, {0,0,0}, uvs[uv.x - 1] });
+				result.push_back({ { verts[face.y - 1], }, {0,0,0}, uvs[uv.y - 1] });
+				result.push_back({ { verts[face.z - 1], }, {0,0,0}, uvs[uv.z - 1] });
+
+				result.push_back({ { verts[face.z - 1], }, {0,0,0}, uvs[uv.z - 1] });
+				result.push_back({ { verts[face.w - 1], }, {0,0,0}, uvs[uv.w - 1] });
+				result.push_back({ { verts[face.x - 1], }, {0,0,0}, uvs[uv.x - 1] });
+			}
+
 			Model* LoadModelFromObj(const char* path, Material* mat, vec3f pos = { 0, 0, 0 }) {
 				auto find = Models.find(path);
 				if (find == Models.end()) {
-					std::vector<glm::vec3> verts;
+					std::vector<glm::vec3> verts = std::vector<glm::vec3>();
+					std::vector<glm::vec2> uvs   = std::vector<glm::vec2>();
+					std::vector<Vertex> final_verts = std::vector<Vertex>();
 
 					std::string s;
 					std::ifstream fin(path);
@@ -142,12 +226,32 @@ namespace SpaRcle {
 							fin >> pos.x >> pos.y >> pos.z;
 							verts.push_back(pos);
 						}
+						else if (s == "vt") {
+							glm::vec2 uv;
+							fin >> uv.x >> uv.y;
+							uvs.push_back(uv);
+						}
 						else if (s == "f") {
+							std::string temp;
+							std::getline(fin, temp);
+							temp = temp.substr(1);
+							std::vector<std::string> faces = String::Split(temp, " ");
 
+							if (faces.size() == 3)
+								AddTriangle(final_verts, verts, uvs, faces);
+							else if (faces.size() == 4)
+								AddQuad(final_verts, verts, uvs, faces);
+
+							faces.clear();
 						}
 					}
-					Mesh* mesh = nullptr;//new Mesh(verts, _3D_Models::CubeUV, pos);
-					Model* model = new Model(mesh, nullptr);
+					fin.close();
+
+					//for (auto v : verts)
+					//	std::cout << v.x << " " << v.y << " " << v.z << std::endl;
+
+					Mesh* mesh = new Mesh(final_verts, pos);
+					Model* model = new Model(mesh, mat);
 					return model;
 				}
 				else return find->second;

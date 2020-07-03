@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-bool SpaRcle::Graphics::Camera::Create(WindowFormat* format, int& x_pos, int& y_pos, glm::mat4& projective)  {
+bool SpaRcle::Graphics::Camera::Create(WindowFormat** format, int& x_pos, int& y_pos, glm::mat4& projective)  {
 	debug->Graph("Creating camera...");
 
 	//this->x_size = &x_size;
@@ -74,20 +74,23 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 			sceneStartTime = clock();
 			if (!isMouseLock) continue;
 
-			if (*isMouseLock)
+			if (*isMouseLock) {
 				GetCursorPos(&pt);          // онксвюел онгхжхч йспянпю
 
-			prevX = pt.x;                   // он ьхпхме
-			prevY = pt.y;                   // он бшянре         
+				prevX = pt.x;                   // он ьхпхме
+				prevY = pt.y;                   // он бшянре         
+			}
 
+			//std::cout << (*format)->size_x << " " << (*format)->size_y << std::endl;
+				 
 			if (*isMouseLock) {
 				//SetCursorPos(1600 / 2, 900 / 2);// ярюбхл йспянп б жемрп нймю
 				bool b = Input::FixedGetKeyDown(KeyCode::F);
 				SetCursorPos(
 					//*x_pos + *x_size / 2,
 					//*y_pos + *y_size / 2
-					*x_pos + format->size_x / 2,
-					*y_pos + format->size_y / 2
+					*x_pos + (*format)->size_x / 2,
+					*y_pos + (*format)->size_y / 2
 				);// ярюбхл йспянп б жемрп нймю
 				GetCursorPos(&pt);              // онксвюел онгхжхч йспянпю
 				//prevX = pt.x;                   // он ьхпхме

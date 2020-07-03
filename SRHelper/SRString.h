@@ -33,7 +33,7 @@ namespace SpaRcle {
 				}
 				return oss.str();
 			}
-			static std::string ReadToChar(std::string& str, const char c, const size_t start = 0, size_t* end = nullptr) {
+			static std::string ReadToChar(const std::string& str, const char c, const size_t start = 0, size_t* end = nullptr) {
 				std::string nstr = std::string();
 
 				for (size_t t = start; t < str.size(); t++) {

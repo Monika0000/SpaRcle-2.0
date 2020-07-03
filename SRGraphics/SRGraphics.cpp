@@ -78,7 +78,7 @@ namespace SpaRcle {
 				if (camera) camera->Create(
 					//win->format->size_x,
 					//win->format->size_y,
-					win->format,
+					&win->format,
 					win->x_pos,
 					win->y_pos,
 					win->projective

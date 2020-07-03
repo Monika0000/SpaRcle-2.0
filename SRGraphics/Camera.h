@@ -41,7 +41,7 @@ namespace SpaRcle {
 		private:
 			GLuint projMatIdx;
 			GLuint viewMatIdx;
-			WindowFormat* format = nullptr;
+			WindowFormat** format = nullptr;
 			glm::mat4* projective = nullptr;
 			int* x_pos = nullptr; int* y_pos = nullptr;
 		private:
@@ -62,12 +62,17 @@ namespace SpaRcle {
 			~Camera() { Close(); };
 		public:
 			bool Create(
-				WindowFormat* format,
+				WindowFormat** format,
 				//unsigned short& x_size, unsigned short& y_size,
 				int& x_pos, int& y_pos, glm::mat4& projective
 			);
 			bool Init(bool& isMouseLock);
 			bool Run();
+			void SetCursorPosition(int x, int y) {
+				SetCursorPos(x, y);
+				prevX = x;
+				prevY = y;
+			}
 			void SetShader(Shader* shader) { 
 				this->shader = shader;
 

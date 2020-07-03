@@ -21,7 +21,10 @@ SpaRcle::Graphics::Render::Render(Debug* debug) {
 
 bool SpaRcle::Graphics::Render::Create() {
 	debug->Graph("Creating render...");
+
 	this->texManager = new TextureManager(debug);
+	this->modManager = new ModelManager(debug);
+
 	isCreate = true;
 
 	this->shader = new Shader("shader", debug);

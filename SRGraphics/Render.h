@@ -58,6 +58,7 @@ namespace SpaRcle {
 			void SetFog(bool val) { this->fog = val; }
 			bool GetFog() { return this->fog; }
 
+
 			Shader* GetShader() {
 				if (!this->shader) {
 					debug->Error("Shader is nullptr!");
@@ -65,6 +66,14 @@ namespace SpaRcle {
 					return nullptr;
 				}
 				else return this->shader;
+			}
+			ModelManager* GetModelManager() {
+				if (!this->modManager) {
+					debug->Error("Model manager is nullptr!");
+					Sleep(1000);
+					return nullptr;
+				}
+				else return this->modManager;
 			}
 			TextureManager* GetTextureManager() {
 				if (!this->texManager) {
@@ -86,6 +95,7 @@ namespace SpaRcle {
 			Shader* shader;
 			Debug* debug;
 			TextureManager* texManager;
+			ModelManager* modManager;
 		private:
 			std::vector<UI*> _ui_objects;
 		};

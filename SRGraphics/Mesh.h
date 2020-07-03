@@ -10,9 +10,17 @@ namespace SpaRcle {
 	namespace Graphics {
 
 		struct Vertex {
+		//public:
 			glm::vec3 Position;
 			glm::vec3 Normal;
 		 	glm::vec2 TexCoords;
+		//public:
+		//	Vertex(glm::vec3 Position, glm::vec3 Normal, glm::vec2 TexCoords) : Position(Position), Normal(Normal), TexCoords(TexCoords) {};
+			//Vertex(vec3f Position, vec3f Normal, vec3f TexCoords) : 
+			//	Position(Position.x, Position.y, Position.z), 
+			//	Normal(Normal.x, Normal.y, Normal.z),
+			//	TexCoords(TexCoords.x, TexCoords.y) {};
+		//	~Vertex() {};
 		};
 
 		class Render;

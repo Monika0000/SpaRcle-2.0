@@ -5,10 +5,11 @@ namespace SpaRcle {
 		struct vec2f { float x, y; };
 		struct vec2i { int x, y; };
 
-		struct vec3f { float x, y, z; };
-		struct vec3d { double x, y, z; };
-		struct vec3i { int x, y, z; };
-		struct vec3s { short x, y, z; };
-		struct vec3l { long x, y, z; };
+		struct vec3f  { float x, y, z; };
+		struct vec3d  { double x, y, z; };
+		struct vec3i  { int x, y, z; };
+		struct vec3ui { unsigned int x, y, z; };
+		struct vec3s  { short x, y, z; };
+		struct vec3l  { long x, y, z; };
 	}
 }

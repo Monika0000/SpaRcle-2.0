@@ -48,7 +48,7 @@ namespace SpaRcle {
 				mouse_pos = win->GetMousePosition();
 
 				/* MATH X_LEFT_SIDE_MAGIC_NUMBER */ //std::cout << "mouse_x = " << mouse_pos->x << "; win_x = " << (this->x_pos + 2.20625f) / (2.20625f * 2.f) << std::endl;
-				/* MATH X_LEFT_SIDE_MAGIC_NUMBER */ std::cout << "mouse_x = " << mouse_pos->x << "; win_x = " << this->x_pos << std::endl;
+				/* MATH X_LEFT_SIDE_MAGIC_NUMBER */ //std::cout << "mouse_x = " << mouse_pos->x << "; win_x = " << this->x_pos << std::endl;
 				//!std::cout << "mouse_y = " << mouse_pos->y << "; win_y = " << (2.485431f - (this->y_pos + 0.788201f)) / 2.485431f << std::endl;
 				//const float y_up = (2.485431f - (this->y_pos + 0.788201f)) / 2.485431f;//-(y_pos - (win->format->y_side_magic_number - (y_size - 1.f)) + up_size) / 2.4f; // -2.49f
 

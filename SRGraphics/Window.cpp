@@ -168,6 +168,9 @@ namespace SpaRcle {
 					break;
 				}
 				case WindowEvents::Maximize: {
+					bool lock = MouseLock();
+					if(lock) this->MouseLock(false);
+					Sleep(50);
 					if (format == maximize) {
 						debug->Log("Window event : minimize window.");
 						format = minimize;
@@ -180,6 +183,9 @@ namespace SpaRcle {
 					glfwSetWindowPos(window,
 						screen_size->x / 2 - format->size_x / 2,
 						screen_size->y / 2 - format->size_y / 2);
+					camera->SetCursorPosition(screen_size->x / 2, screen_size->y / 2);
+					Sleep(50);
+					if (lock) this->MouseLock(true);
 					break;
 				}
 				default:
