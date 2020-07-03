@@ -111,7 +111,7 @@ namespace SpaRcle {
 			return vec;
 		}
 
-		Window::Window(Debug* debug, Camera* camera, const char* name, WindowFormat* window_format, bool isMouseLock, bool vsync) {
+		Window::Window(Debug* debug, Camera* camera, const char* name, WindowFormat* window_minimize, WindowFormat* window_maximize, bool isMouseLock, bool vsync) {
 			if (global) {
 				debug->Error("Window already create!");
 				EventsManager::PushEvent(EventsManager::Events::Error);
@@ -137,7 +137,9 @@ namespace SpaRcle {
 				//this->x_size = screen_format.x;
 				//this->y_size = screen_format.y;
 
-				this->format = window_format;
+				this->format = window_minimize;
+				this->maximize = window_maximize;
+				this->minimize = window_minimize;
 
 				this->name = name;
 				this->hWnd = NULL;
@@ -163,6 +165,21 @@ namespace SpaRcle {
 					else {
 						debug->Log("You can't close this window.");
 					}
+					break;
+				}
+				case WindowEvents::Maximize: {
+					if (format == maximize) {
+						debug->Log("Window event : minimize window.");
+						format = minimize;
+					}
+					else {
+						format = maximize;
+						debug->Log("Window event : maximize window.");
+					}
+					Resize(window, format->size_x, format->size_y);
+					glfwSetWindowPos(window,
+						screen_size->x / 2 - format->size_x / 2,
+						screen_size->y / 2 - format->size_y / 2);
 					break;
 				}
 				default:

@@ -47,6 +47,7 @@ namespace SpaRcle {
 			bmp->imageSize = *(int*)&(bmp->header[0x22]);
 			bmp->width = *(int*)&(bmp->header[0x12]);
 			bmp->height = *(int*)&(bmp->header[0x16]);
+			bmp->type = Image::Type::BMP;
 
 			if (bmp->imageSize == 0) bmp->imageSize = bmp->width * bmp->height * 3; // 3 : Один байт на каждую Red, Green, Blue компоненты
 			if (bmp->dataPos == 0)	 bmp->dataPos = 54; // Тут заканчивается заголовок, и по идее, должны начаться данные
@@ -58,7 +59,7 @@ namespace SpaRcle {
 
 			return bmp;
 		}
-		Texture* TextureManager::LoadTexture(const char* file) {
+		Texture* TextureManager::LoadTexture(const char* file, Texture::Type type_texture, Texture::Filter filter) {
 			auto find = Textures.find(file);
 			if (find != Textures.end())
 				return find->second;
@@ -94,8 +95,9 @@ namespace SpaRcle {
 
 			texture->id = 0;
 			texture->path = file;
-			texture->type = Texture::Type::BMP;
 			texture->image = bmp;
+			texture->type = type_texture;
+			texture->filter = filter;
 
 			Textures.insert(std::make_pair(file, texture));
 
@@ -104,11 +106,5 @@ namespace SpaRcle {
 			//delete bmp;
 			return texture; 
 		}
-		//void Texture::Use(GLuint program) {
-		//	if (!isGenerate) Generate();
-		//	glActiveTexture(GL_TEXTURE0);
-		//	glBindTexture(GL_TEXTURE_2D, id);
-		//	glUniform1i(glGetUniformLocation(program, "img"), 0);
-		//}
 	}
 }

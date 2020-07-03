@@ -51,7 +51,10 @@ namespace SpaRcle {
 			int argcp;
 		public:
 			glm::mat4 projective;
+
 			WindowFormat* format;
+			WindowFormat* minimize;
+			WindowFormat* maximize;
 		public:
 			const int GetXSize() const { return format->size_x; }
 			const int GetYSize() const { return format->size_y; }
@@ -82,7 +85,7 @@ namespace SpaRcle {
 			Window(
 				Debug* debug, Camera* camera = NULL, 
 				const char*name = "SpaRcle Engine", 
-				WindowFormat* window_format = new WindowMinimize(),
+				WindowFormat* window_minimize = new Screen_720_576(), WindowFormat* window_maximize = new Screen_1600_900(),
 				bool isMouseLock = true, bool vsync = true
 			);
 			~Window() { Close(); }

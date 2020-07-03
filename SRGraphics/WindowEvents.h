@@ -20,12 +20,23 @@ namespace SpaRcle {
 				Idle = 160, LeftDown = 161, LeftUp = 162
 			};
 
+			enum class Keyboard {
+				Down = 256, Up = 257
+			};
+
+			enum class Keys {
+				F11 = 122
+			};
+
 			enum Event {
-				Close, Collapse, Expand, Unknown
+				Close, Collapse, Expand, Maximize, Unknown
 			};
 			static Event GetEvent(int msg, int param) {
 				if (msg == (int)MouseClickInToolBar::LeftDown && param == (int)MousePos::Close)
 					return Event::Close;
+				if (msg == (int)Keyboard::Down && param == (int)Keys::F11) {
+					return Event::Maximize;
+				}
 				else { return Event::Unknown; }
 			}
 		private:

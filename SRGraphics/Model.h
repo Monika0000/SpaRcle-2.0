@@ -99,19 +99,63 @@ namespace SpaRcle {
 		class Shader;
 		class Model {
 		public:
-			Texture* texture;
+			Material* material;
 			Mesh* mesh;
 		public:
 			void Draw(Shader* shader);
 		public:
-			Model(Mesh* mesh, Texture* texture) {
-				this->texture = texture;
+			Model(Mesh* mesh, Material* material) {
+				this->material = material;
 				this->mesh = mesh;
 			}
 			~Model() {
-				delete texture;
+				material = NULL;
 				delete mesh;
 			}
+		};
+
+		class ModelManager {
+		public:
+			ModelManager(Debug* debug) {
+				this->debug = debug;
+				Models = std::map<std::string, Model*>();
+			}
+			~ModelManager() {
+				//TODO: Delete all meshes!
+			}
+		public:
+			Model* LoadModelFromObj(const char* path, Material* mat, vec3f pos = { 0, 0, 0 }) {
+				auto find = Models.find(path);
+				if (find == Models.end()) {
+					std::vector<glm::vec3> verts;
+
+					std::string s;
+					std::ifstream fin(path);
+					if (!fin) {
+						debug->Error("LoadModelFromObj() : Failed loading obj model!\n\tPath : " + std::string(path));
+						Sleep(1000);
+						return nullptr;
+					}
+					while (fin >> s) {
+						if (s == "v") {
+							glm::vec3 pos;
+							fin >> pos.x >> pos.y >> pos.z;
+							verts.push_back(pos);
+						}
+						else if (s == "f") {
+
+						}
+					}
+					Mesh* mesh = nullptr;//new Mesh(verts, _3D_Models::CubeUV, pos);
+					Model* model = new Model(mesh, nullptr);
+					return model;
+				}
+				else return find->second;
+			}
+		private:
+			std::map<std::string, Model*> Models;
+		private:
+			Debug* debug;
 		};
 	}
 }
