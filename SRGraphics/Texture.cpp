@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include <Debug.h>
 #include "Shader.h"
+#include "SRString.h"
 
 namespace SpaRcle {
 	using namespace Helper;
@@ -18,8 +19,8 @@ namespace SpaRcle {
 
 		}
 
-		BMP* TextureManager::LoadBMP(const char* path) {
-			BMP* bmp = new BMP();
+		Image* TextureManager::LoadBMP(const char* path) {
+			Image* bmp = new Image();
 
 			FILE* file = nullptr; 
 			fopen_s(&file, path, "rb");
@@ -30,27 +31,31 @@ namespace SpaRcle {
 				return nullptr; 
 			}
 
-			if (fread(bmp->header, 1, 54, file) != 54) { // У нас проблемы, если не смогли прочитать 54 байта
+			unsigned char header[54]; // каждый BMP файл начинается с 54байтного заголовка
+			unsigned int dataPos;	  // Позиция в файле где сами данные начинаются
+
+			if (fread(header, 1, 54, file) != 54) { // У нас проблемы, если не смогли прочитать 54 байта
 				debug->Error("LoadBMP() : Not a correct BMP file!\n\tPath : " + std::string(path));
 				Sleep(1000);
 				return nullptr;
 			}
 
-			if (bmp->header[0] != 'B' || bmp->header[1] != 'M') {
+			if (header[0] != 'B' || header[1] != 'M') {
 				debug->Error("LoadBMP() : Not a correct BMP file!\n\tPath : " + std::string(path));
 				Sleep(1000);
 				return nullptr;
 			}
 
 			// Читаем int из массива байтов
-			bmp->dataPos = *(int*)&(bmp->header[0x0A]);
-			bmp->imageSize = *(int*)&(bmp->header[0x22]);
-			bmp->width = *(int*)&(bmp->header[0x12]);
-			bmp->height = *(int*)&(bmp->header[0x16]);
+			dataPos = *(int*)&(header[0x0A]);
+			bmp->imageSize = *(int*)&(header[0x22]);
+			bmp->width = *(int*)&(header[0x12]);
+			bmp->height = *(int*)&(header[0x16]);
 			bmp->type = Image::Type::BMP;
+			bmp->channels = 3;
 
 			if (bmp->imageSize == 0) bmp->imageSize = bmp->width * bmp->height * 3; // 3 : Один байт на каждую Red, Green, Blue компоненты
-			if (bmp->dataPos == 0)	 bmp->dataPos = 54; // Тут заканчивается заголовок, и по идее, должны начаться данные
+			if (dataPos == 0)		 dataPos = 54; // Тут заканчивается заголовок, и по идее, должны начаться данные
 
 			bmp->data = new unsigned char[bmp->imageSize]; // Создаем буфер
 
@@ -59,11 +64,120 @@ namespace SpaRcle {
 
 			return bmp;
 		}
+		Image* TextureManager::LoadPNG(const char* path) {
+			int width = 0;
+			int height = 0;	
+			int channels = 0;	
+
+			unsigned char* image = SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_AUTO);
+			Image* png = new Image();
+			png->alpha = true;
+			png->data = image;
+			png->type = Image::Type::PNG;
+			png->height = height;
+			png->width = width;
+			png->channels = channels;
+			png->imageSize = width * height;
+
+			return png;
+		}
+		Image* TextureManager::LoadTGA(const char* path) {
+			HANDLE hFile = CreateFile(String::CharsToLPWSTR(path), FILE_READ_DATA, FILE_SHARE_READ, 0,
+				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+
+			if (hFile == INVALID_HANDLE_VALUE) {
+				debug->Error("LoadTGA() : INVALID_HANDLE_VALUE!\n\tPath : " + std::string(path));
+				return nullptr;
+			}
+
+			DWORD dwBytesRead = 0;
+			TgaHeader header = { 0 };
+
+			// Read in the TGA file header.
+			ReadFile(hFile, &header, sizeof(header), &dwBytesRead, 0);
+
+			// Skip over the TGA file's ID field.
+			if (header.idLength > 0)
+				SetFilePointer(hFile, header.idLength, 0, FILE_CURRENT);
+
+			// Check for compatible color depth.
+			if (!(header.pixelDepth == 32 || header.pixelDepth == 24 || header.pixelDepth == 8))
+			{
+				CloseHandle(hFile);
+				debug->Error("LoadTGA() : Incorrect depth!\n\tPath : " + std::string(path));
+				return nullptr;
+			}
+
+			// Only support uncompressed true color and grayscale images.
+			if (!(header.imageType == 0x02 || header.imageType == 0x01))
+			{
+				CloseHandle(hFile);
+				debug->Error("LoadTGA() : Incorrect type!\n\tPath : " + std::string(path));
+				return nullptr;
+			}
+
+			// Read the TGA file into a temporary buffer.
+
+			DWORD dwPitch = header.width * (header.pixelDepth / 8);
+			DWORD dwBufferSize = dwPitch * header.height;
+			std::vector<BYTE> buffer(dwBufferSize);
+
+			// Load the pixel data from the TGA file. Flip image if it's not top down.
+			if ((header.imageDescriptor & 0x30) == 0x20)
+			{
+				// TGA image is stored top down in file.
+				ReadFile(hFile, &buffer[0], dwBufferSize, &dwBytesRead, 0);
+			}
+			else
+			{
+				// TGA image is stored bottom up in file. Need to flip it.
+
+				BYTE* pRow = 0;
+
+				for (int i = 0; i < header.height; ++i)
+				{
+					pRow = &buffer[(header.height - 1 - i) * dwPitch];
+					ReadFile(hFile, pRow, dwPitch, &dwBytesRead, 0);
+				}
+			}
+
+			CloseHandle(hFile);
+
+			//if (!create(header.width, header.height))
+			//	return false;
+
+			//setPixels(&buffer[0], header.width, header.height, header.pixelDepth / 8);
+			return nullptr;
+		}
 		Texture* TextureManager::LoadTexture(const char* file, Texture::Type type_texture, Texture::Filter filter) {
 			auto find = Textures.find(file);
 			if (find != Textures.end())
 				return find->second;
 
+			std::string extension = Helper::String::BackReadToChar(file, '.');
+			Image* image = nullptr;
+			if (extension == "bmp")
+				image = LoadBMP(file);
+			else if (extension == "png")
+				image = LoadPNG(file);
+			else if (extension == "tga")
+				image = LoadTGA(file);
+			else {
+				debug->Error("TextureManager : Unknown image format!\n\tPath : " + std::string(file)+"\n\tExtension : "+ extension);
+				Sleep(1000);
+				return nullptr;
+			}
+
+			if (!image) {
+				debug->Error("TextureManager : Failed loading texture!\n\tPath : "+std::string(file));
+				Sleep(1000);
+				return nullptr;
+			}
+			if (!image->data) {
+				debug->Error("TextureManager : Texture data is nullptr!\n\tPath : " + std::string(file));
+				Sleep(1000);
+				return nullptr;
+			}
 			/*
 			SOIL_load_OGL_texture(
 				file, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
@@ -73,31 +187,16 @@ namespace SpaRcle {
 			*/
 
 			Texture* texture = new Texture();
-			BMP* bmp = LoadBMP(file);
-			if (!bmp) {
-				debug->Error("Failed loading texture!");
-				Sleep(1000);
-				return nullptr;
-			}
+		
 
 			//?=====================================
 
-			// Создаем одну OpenGL текстуру
-
-			/*
-			// Биндим текстуру, и теперь все функции по работе с текстурами будут работать с этой
-			glBindTexture(GL_TEXTURE_2D, textureID);
-			// Отправляем картинку в OpenGL текстуру
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bmp->width, bmp->height, 0, GL_BGR, GL_UNSIGNED_BYTE, bmp->data);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			*/
-
 			texture->id = 0;
 			texture->path = file;
-			texture->image = bmp;
+			texture->image = image;
 			texture->type = type_texture;
 			texture->filter = filter;
+			texture->Alpha = image->alpha;
 
 			Textures.insert(std::make_pair(file, texture));
 

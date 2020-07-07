@@ -5,10 +5,11 @@
 #include <GL/glew.h>
 #include <vector>
 #include <Vector3.h>
+#include <SRHelper.h>
 
 namespace SpaRcle {
 	namespace Graphics {
-
+		using namespace Helper;
 		struct Vertex {
 		//public:
 			glm::vec3 Position;
@@ -25,12 +26,14 @@ namespace SpaRcle {
 
 		class Render;
 		class Model;
+		class ModelManager;
 		class Shader;
 		class Texture;
 
 		struct Mesh {
 			friend class Render;
 			friend class Model;
+			friend class ModelManager;
 		private:
 			size_t count_vertices;
 			std::vector<Vertex> vertices;
@@ -159,7 +162,7 @@ namespace SpaRcle {
 				glBindVertexArray(this->VAO);
 			}
 		public:
-			Mesh(std::vector<Vertex> vertices, vec3f pos = { 0.f, 0.f, 0.f }) {
+			Mesh(std::vector<Vertex> vertices, vec3f pos = { 0.f, 0.f, 0.f }, size_t count_vertices = Math::size_t_max) {
 			//Mesh(Data* data, vec3f pos = { 0.f, 0.f, 0.f }) {
 			//Mesh(std::vector<glm::vec3> vertices, std::vector<glm::vec2> uvs, vec3f pos = { 0.f, 0.f, 0.f }) {
 				this->VAO = 0;
@@ -175,7 +178,8 @@ namespace SpaRcle {
 				//this->uvs= uvs;
 
 				SetPosition(pos);
-				this->count_vertices = vertices.size();
+				if(count_vertices == Math::size_t_max)
+					this->count_vertices = vertices.size();
 				//this->Compile();
 			}
 			~Mesh() {

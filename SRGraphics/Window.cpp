@@ -167,6 +167,12 @@ namespace SpaRcle {
 					}
 					break;
 				}
+				case WindowEvents::ALT_F4: {
+					debug->System("Alt+F4 has been pressed.");
+					EventsManager::PushEvent(EventsManager::Events::Exit);
+					glfwTerminate();
+					break;
+				}
 				case WindowEvents::Maximize: {
 					bool lock = MouseLock();
 					if(lock) this->MouseLock(false);
@@ -472,6 +478,8 @@ namespace SpaRcle {
 
 			isRun = false;
 			if (task.joinable()) task.join();
+
+			delete this->format;
 
 			return true;
 		}

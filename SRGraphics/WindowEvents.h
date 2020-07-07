@@ -29,14 +29,16 @@ namespace SpaRcle {
 			};
 
 			enum Event {
-				Close, Collapse, Expand, Maximize, Unknown
+				Close, Collapse, Expand, Maximize, ALT_F4, Unknown
 			};
 			static Event GetEvent(int msg, int param) {
 				if (msg == (int)MouseClickInToolBar::LeftDown && param == (int)MousePos::Close)
 					return Event::Close;
-				if (msg == (int)Keyboard::Down && param == (int)Keys::F11) {
+				else if (msg == (int)Keyboard::Down && param == (int)Keys::F11) {
 					return Event::Maximize;
 				}
+				else if (msg == 274 && param == 61536)
+					return Event::ALT_F4;
 				else { return Event::Unknown; }
 			}
 		private:

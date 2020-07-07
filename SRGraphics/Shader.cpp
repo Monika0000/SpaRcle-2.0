@@ -65,8 +65,10 @@ bool SpaRcle::Graphics::Shader::Compile() {
     glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 
     //?===========================================[ ERRORS ]==============================================
-    std::vector<char> VertexShaderErrorMessage(InfoLogLength);
-    glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+    if (InfoLogLength != 0) {
+        std::vector<char> VertexShaderErrorMessage(InfoLogLength);
+        glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+    }
     ///error = String::FromCharVector(VertexShaderErrorMessage);
     ///if (error.size() == 0) error = "Shader is nullptr!";
     ///debug->Error("Failed compile vertex shader! Reason : " + error);
@@ -83,8 +85,10 @@ bool SpaRcle::Graphics::Shader::Compile() {
     glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 
     //?===========================================[ ERRORS ]==============================================
-    std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
-    glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+    if (InfoLogLength != 0) {
+        std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
+        glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+    }
    /// error = String::FromCharVector(FragmentShaderErrorMessage);
     ///if (error.size() == 0) error = "Shader is nullptr!";
     ///debug->Error("Failed compile fragment shader! Reason : " + error);
@@ -101,18 +105,20 @@ bool SpaRcle::Graphics::Shader::Compile() {
     glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 
     //?===========================================[ ERRORS ]==============================================
-    std::vector<char> ProgramErrorMessage(InfoLogLength);
-    glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-    error = String::FromCharVector(ProgramErrorMessage);
-    if (error.size() != 0) {
-        size_t index = error.find("error");
-        if (index == Math::size_t_max) {
-            debug->Warn("Warning linking program! Reason : " + error);
-            isLinked = true;
+    if (InfoLogLength != 0) {
+        std::vector<char> ProgramErrorMessage(InfoLogLength);
+        glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+        error = String::FromCharVector(ProgramErrorMessage);
+        if (error.size() != 0) {
+            size_t index = error.find("error");
+            if (index == Math::size_t_max) {
+                debug->Warn("Warning linking program! Reason : " + error);
+                isLinked = true;
+            }
+            else debug->Error("Failed linking program! Reason : " + error);
         }
-        else debug->Error("Failed linking program! Reason : " + error);
-    }
-    else isLinked = true;
+        else isLinked = true;
+    } else isLinked = true;
     //?===================================================================================================
 
     glDeleteShader(VertexShaderID);

@@ -72,7 +72,7 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 		now = clock();
 		if (now - sceneStartTime > sceneSkipTime) {
 			sceneStartTime = clock();
-			if (!isMouseLock) continue;
+			if (!isMouseLock || !format) continue;
 
 			if (*isMouseLock) {
 				GetCursorPos(&pt);          // ÏÎËÓ×ÀÅÌ ÏÎÇÈÖÈÞ ÊÓÐÑÎÐÀ
@@ -86,6 +86,10 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 			if (*isMouseLock) {
 				//SetCursorPos(1600 / 2, 900 / 2);// ÑÒÀÂÈÌ ÊÓÐÑÎÐ Â ÖÅÍÒÐ ÎÊÍÀ
 				bool b = Input::FixedGetKeyDown(KeyCode::F);
+				
+				if ((unsigned long long)(*format) == 0xdddddddddddddddd) { 
+					debug->Warn("Camera : *format has been adress 0xdddddddddddddddd");
+					break; }
 				SetCursorPos(
 					//*x_pos + *x_size / 2,
 					//*y_pos + *y_size / 2

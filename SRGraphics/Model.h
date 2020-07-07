@@ -115,6 +115,8 @@ namespace SpaRcle {
 		};
 
 		class ModelManager {
+			const glm::vec3 negative1 = glm::vec3(-1, -1, -1);
+			const glm::vec2 negative2 = glm::vec3(-1, -1, -1);
 		public:
 			ModelManager(Debug* debug) {
 				this->debug = debug;
@@ -164,9 +166,19 @@ namespace SpaRcle {
 					uv.z = atof(pos_3.c_str());
 				}
 
-				result.push_back({ { verts[face.x - 1], }, {0,0,0}, uvs[uv.x - 1] }); //uvs[uv.x - 1]
-				result.push_back({ { verts[face.y - 1], }, {0,0,0}, uvs[uv.y - 1] });
-				result.push_back({ { verts[face.z - 1], }, {0,0,0}, uvs[uv.z - 1] });
+				result.push_back({ { verts[face.x - 1.f] }, {0,0,0}, uvs[uv.z - 1.f] }); //z
+				result.push_back({ { verts[face.y - 1.f] }, {0,0,0}, uvs[uv.x - 1.f] }); //x
+				result.push_back({ { verts[face.z - 1.f] }, {0,0,0}, uvs[uv.y - 1.f] }); //y
+
+				//? OKAY
+				//result.push_back({ { verts[face.x - 1.f] }, {0,0,0}, uvs[uv.z - 1.f] }); //z
+				//result.push_back({ { verts[face.y - 1.f] }, {0,0,0}, uvs[uv.x - 1.f] }); //x
+				//result.push_back({ { verts[face.z - 1.f] }, {0,0,0}, uvs[uv.y - 1.f] }); //y
+
+				//? Вывернуть наизнанку
+				//result.push_back({ { verts[face.z - 1.f] * negative1, }, {0,0,0}, uvs[face.z - 1.f] });
+				//result.push_back({ { verts[face.y - 1.f] * negative1, }, {0,0,0}, uvs[face.x - 1.f] });
+				//result.push_back({ { verts[face.x - 1.f] * negative1, }, {0,0,0}, uvs[face.y - 1.f] });
 			}
 
 			void AddQuad(std::vector<Vertex>& result, std::vector<glm::vec3> verts, std::vector<glm::vec2>& uvs, std::vector<std::string> faces) {
@@ -209,6 +221,9 @@ namespace SpaRcle {
 			Model* LoadModelFromObj(const char* path, Material* mat, vec3f pos = { 0, 0, 0 }) {
 				auto find = Models.find(path);
 				if (find == Models.end()) {
+					size_t count_vertices = 0;
+					size_t count_texcoord = 0;
+
 					std::vector<glm::vec3> verts = std::vector<glm::vec3>();
 					std::vector<glm::vec2> uvs   = std::vector<glm::vec2>();
 					std::vector<Vertex> final_verts = std::vector<Vertex>();
@@ -225,11 +240,13 @@ namespace SpaRcle {
 							glm::vec3 pos;
 							fin >> pos.x >> pos.y >> pos.z;
 							verts.push_back(pos);
+							count_vertices++;
 						}
 						else if (s == "vt") {
 							glm::vec2 uv;
 							fin >> uv.x >> uv.y;
 							uvs.push_back(uv);
+							count_texcoord++;
 						}
 						else if (s == "f") {
 							std::string temp;
@@ -242,7 +259,7 @@ namespace SpaRcle {
 							else if (faces.size() == 4)
 								AddQuad(final_verts, verts, uvs, faces);
 
-							faces.clear();
+							//faces.clear();
 						}
 					}
 					fin.close();
@@ -251,7 +268,16 @@ namespace SpaRcle {
 					//	std::cout << v.x << " " << v.y << " " << v.z << std::endl;
 
 					Mesh* mesh = new Mesh(final_verts, pos);
+					if (mesh->count_vertices == 0) {
+						debug->Error("LoadModelFromObj() : Failed loading obj model!\n\tPath : " + std::string(path) + "\n\tReason : count_vertices == 0!");
+						Sleep(1000);
+						return nullptr;
+					}
+
 					Model* model = new Model(mesh, mat);
+
+					//model->mesh->vertices.swap(model->mesh->vertices); ??????
+
 					return model;
 				}
 				else return find->second;
