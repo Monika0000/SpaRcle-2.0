@@ -39,15 +39,22 @@ namespace SpaRcle {
 			bool isRun = false;
 			bool* isMouseLock = nullptr;
 		private:
-			GLuint projMatIdx;
-			GLuint viewMatIdx;
+			glm::mat4 viewMat;
+			std::vector<GLuint> projMatIdxes;
+			std::vector<GLuint> viewMatIdxes;
+			std::vector<GLuint> CameraPositionIdxes;
+			std::vector<Shader*> shaders;
+			size_t count_shaders = 0;
+
 			WindowFormat** format = nullptr;
 			glm::mat4* projective = nullptr;
 			int* x_pos = nullptr; int* y_pos = nullptr;
 		private:
 			Debug* debug = nullptr;
-			Shader* shader = nullptr;
 			std::thread move_thread;
+		public:
+			const glm::mat4 GetView() const noexcept { return viewMat; }
+			const glm::mat4 GetProj() const { return *projective; }
 		public:
 			Camera(Debug*debug) {
 				//x_size = NULL;
@@ -73,11 +80,14 @@ namespace SpaRcle {
 				prevX = x;
 				prevY = y;
 			}
-			void SetShader(Shader* shader) { 
-				this->shader = shader;
+			void AddShader(Shader* shader) { 
+				this->shaders.push_back(shader);
 
-				projMatIdx = glGetUniformLocation(shader->ProgramID, "projMat");
-				viewMatIdx = glGetUniformLocation(shader->ProgramID, "viewMat");
+				projMatIdxes.push_back(glGetUniformLocation(shader->ProgramID, "projMat"));
+				viewMatIdxes.push_back(glGetUniformLocation(shader->ProgramID, "viewMat"));
+				CameraPositionIdxes.push_back(glGetUniformLocation(shader->ProgramID, "CamPos"));
+
+				count_shaders++;
 			}
 			bool Close();
 			void Move();

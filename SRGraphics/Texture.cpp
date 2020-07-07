@@ -9,8 +9,8 @@ namespace SpaRcle {
 	using namespace Helper;
 	namespace Graphics {
 		TextureManager::TextureManager(Debug* debug) {
-			if (debug) { 
-				this->debug = debug; 
+			if (debug) {
+				this->debug = debug;
 				this->debug->Graph("Texture manager has been created!");
 			}
 			else Debug::InternalError("TextureManager : debug is nullptr!");
@@ -20,15 +20,28 @@ namespace SpaRcle {
 		}
 
 		Image* TextureManager::LoadBMP(const char* path) {
-			Image* bmp = new Image();
+			int width = 0;
+			int height = 0;
+			int channels = 0;
 
-			FILE* file = nullptr; 
+			unsigned char* image = SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_AUTO);
+			Image* bmp = new Image();
+			bmp->alpha = false;
+			bmp->data = image;
+			bmp->type = Image::Type::BMP;
+			bmp->height = height;
+			bmp->width = width;
+			bmp->channels = channels;
+			bmp->imageSize = width * height;
+
+			/*
+			FILE* file = nullptr;
 			fopen_s(&file, path, "rb");
 
-			if (!file) { 
-				debug->Error("LoadBMP() : Image could not be opened!\n\tPath : "+ std::string(path)); 
+			if (!file) {
+				debug->Error("LoadBMP() : Image could not be opened!\n\tPath : "+ std::string(path));
 				Sleep(1000);
-				return nullptr; 
+				return nullptr;
 			}
 
 			unsigned char header[54]; // каждый BMP файл начинается с 54байтного заголовка
@@ -60,14 +73,14 @@ namespace SpaRcle {
 			bmp->data = new unsigned char[bmp->imageSize]; // Создаем буфер
 
 			fread(bmp->data, 1, bmp->imageSize, file); // Читаем данные из файла в буфер
-			fclose(file);					 //Теперь все данные в памяти, и можно закрыть файл
+			fclose(file);					 //Теперь все данные в памяти, и можно закрыть файл*/
 
 			return bmp;
 		}
 		Image* TextureManager::LoadPNG(const char* path) {
 			int width = 0;
-			int height = 0;	
-			int channels = 0;	
+			int height = 0;
+			int channels = 0;
 
 			unsigned char* image = SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_AUTO);
 			Image* png = new Image();
@@ -149,27 +162,66 @@ namespace SpaRcle {
 			//setPixels(&buffer[0], header.width, header.height, header.pixelDepth / 8);
 			return nullptr;
 		}
-		Texture* TextureManager::LoadTexture(const char* file, Texture::Type type_texture, Texture::Filter filter) {
-			auto find = Textures.find(file);
-			if (find != Textures.end())
-				return find->second;
+		Image* TextureManager::LoadJPG(const char* path) {
+			int width = 0;
+			int height = 0;
+			int channels = 0;
 
-			std::string extension = Helper::String::BackReadToChar(file, '.');
+			unsigned char* image = SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_AUTO);
+			Image* jpg = new Image();
+			jpg->alpha = false;
+			jpg->data = image;
+			jpg->type = Image::Type::JPG;
+			jpg->height = height;
+			jpg->width = width;
+			jpg->channels = channels;
+			jpg->imageSize = width * height;
+
+			return jpg;
+		}
+
+		Image* TextureManager::LoadImage(const char* file) {
+			debug->Log("Loading image : " + std::string(file));
+
 			Image* image = nullptr;
+			std::string extension = Helper::String::BackReadToChar(file, '.');
 			if (extension == "bmp")
 				image = LoadBMP(file);
 			else if (extension == "png")
 				image = LoadPNG(file);
 			else if (extension == "tga")
 				image = LoadTGA(file);
+			else if (extension == "jpg")
+				image = LoadJPG(file);
 			else {
-				debug->Error("TextureManager : Unknown image format!\n\tPath : " + std::string(file)+"\n\tExtension : "+ extension);
+				debug->Error("TextureManager::LoadImage() : Unknown image format!\n\tPath : " + std::string(file) + "\n\tExtension : " + extension);
 				Sleep(1000);
 				return nullptr;
 			}
+			return image;
+		}
+
+		Skybox* TextureManager::LoadSkybox(const char* file_base, Image::Type format) {
+			static const std::string files[6] { "_right", "_left", "_top", "_bottom", "_front", "_back" };
+			
+			Skybox* skybox = new Skybox();
+
+			for (unsigned int i = 0; i < 6; i++){
+				skybox->sides[i] = LoadImage((std::string(file_base) + files[i] + Image::TypeToStr(format)).c_str());
+			}
+
+			return skybox;
+		}
+
+		Texture* TextureManager::LoadTexture(const char* file, Texture::Type type_texture, Texture::Filter filter) {
+			auto find = Textures.find(file);
+			if (find != Textures.end())
+				return find->second;
+
+			Image* image = this->LoadImage(file);
 
 			if (!image) {
-				debug->Error("TextureManager : Failed loading texture!\n\tPath : "+std::string(file));
+				debug->Error("TextureManager : Failed loading texture!\n\tPath : " + std::string(file));
 				Sleep(1000);
 				return nullptr;
 			}
@@ -187,7 +239,7 @@ namespace SpaRcle {
 			*/
 
 			Texture* texture = new Texture();
-		
+
 
 			//?=====================================
 
@@ -203,7 +255,19 @@ namespace SpaRcle {
 			//?=====================================
 
 			//delete bmp;
-			return texture; 
+			return texture;
+		}
+
+		void Skybox::Draw(Shader* skybox_shader) {
+			if (!isGenerated) Generate();
+
+			glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+			skybox_shader->Use();
+			// ... задание видовой и проекционной матриц
+			glBindVertexArray(VAO);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, this->cubemap);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+			glDepthFunc(GL_LESS); // set depth function back to default
 		}
 	}
 }

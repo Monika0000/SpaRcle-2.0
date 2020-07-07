@@ -10,6 +10,7 @@ SpaRcle::Helper::Debug::Debug(std::string path, bool init_color_therme) {
         InitColorTherme();
     }
     setlocale(LC_ALL, "rus");
+    setlocale(LC_NUMERIC, "C");
     srand(static_cast<unsigned int>(time(0)));
 
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);

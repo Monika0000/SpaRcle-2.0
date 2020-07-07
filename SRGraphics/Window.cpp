@@ -71,10 +71,10 @@ namespace SpaRcle {
 			glMatrixMode(GL_PROJECTION);// используем матрицу проекции
 			glLoadIdentity();// Reset матрицы
 			glViewport(0, 0, x_size, y_size);// определ€ем окно просмотра
-			gluPerspective(45, ratio, 0.1, 1000);// установить корректную перспективу.
+			gluPerspective(45, ratio, 0.1, 8000);// установить корректную перспективу.
 			glMatrixMode(GL_MODELVIEW);// вернутьс€ к модели
 
-			win->projective = glm::perspective(glm::radians(45.f), ratio, 0.1f, 1000.0f);
+			win->projective = glm::perspective(glm::radians(45.f), ratio, 0.1f, 8000.0f);
 
 			/*
 			if (height == 0)
@@ -413,7 +413,7 @@ namespace SpaRcle {
 			glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Ѕез этого ничего не будет работать (очистка буфера)
 
-			shader->Use();
+			//shader->Use();
 			camera->Move();
 
 			glPushMatrix(); // —охранение матрици
@@ -456,7 +456,7 @@ namespace SpaRcle {
 			}
 			else {
 				this->shader = render->GetShader();
-				this->camera->SetShader(shader);
+				//this->camera->AddShader(shader);
 			}
 
 			isInitWindow = true;

@@ -21,11 +21,33 @@ namespace SpaRcle {
 	namespace Graphics {
 		class Shader;
 		class Model;
+		class Mesh;
+		class TextureManager;
+		class Camera;
 
 		struct Image {
 			enum class Type {
 				BMP, PNG, JPG, TIFF, TGA, UNKNOWN
 			};
+		public:
+			static const std::string TypeToStr(Type type) noexcept {
+				switch (type){
+				case Image::Type::BMP:
+					return ".bmp";
+				case Image::Type::PNG:
+					return ".png";
+				case Image::Type::JPG:
+					return ".jpg";
+				case Image::Type::TIFF:
+					return ".tiff";
+				case Image::Type::TGA:
+					return ".tga";
+				case Image::Type::UNKNOWN:
+					return ".unknown";
+				default:
+					return ".default";
+				}
+			}
 		public:
 			unsigned int width = 0, height = 0, channels = 0;
 			unsigned int imageSize = 0;   // = ширина*высота*3
@@ -138,6 +160,97 @@ namespace SpaRcle {
 			std::string path;
 			Image* image;
 		};
+
+		class Skybox {
+			friend class TextureManager;
+			const float skyboxVertices[36 * 3] = {
+				// positions          
+				-10.0f,  10.0f, -10.0f,
+				-10.0f, -10.0f, -10.0f,
+				 10.0f, -10.0f, -10.0f,
+				 10.0f, -10.0f, -10.0f,
+				 10.0f,  10.0f, -10.0f,
+				-10.0f,  10.0f, -10.0f,
+
+				-10.0f, -10.0f,  10.0f,
+				-10.0f, -10.0f, -10.0f,
+				-10.0f,  10.0f, -10.0f,
+				-10.0f,  10.0f, -10.0f,
+				-10.0f,  10.0f,  10.0f,
+				-10.0f, -10.0f,  10.0f,
+
+				 10.0f, -10.0f, -10.0f,
+				 10.0f, -10.0f,  10.0f,
+				 10.0f,  10.0f,  10.0f,
+				 10.0f,  10.0f,  10.0f,
+				 10.0f,  10.0f, -10.0f,
+				 10.0f, -10.0f, -10.0f,
+
+				-10.0f, -10.0f,  10.0f,
+				-10.0f,  10.0f,  10.0f,
+				 10.0f,  10.0f,  10.0f,
+				 10.0f,  10.0f,  10.0f,
+				 10.0f, -10.0f,  10.0f,
+				-10.0f, -10.0f,  10.0f,
+
+				-10.0f,  10.0f, -10.0f,
+				 10.0f,  10.0f, -10.0f,
+				 10.0f,  10.0f,  10.0f,
+				 10.0f,  10.0f,  10.0f,
+				-10.0f,  10.0f,  10.0f,
+				-10.0f,  10.0f, -10.0f,
+
+				-10.0f, -10.0f, -10.0f,
+				-10.0f, -10.0f,  10.0f,
+				 10.0f, -10.0f, -10.0f,
+				 10.0f, -10.0f, -10.0f,
+				-10.0f, -10.0f,  10.0f,
+				 10.0f, -10.0f,  10.0f
+			};
+		private:
+			void Generate() {
+				glGenTextures(1, &cubemap);
+				glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+
+				for (unsigned int i = 0; i < 6; i++) {
+					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+						0, GL_RGB, sides[i]->width, sides[i]->height, 0, GL_RGB, GL_UNSIGNED_BYTE, sides[i]->data
+					);
+					delete sides[i];
+				}
+
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+				
+				//?/////////////////////////////////////////////////////////////////////////////////
+
+				glGenVertexArrays(1, &this->VAO);
+				glGenBuffers(1, &this->VBO);
+
+				glBindVertexArray(VAO);
+				glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+				glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+				glEnableVertexAttribArray(0);
+				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+				glBindVertexArray(0);
+
+				isGenerated = true;
+			}
+		private:
+			GLuint VAO = 0, VBO = 0;
+			Image* sides[6] = { 0 };
+			GLuint cubemap = 0;
+			bool isGenerated = false;
+		public:
+			Skybox() { };
+			void Draw(Shader* skybox_shader);
+		};
+
 		class TextureManager {
 			// TGA file header structure. This *must* be byte aligned.
 			struct TgaHeader
@@ -156,9 +269,9 @@ namespace SpaRcle {
 				BYTE imageDescriptor;
 			};
 		private:
-			std::map<std::string, Texture*> Textures;
+			std::map<std::string, Texture*> Textures = std::map<std::string, Texture*>();
 		private:
-			Debug* debug;
+			Debug* debug = nullptr;
 		public:
 			TextureManager(Debug* debug);
 			void Close();
@@ -166,7 +279,10 @@ namespace SpaRcle {
 			Image* LoadBMP(const char* path);
 			Image* LoadPNG(const char* path);
 			Image* LoadTGA(const char* path);
+			Image* LoadJPG(const char* path);
 
+			Image* LoadImage(const char* file);
+			Skybox* LoadSkybox(const char* file_base, Image::Type format);
 			Texture* LoadTexture(const char* file, Texture::Type type_texture = Texture::Type::Diffuse, Texture::Filter filter = Texture::Filter::NEAREST);
 		};
 

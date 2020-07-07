@@ -20,16 +20,16 @@ namespace SpaRcle {
 			bool isRun = false;
 			bool useOldSlowRender = false;
 		public:
-			bool Create();
+			bool Create(Camera* camera);
 			bool Init();
 			bool Run();
 			void Close();
-		private: //! ====== [Meshes sector] ======
+		private: //! ====== [Resources sector] ======
 			//?=====================================
-			//std::vector<Mesh*> meshes;
-			//size_t count_meshes;
 			std::vector<Model*> models;
 			size_t count_models;
+			Material* def_mat = nullptr;
+			Skybox* skybox = nullptr;
 			//?=====================================
 		private:
 			bool fog;
@@ -40,6 +40,8 @@ namespace SpaRcle {
 		public:
 			void DrawAllObjects();
 			void DrawAllUI();
+
+			void SetSkybox(Skybox* skybox) { this->skybox = skybox; }
 
 			void AddModel(Model* model);
 			void AddUI(UI* ui);
@@ -58,7 +60,14 @@ namespace SpaRcle {
 			void SetFog(bool val) { this->fog = val; }
 			bool GetFog() { return this->fog; }
 
-
+			Material* GetDefMat() {
+				if (!this->def_mat) {
+					debug->Error("Default material is nullptr!");
+					Sleep(1000);
+					return nullptr;
+				}
+				else return this->def_mat;
+			}
 			Shader* GetShader() {
 				if (!this->shader) {
 					debug->Error("Shader is nullptr!");
@@ -92,10 +101,12 @@ namespace SpaRcle {
 				clear = false;
 			}
 		private:
-			Shader* shader;
-			Debug* debug;
-			TextureManager* texManager;
-			ModelManager* modManager;
+			Camera* camera = nullptr;
+			Shader* shader = nullptr;
+			Shader* skyboxShader = nullptr;
+			Debug* debug = nullptr;
+			TextureManager* texManager = nullptr;
+			ModelManager* modManager = nullptr;
 		private:
 			std::vector<UI*> _ui_objects;
 		};

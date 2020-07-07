@@ -10,12 +10,13 @@
 namespace SpaRcle {
 	namespace Graphics {
 		using namespace Helper;
+
 		struct Vertex {
 		//public:
 			glm::vec3 Position;
-			glm::vec3 Normal;
 		 	glm::vec2 TexCoords;
-		//public:
+			glm::vec3 Normal;
+			//public:
 		//	Vertex(glm::vec3 Position, glm::vec3 Normal, glm::vec2 TexCoords) : Position(Position), Normal(Normal), TexCoords(TexCoords) {};
 			//Vertex(vec3f Position, vec3f Normal, vec3f TexCoords) : 
 			//	Position(Position.x, Position.y, Position.z), 
@@ -53,15 +54,14 @@ namespace SpaRcle {
 				glBufferData(GL_ARRAY_BUFFER, count_vertices * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 				glEnableVertexAttribArray(0);
 				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-				//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-				//? [NORMAL]
-				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
 
 				//? [TEXTURE]
 				glEnableVertexAttribArray(2);
 				glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+
+				//? [NORMAL]
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
 
 				glBindVertexArray(0);
 
@@ -246,28 +246,28 @@ namespace SpaRcle {
 			};
 			inline static std::vector<Vertex> CubeVertex = {
 				// SOUTH
-				{ { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 1.0f } },		{ { 1.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },
-				{ { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 1.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },		{ { 1.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 0.0f } },
+				{ { 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0, 0, 0 } },		{ { 1.0f, 1.0f, 0.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },
+				{ { 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 1.0f, 1.0f, 0.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },		{ { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 0, 0, 0 } },
 				
 				// EAST
-				{ { 1.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 1.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 1.0f } },		{ { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },
-				{ { 1.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },		{ { 1.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 0.0f } },
+				{ { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 1.0f, 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0, 0, 0 } },		{ { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },
+				{ { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },		{ { 1.0f, 0.0f, 1.0f }, { 0.0f, 0.0f }, { 0, 0, 0 } },
 
 				// NORTH
-				{ { 1.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 1.0f } },		{ { 0.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },
-				{ { 1.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },		{ { 0.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 0.0f } },
+				{ { 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f }, { 0, 0, 0 } },		{ { 0.0f, 1.0f, 1.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },
+				{ { 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 0.0f, 1.0f, 1.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },		{ { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f }, { 0, 0, 0 } },
 
 				// WEST
-				{ { 0.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 1.0f } },		{ { 0.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },
-				{ { 0.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },		{ { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 0.0f } },
+				{ { 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 0.0f, 1.0f, 1.0f }, { 1.0f, 1.0f }, { 0, 0, 0 } },		{ { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },
+				{ { 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },		{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 0, 0, 0 } },
 
 				// TOP
-				{ { 0.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 1.0f } },		{ { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },
-				{ { 0.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 1.0f, 1.0f, 1.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },		{ { 1.0f, 1.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 0.0f } },
+				{ { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 0.0f, 1.0f, 1.0f }, { 1.0f, 1.0f }, { 0, 0, 0 } },		{ { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },
+				{ { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },		{ { 1.0f, 1.0f, 0.0f }, { 0.0f, 0.0f }, { 0, 0, 0 } },
 
 				// BOTTOM
-				{ { 1.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 1.0f } },		{ { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },
-				{ { 1.0f, 0.0f, 1.0f }, { 0, 0, 0 }, { 1.0f, 0.0f } },		{ { 0.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 1.0f } },		{ { 1.0f, 0.0f, 0.0f }, { 0, 0, 0 }, { 0.0f, 0.0f } },
+				{ { 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f }, { 0, 0, 0 } },		{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },
+				{ { 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },		{ { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 0, 0, 0 } },
 			};
 		};
 	}

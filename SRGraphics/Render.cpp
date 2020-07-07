@@ -3,7 +3,7 @@
 #include "Render.h"
 #include <GL\glew.h>
 #include <GL\freeglut_std.h>
-
+#include "SRGraphics.h"
 //#pragma comment(lib, "glew32s.lib")
 
 SpaRcle::Graphics::Render::Render(Debug* debug) {
@@ -19,15 +19,21 @@ SpaRcle::Graphics::Render::Render(Debug* debug) {
 	//this->_3d_objects = std::vector<Object3D*>();
 }
 
-bool SpaRcle::Graphics::Render::Create() {
+bool SpaRcle::Graphics::Render::Create(Camera* camera) {
 	debug->Graph("Creating render...");
 
+	this->camera = camera;
 	this->texManager = new TextureManager(debug);
-	this->modManager = new ModelManager(debug);
+	
+	SRGraphics* graph = SRGraphics::Get();
+	this->def_mat = new Material(texManager->LoadTexture((graph->GetResourcesFolder() + "\\Textures\\default.png").c_str()));
+
+	this->modManager = new ModelManager(debug, def_mat);
 
 	isCreate = true;
 
 	this->shader = new Shader("shader", debug);
+	this->skyboxShader = new Shader("skybox", debug);
 
 	return true;
 }
@@ -40,6 +46,10 @@ bool SpaRcle::Graphics::Render::Init() {
 	debug->Graph("Initializing render...");
 
 	this->shader->Compile();
+	this->skyboxShader->Compile();
+
+	this->camera->AddShader(skyboxShader);
+	this->camera->AddShader(shader);
 
 	//this->InitFog();
 
@@ -79,7 +89,9 @@ ret: if (clear) goto ret;
 		glDisable(GL_FOG);
 
 	for (Model* model : models)
-		model->Draw(shader);
+		if(model) model->Draw(shader);
+
+	if (skybox) skybox->Draw(skyboxShader);
 
 	glUseProgram(0);
 

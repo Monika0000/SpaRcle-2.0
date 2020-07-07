@@ -78,17 +78,32 @@ namespace SpaRcle {
 				result.resize(count);
 				return result;
 			}
-			static std::vector<std::string> Split(std::string text, std::string chr) {
+			static std::vector<std::string> Split(std::string text, std::string chr, bool remove_empty = false) {
 				std::vector<std::string> arr;
 				std::size_t prev = 0;
 				std::size_t next;
 				std::size_t delta = chr.length();
 
-				while ((next = text.find(chr, prev)) != std::string::npos) {
-					arr.push_back(text.substr(prev, next - prev));
-					prev = next + delta;
+				std::string temp = "";
+
+				if (remove_empty) {
+					while ((next = text.find(chr, prev)) != std::string::npos) {
+						temp = text.substr(prev, next - prev);
+						if (temp != chr && temp != "")
+							arr.push_back(temp);
+						prev = next + delta;
+					}
+					temp = text.substr(prev);
+					if (temp != chr && temp != "")
+						arr.push_back(temp);
 				}
-				arr.push_back(text.substr(prev));
+				else {
+					while ((next = text.find(chr, prev)) != std::string::npos) {
+						arr.push_back(text.substr(prev, next - prev));
+						prev = next + delta;
+					}
+					arr.push_back(text.substr(prev));
+				}
 
 				return arr;
 			}

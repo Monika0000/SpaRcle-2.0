@@ -133,27 +133,36 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 			posx += spdz * dxz;
 			posz -= spdx * dxz;
 			posy += spdy / 10;
+
+			viewMat = glm::lookAt(glm::vec3(posx + dxx, posy + dyy, posz - dxz), glm::vec3(posx, posy, posz), glm::vec3(0, 1, 0));
 		}
 	}
 }
 
 void SpaRcle::Graphics::Camera::Move() {
 	if (isRun) {
-		if (shader) {
+		//if (shader) {
 			//glm::mat4 viewMat = glm::lookAt(glm::vec3(5, 5, 5), glm::vec3(0, 0, 0), glm::vec3(0, 0, 1));
-			glm::mat4 viewMat = glm::lookAt(glm::vec3(posx + dxx, posy + dyy, posz - dxz), glm::vec3(posx, posy, posz), glm::vec3(0, 1, 0));
 			//glm::mat4 modelMat = glm::mat4(); // identity
 
 			//GLuint modelMatIdx = glGetUniformLocation(shader->ProgramID, "modelMat");
 			//std::cout << projMatIdx << " " << viewMatIdx << " " << modelMatIdx << std::endl;
 
-			glUniformMatrix4fv(projMatIdx, 1, GL_FALSE, glm::value_ptr(*this->projective));
-			glUniformMatrix4fv(viewMatIdx, 1, GL_FALSE, glm::value_ptr(viewMat));
+
+		for (size_t t = 0; t < count_shaders; t++) {
+			shaders[t]->Use();
+			glUniformMatrix4fv(projMatIdxes[t], 1, GL_FALSE, glm::value_ptr(*this->projective));
+			glUniformMatrix4fv(viewMatIdxes[t], 1, GL_FALSE, glm::value_ptr(viewMat));
+			if (CameraPositionIdxes[t] != 4294967295) {
+				glm::vec3 pos(posx, posy, posz);
+				glUniform3fv(CameraPositionIdxes[t], 1, &pos[0]);
+			}
+		}
 			//glUniformMatrix4fv(modelMatIdx, 1, GL_FALSE, glm::value_ptr(modelMat));
-		}
-		else {
-			debug->Error("Camera::Move() : shader is nullptr!");
-		}
+			//}
+		//else {
+		//	debug->Error("Camera::Move() : shader is nullptr!");
+		//}
 		//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 		//gluLookAt(posx + dxx, posy + dyy, posz - dxz, posx, posy, posz, 0.0, 0.1, 0.0);
 	}

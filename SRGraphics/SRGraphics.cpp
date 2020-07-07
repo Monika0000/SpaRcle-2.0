@@ -59,21 +59,22 @@ namespace SpaRcle {
 			if (!isCreate) {
 				debug->Graph("Creating graphics engine...");
 
+				if (!camera) {
+					debug->Error("Failed creating graphics engine! Camera is nullptr!");
+					return false;
+				}
+				else this->camera = camera;
+
 				if (!render) {
 					debug->Error("Failed creating graphics engine! Render is nullptr!");
 					return false;
 				} else { 
 					this->render = render; 
-					if (!this->render->Create()) {
+					if (!this->render->Create(camera)) {
 						debug->Error("Failed creating of render!");
 						return false;
 					}
 				}
-
-				if (!camera) {
-					debug->Error("Failed creating graphics engine! Camera is nullptr!");
-					return false;
-				} else this->camera = camera;
 
 				if (camera) camera->Create(
 					//win->format->size_x,
