@@ -16,6 +16,8 @@ namespace SpaRcle {
 			glm::vec3 Position;
 		 	glm::vec2 TexCoords;
 			glm::vec3 Normal;
+			glm::vec3 Tangent;
+
 			//public:
 		//	Vertex(glm::vec3 Position, glm::vec3 Normal, glm::vec2 TexCoords) : Position(Position), Normal(Normal), TexCoords(TexCoords) {};
 			//Vertex(vec3f Position, vec3f Normal, vec3f TexCoords) : 
@@ -44,7 +46,7 @@ namespace SpaRcle {
 
 			bool isGenerate;
 			bool isBind;
-			vec3f position;
+			glm::vec3 position;
 		private:
 			void Bind() {
 				glBindVertexArray(VAO);
@@ -56,113 +58,53 @@ namespace SpaRcle {
 				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 
 				//? [TEXTURE]
-				glEnableVertexAttribArray(2);
-				glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+				glEnableVertexAttribArray(1);
+				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 
 				//? [NORMAL]
-				glEnableVertexAttribArray(1);
-				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+				glEnableVertexAttribArray(2);
+				glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE,	sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+
+				//? [TANGENT]
+				glEnableVertexAttribArray(3);
+				glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
 
 				glBindVertexArray(0);
-
-				//!glBindBuffer(GL_ARRAY_BUFFER, UV);
-				//!glBufferData(GL_ARRAY_BUFFER, count_vertices * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
-
-				//glBufferData(GL_ARRAY_BUFFER, count_vertices * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
-
-				//std::vector<glm::vec3> vt = {
-				//	{ 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f }
-				//};
-				//glBufferData(GL_ARRAY_BUFFER, vt.size() * sizeof(glm::vec3), &vt[0], GL_STATIC_DRAW);
-
-				//unsigned int indices[] = {
-				//	0, 1, 3, // first triangle
-				//	1, 2, 3,  // second triangle
-				//};
-				//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-				//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-				//Vertex Positionen
-				///glEnableVertexAttribArray(0);
-				///glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
-
-				//Vertex Positionen
-				///!glEnableVertexAttribArray(0);
-				///!glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid*)0);
-
-				//glEnableVertexAttribArray(2);
-				//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, size, (GLvoid*)(6 * sizeof(float)));
-
-				/*
-				// position attribute
-				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-				glEnableVertexAttribArray(0);
-				// color attribute
-				glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-				glEnableVertexAttribArray(1);
-				// texture coord attribute
-				glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-				glEnableVertexAttribArray(2);
-				*/
-
-				/*
-				glBindVertexArray(this->VAO);
-
-				glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-				glBufferData(GL_ARRAY_BUFFER, count_vertices * sizeof(Vertex), &this->vertices[0], GL_STATIC_DRAW);
-
-				//?glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-				//?glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLuint), &this->indices[0], GL_STATIC_DRAW);
-
-				//Vertex Positionen
-				glEnableVertexAttribArray(0);
-				glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
-
-				//Vertex Normals
-				//?glEnableVertexAttribArray(1);
-				//?glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, Normal));
-
-				//Vertex Texture coordinates
-				//?glEnableVertexAttribArray(2);
-				//?glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, TexCoords));
-
-				//glBindVertexArray(0);
-				*/
+				
+				//this->count_vertices = 0;
+				//this->vertices.clear();
 
 				isBind = true;
 			}
 			void Generate() {
 				glGenVertexArrays(1, &this->VAO);
 				glGenBuffers(1, &this->VBO);
-				//glGenBuffers(1, &this->EBO);
-				//glGenBuffers(1, &this->UV);
-
-				//std::cout << "VAO = " << VAO << std::endl;
 
 				isGenerate = true;
 			}
 		public:
-			void SetPosition(vec3f pos) {
-				vec3f p_temp = pos;
-				pos.x -= position.x;
-				pos.y -= position.y;
-				pos.z -= position.z;
-				position = p_temp;
+			void SetPosition(glm::vec3 pos) {
+				position = pos;
+				//vec3f p_temp = pos;
+				//pos.x -= position.x;
+				////pos.y -= position.y;
+				//pos.z -= position.z;
+				//position = p_temp;
 
-				for (auto& v : vertices) {
-					v.Position.x += pos.x;
-					v.Position.y += pos.y;
-					v.Position.z += pos.z;
-				}
+				//for (auto& v : vertices) {
+				//	v.Position.x += pos.x;
+				//	v.Position.y += pos.y;
+				//	v.Position.z += pos.z;
+				//}
 
-				isBind = false;
+				//isBind = false;
 			}
 			void Draw();
-			void Bind() const {
-				glBindVertexArray(this->VAO);
-			}
+			//void Bind() const {
+			//	glBindVertexArray(this->VAO);
+			//}
 		public:
-			Mesh(std::vector<Vertex> vertices, vec3f pos = { 0.f, 0.f, 0.f }, size_t count_vertices = Math::size_t_max) {
+			Mesh(std::vector<Vertex> vertices, glm::vec3 pos = { 0.f, 0.f, 0.f }, size_t count_vertices = Math::size_t_max) {
 			//Mesh(Data* data, vec3f pos = { 0.f, 0.f, 0.f }) {
 			//Mesh(std::vector<glm::vec3> vertices, std::vector<glm::vec2> uvs, vec3f pos = { 0.f, 0.f, 0.f }) {
 				this->VAO = 0;
@@ -172,12 +114,13 @@ namespace SpaRcle {
 				this->isBind = false;
 				this->isGenerate= false;
 
-				position = { 0.f, 0.f, 0.f };
+				this->position = pos;
+				//position = { 0.f, 0.f, 0.f };
 
 				this->vertices = vertices;
 				//this->uvs= uvs;
 
-				SetPosition(pos);
+				//SetPosition(pos);
 				if(count_vertices == Math::size_t_max)
 					this->count_vertices = vertices.size();
 				//this->Compile();
@@ -244,6 +187,7 @@ namespace SpaRcle {
 				{ 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f },
 				{ 1.0f, 0.0f }, { 0.0f, 1.0f }, { 0.0f, 0.0f },
 			};
+			/*
 			inline static std::vector<Vertex> CubeVertex = {
 				// SOUTH
 				{ { 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0, 0, 0 } },		{ { 1.0f, 1.0f, 0.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },
@@ -268,7 +212,7 @@ namespace SpaRcle {
 				// BOTTOM
 				{ { 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f }, { 0, 0, 0 } },		{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },
 				{ { 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },		{ { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 0, 0, 0 } },
-			};
+			};*/
 		};
 	}
 }

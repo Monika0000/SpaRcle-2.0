@@ -1,15 +1,8 @@
 #pragma once
 #define GLEW_STATIC
 #define NOMINMAX
-#include <iostream>
-#include <GL\glew.h>
-#include <map>
-//#include <GL\glut.h>
-//#include <GLFW/glfw3.h>
-#include <SOIL/SOIL.h>
-#include <GL\glaux.h>
-#include <Debug.h>
-#pragma comment(lib, "SOIL.lib")
+
+#include "Resource.h"
 
 namespace SpaRcle {
 	namespace Helper {
@@ -24,6 +17,7 @@ namespace SpaRcle {
 		class Mesh;
 		class TextureManager;
 		class Camera;
+		class SRGraphics;
 
 		struct Image {
 			enum class Type {
@@ -57,7 +51,12 @@ namespace SpaRcle {
 
 			unsigned char* data = nullptr;
 			~Image() {
-				free(data);
+				width = 0;
+				height = 0;
+				channels = 0;
+				type = Type::UNKNOWN;
+				SOIL_free_image_data(data);
+				//free(data);
 			}
 		};
 
@@ -65,7 +64,7 @@ namespace SpaRcle {
 			friend class Model;
 			friend class Material;
 			enum class Type {
-				Diffuse, Normal, Specular, Roughness
+				Diffuse, Normal, Specular, Roughness, Glossiness
 			};
 			enum class Filter {
 				NEAREST = GL_NEAREST, LINEAR = GL_LINEAR, NEAREST_MIPMAP_NEAREST = GL_NEAREST_MIPMAP_NEAREST, 
@@ -211,13 +210,19 @@ namespace SpaRcle {
 			void Generate() {
 				glGenTextures(1, &cubemap);
 				glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+				//glDeleteTextures(1, &cubemap);
 
 				for (unsigned int i = 0; i < 6; i++) {
+					if (!sides[i]) {
+						glDeleteTextures(1, &cubemap);
+						return;
+					}
+
 					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
 						0, GL_RGB, sides[i]->width, sides[i]->height, 0, GL_RGB, GL_UNSIGNED_BYTE, sides[i]->data
 					);
-					delete sides[i];
 				}
+				for (unsigned int i = 0; i < 6; i++) delete sides[i];
 
 				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -243,7 +248,7 @@ namespace SpaRcle {
 			}
 		private:
 			GLuint VAO = 0, VBO = 0;
-			Image* sides[6] = { 0 };
+			Image* sides[6] = { nullptr,nullptr,nullptr,nullptr,nullptr,nullptr };
 			GLuint cubemap = 0;
 			bool isGenerated = false;
 		public:
@@ -251,7 +256,8 @@ namespace SpaRcle {
 			void Draw(Shader* skybox_shader);
 		};
 
-		class TextureManager {
+		class TextureManager : public IResourceManager {
+			/*
 			// TGA file header structure. This *must* be byte aligned.
 			struct TgaHeader
 			{
@@ -268,13 +274,12 @@ namespace SpaRcle {
 				BYTE pixelDepth;
 				BYTE imageDescriptor;
 			};
+			*/
 		private:
 			std::map<std::string, Texture*> Textures = std::map<std::string, Texture*>();
-		private:
-			Debug* debug = nullptr;
 		public:
-			TextureManager(Debug* debug);
-			void Close();
+			TextureManager(Debug* debug, SRGraphics* graph);
+			bool Close() override;
 		public:
 			Image* LoadBMP(const char* path);
 			Image* LoadPNG(const char* path);
@@ -284,39 +289,6 @@ namespace SpaRcle {
 			Image* LoadImage(const char* file);
 			Skybox* LoadSkybox(const char* file_base, Image::Type format);
 			Texture* LoadTexture(const char* file, Texture::Type type_texture = Texture::Type::Diffuse, Texture::Filter filter = Texture::Filter::NEAREST);
-		};
-
-		class Material {
-			friend class Model;
-		private:
-			bool isGenerate = false;
-			void Generate() {
-				if (diffuse)  if (!diffuse->isGenerate)  diffuse->Generate();
-				if (normal)   if (!normal->isGenerate)   normal->Generate();
-				if (specular) if (!specular->isGenerate) specular->Generate();
-				isGenerate = true;
-			}
-		public:
-			Material(Texture* diffuse) : isGenerate(false) {
-				if (!diffuse) {
-					Debug::InternalWarning("new Material(Texture* diffuse) : diffuse is nullptr!");
-					this->diffuse = nullptr;
-				}
-				else
-					this->diffuse = diffuse;
-				this->normal = nullptr;
-				this->specular = nullptr;
-			};
-			Material(Texture* diffuse, Texture* normal) : diffuse(diffuse), normal(normal), isGenerate(false) { };
-			~Material() { 
-				diffuse = nullptr;
-				normal = nullptr;
-				specular = nullptr;
-			};
-		public:
-			Texture* diffuse  = nullptr;
-			Texture* normal	  = nullptr;
-			Texture* specular = nullptr;
 		};
 	}
 }

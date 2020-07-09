@@ -159,6 +159,7 @@
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="GraphUtils.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Interfaces.h" />
     <ClInclude Include="IPackage.h" />
     <ClInclude Include="KeyCodes.h" />
     <ClInclude Include="ScreenFormats.h" />

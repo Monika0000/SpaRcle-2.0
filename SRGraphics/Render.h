@@ -7,9 +7,12 @@
 #include "UIWindow.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "RayTracing.h"
 
 namespace SpaRcle {
 	namespace Graphics {
+		class SRGraphics;
+
 		class Render {
 		public:
 			Render(Debug* debug);
@@ -20,16 +23,19 @@ namespace SpaRcle {
 			bool isRun = false;
 			bool useOldSlowRender = false;
 		public:
-			bool Create(Camera* camera);
+			bool Create(Camera* camera, SRGraphics* graph);
 			bool Init();
 			bool Run();
 			void Close();
 		private: //! ====== [Resources sector] ======
 			//?=====================================
-			std::vector<Model*> models;
+			std::vector<Model*> models = std::vector<Model*>();
+			std::vector<Model*> deleteModels = std::vector<Model*>();
+
 			size_t count_models;
 			Material* def_mat = nullptr;
 			Skybox* skybox = nullptr;
+			RayTracing* raytracing = nullptr;
 			//?=====================================
 		private:
 			bool fog;
@@ -43,6 +49,7 @@ namespace SpaRcle {
 
 			void SetSkybox(Skybox* skybox) { this->skybox = skybox; }
 
+			//bool RemoveModel(Model* model);
 			void AddModel(Model* model);
 			void AddUI(UI* ui);
 
@@ -89,7 +96,16 @@ namespace SpaRcle {
 					debug->Error("Texture manager is nullptr!");
 					Sleep(1000);
 					return nullptr;
-				} else return this->texManager;
+				}
+				else return this->texManager;
+			}
+			MaterialManager* GetMaterialManager() {
+				if (!this->matManager) {
+					debug->Error("Material manager is nullptr!");
+					Sleep(1000);
+					return nullptr;
+				}
+				else return this->matManager;
 			}
 
 			void Clear() {
@@ -101,12 +117,15 @@ namespace SpaRcle {
 				clear = false;
 			}
 		private:
+			SRGraphics* graph = nullptr;
 			Camera* camera = nullptr;
 			Shader* shader = nullptr;
 			Shader* skyboxShader = nullptr;
 			Debug* debug = nullptr;
+
 			TextureManager* texManager = nullptr;
 			ModelManager* modManager = nullptr;
+			MaterialManager* matManager = nullptr;
 		private:
 			std::vector<UI*> _ui_objects;
 		};

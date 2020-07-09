@@ -70,7 +70,7 @@ namespace SpaRcle {
 					return false;
 				} else { 
 					this->render = render; 
-					if (!this->render->Create(camera)) {
+					if (!this->render->Create(camera, this)) {
 						debug->Error("Failed creating of render!");
 						return false;
 					}
@@ -91,7 +91,8 @@ namespace SpaRcle {
 
 				if (!this->win->Create(
 					this->argcp,
-					this->argv)) 
+					this->argv,
+					resources_folder)) 
 				{
 					debug->Error("Failed creating of engine!");
 					return false;

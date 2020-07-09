@@ -43,6 +43,8 @@ namespace SpaRcle {
 			Camera* camera;
 			Render* render;
 			Shader* shader;
+
+			std::string resources_folder = "";
 			//Font* font;
 			//HFONT font;
 			//HCURSOR cursor;
@@ -135,7 +137,7 @@ namespace SpaRcle {
 				}
 			}
 			bool Close();
-			bool Create(int argcp, char** argv);
+			bool Create(int argcp, char** argv, std::string resources_folder);
 			bool Init();
 			/*
 			void Resize(GLsizei width, GLsizei height) {

@@ -19,22 +19,27 @@ SpaRcle::Graphics::Render::Render(Debug* debug) {
 	//this->_3d_objects = std::vector<Object3D*>();
 }
 
-bool SpaRcle::Graphics::Render::Create(Camera* camera) {
+bool SpaRcle::Graphics::Render::Create(Camera* camera, SRGraphics* graph) {
 	debug->Graph("Creating render...");
 
+	this->graph = graph;
 	this->camera = camera;
-	this->texManager = new TextureManager(debug);
-	
-	SRGraphics* graph = SRGraphics::Get();
-	this->def_mat = new Material(texManager->LoadTexture((graph->GetResourcesFolder() + "\\Textures\\default.png").c_str()));
 
-	this->modManager = new ModelManager(debug, def_mat);
+	this->texManager = new TextureManager(debug, graph);
+	this->matManager = new MaterialManager(debug, graph);
 
-	isCreate = true;
+	this->def_mat = new Material(texManager->LoadTexture("Textures\\default.png"));
+
+	this->modManager = new ModelManager(debug, graph, def_mat);
+
+	this->raytracing = new RayTracing();
+
+	//?//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	this->shader = new Shader("shader", debug);
 	this->skyboxShader = new Shader("skybox", debug);
 
+	isCreate = true;
 	return true;
 }
 bool SpaRcle::Graphics::Render::Init() {
@@ -76,6 +81,8 @@ void SpaRcle::Graphics::Render::Close() {
 	for (UI* ui : this->_ui_objects)
 		if (ui) delete ui;
 	//_ui_objects.clear();
+
+	delete raytracing;
 }
 
 static size_t t = 0;
@@ -83,13 +90,38 @@ void SpaRcle::Graphics::Render::DrawAllObjects() {
 	if (!isRun) return;
 ret: if (clear) goto ret;
 	render = true;
+
+	/*
+	for (auto del : deleteModels) {
+		std::vector<Model*>::iterator iter = models.begin();
+		while (iter != models.end()) {
+			if ((*iter) == del) {
+				delete del;
+				models.erase(iter);
+				break;
+			}
+			else iter++;
+			std::cout << del << std::endl;
+		}
+		deleteModels.erase(deleteModels.begin());
+	}*/
+
 	if (fog)
 		InitFog();
 	else
 		glDisable(GL_FOG);
 
-	for (Model* model : models)
-		if(model) model->Draw(shader);
+	raytracing->Enable();
+	
+	for (t = 0; t < this->count_models; t++)
+		if (models[t]) if (!models[t]->Draw(shader)) {
+			delete models[t]; models[t] = nullptr;
+			models.erase(models.begin() + t);
+			t--;
+			count_models--;
+		}
+
+	raytracing->Disable();
 
 	if (skybox) skybox->Draw(skyboxShader);
 
@@ -145,6 +177,11 @@ void SpaRcle::Graphics::Render::DrawAllUI() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_FOG); // Туман
 }
+
+//bool SpaRcle::Graphics::Render::RemoveModel(Model* model) {
+//	deleteModels.push_back(model);
+//	return true;
+//}
 
 void SpaRcle::Graphics::Render::AddModel(Model* model) {
 	if ((unsigned long long)model == 0xdddddddddddddddd) {

@@ -21,8 +21,14 @@
     <Filter Include="RenderSystem">
       <UniqueIdentifier>{6b89ac74-d058-4619-b64a-cddaa490c2d0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Object3D">
+    <Filter Include="Resources">
       <UniqueIdentifier>{188829f5-a984-4560-8dbe-41e45037178e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{0ee0b887-d203-487a-b5a9-d5e95232febf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RayTracing">
+      <UniqueIdentifier>{6794af43-00af-428d-a274-518d3ff1342c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -35,9 +41,6 @@
     <ClInclude Include="Window.h">
       <Filter>Window</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Object3D</Filter>
-    </ClInclude>
     <ClInclude Include="Render.h">
       <Filter>RenderSystem</Filter>
     </ClInclude>
@@ -48,10 +51,7 @@
       <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Object3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Vectors.h">
-      <Filter>Object3D</Filter>
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="UIString.h">
       <Filter>UIElements</Filter>
@@ -63,13 +63,25 @@
       <Filter>UIElements</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Object3D</Filter>
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
-      <Filter>Object3D</Filter>
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Vectors.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="RayTracing.h">
+      <Filter>RayTracing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -95,16 +107,22 @@
       <Filter>UIElements</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>Object3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Object3D</Filter>
+      <Filter>Resources</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>RenderSystem</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
-      <Filter>Object3D</Filter>
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="RayTracing.cpp">
+      <Filter>RayTracing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

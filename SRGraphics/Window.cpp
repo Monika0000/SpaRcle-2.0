@@ -203,8 +203,10 @@ namespace SpaRcle {
 			}
 		}
 
-		bool Window::Create(int argcp, char** argv) {
+		bool Window::Create(int argcp, char** argv, std::string resources_folder) {
 			debug->Graph("Creating window...");
+
+			this->resources_folder = resources_folder;
 
 			if (String::Contains(name, ' ')) {
 				debug->Error("Window name contains empty symbol (space)! \n\t\tWindow name : \"" + std::string(name) + "\"");
@@ -276,12 +278,12 @@ namespace SpaRcle {
 				GraphUtils::CheckSystemErrors("Init glfw : ");
 
 				GLFWimage icons[1];
-				unsigned char* pxs = SOIL_load_image((Utils::GetPathToExe() + "../../Resources/icon.png").c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
+				unsigned char* pxs = SOIL_load_image((resources_folder+"\\icon.png").c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
 				if (pxs) {
 					icons[0].pixels = pxs;
 					glfwSetWindowIcon(window, 1, icons);
 					SOIL_free_image_data(icons[0].pixels);
-				} else debug->Error("Failed loading ico image! Continue...");
+				} else debug->Error("Failed loading ico image! Continue...\n\t" + (resources_folder + "\\icon.png"));
 
 				return true;
 			}
@@ -357,6 +359,12 @@ namespace SpaRcle {
 			glEnable(GL_COLOR_MATERIAL);
 
 			glEnable(GL_MULTISAMPLE);
+
+			//!==============================================[LIGHTING]================================================
+			glEnable(GL_LIGHTING); // здесь включается расчет освещения 
+			glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE); // делаем так, чтобы освещались обе стороны полигона 
+			glEnable(GL_NORMALIZE); //делам нормали одинаковой величины во избежание артефактов
+			//!==============================================[LIGHTING]================================================
 
 			//glEnable(GL_COLOR_SUM);  https://stackoverflow.com/questions/8265636/how-to-get-specular-color-in-opengl
 			//glEnable(GL_FOG); // Туман

@@ -4,19 +4,20 @@
 #include <Debug.h>
 #include "Shader.h"
 #include "SRString.h"
+#include "Material.h"
+#include "SRGraphics.h"
 
 namespace SpaRcle {
 	using namespace Helper;
 	namespace Graphics {
-		TextureManager::TextureManager(Debug* debug) {
+		TextureManager::TextureManager(Debug* debug, SRGraphics* graph) : IResourceManager(debug, graph) {
 			if (debug) {
-				this->debug = debug;
 				this->debug->Graph("Texture manager has been created!");
 			}
 			else Debug::InternalError("TextureManager : debug is nullptr!");
 		}
-		void TextureManager::Close() {
-
+		bool TextureManager::Close() {
+			return 1;
 		}
 
 		Image* TextureManager::LoadBMP(const char* path) {
@@ -95,6 +96,7 @@ namespace SpaRcle {
 			return png;
 		}
 		Image* TextureManager::LoadTGA(const char* path) {
+			/*
 			HANDLE hFile = CreateFile(String::CharsToLPWSTR(path), FILE_READ_DATA, FILE_SHARE_READ, 0,
 				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
@@ -159,7 +161,7 @@ namespace SpaRcle {
 			//if (!create(header.width, header.height))
 			//	return false;
 
-			//setPixels(&buffer[0], header.width, header.height, header.pixelDepth / 8);
+			//setPixels(&buffer[0], header.width, header.height, header.pixelDepth / 8);*/
 			return nullptr;
 		}
 		Image* TextureManager::LoadJPG(const char* path) {
@@ -181,7 +183,7 @@ namespace SpaRcle {
 		}
 
 		Image* TextureManager::LoadImage(const char* file) {
-			debug->Log("Loading image : " + std::string(file));
+			debug->Log("Loading image : \"" + std::string(file)+"\"");
 
 			Image* image = nullptr;
 			std::string extension = Helper::String::BackReadToChar(file, '.');
@@ -198,35 +200,45 @@ namespace SpaRcle {
 				Sleep(1000);
 				return nullptr;
 			}
+			if (!image || !image->data) {
+				debug->Error("TextureManager::LoadImage() : Failed loading image!\n\tPath : " + std::string(file));
+				Sleep(1000);
+				return nullptr;
+			}
 			return image;
 		}
 
 		Skybox* TextureManager::LoadSkybox(const char* file_base, Image::Type format) {
 			static const std::string files[6] { "_right", "_left", "_top", "_bottom", "_front", "_back" };
 			
-			Skybox* skybox = new Skybox();
+			Skybox* skybox = new Skybox();	
 
 			for (unsigned int i = 0; i < 6; i++){
-				skybox->sides[i] = LoadImage((std::string(file_base) + files[i] + Image::TypeToStr(format)).c_str());
+				skybox->sides[i] = LoadImage((graph->GetResourcesFolder() + "\\" + std::string(file_base) + "\\skybox" + files[i] + Image::TypeToStr(format)).c_str());
 			}
 
 			return skybox;
 		}
 
 		Texture* TextureManager::LoadTexture(const char* file, Texture::Type type_texture, Texture::Filter filter) {
-			auto find = Textures.find(file);
+			std::string path = graph->GetResourcesFolder() + "\\" + std::string(file);
+
+			path = String::ReplaceAll(path, "\\\\", "\\");
+			path = String::ReplaceAll(path, "/", "\\");
+
+			auto find = Textures.find(path);
 			if (find != Textures.end())
 				return find->second;
 
-			Image* image = this->LoadImage(file);
+			Image* image = this->LoadImage(path.c_str());
 
 			if (!image) {
-				debug->Error("TextureManager : Failed loading texture!\n\tPath : " + std::string(file));
+				debug->Error("TextureManager : Failed loading texture!\n\tPath : " + std::string(path));
 				Sleep(1000);
 				return nullptr;
 			}
 			if (!image->data) {
-				debug->Error("TextureManager : Texture data is nullptr!\n\tPath : " + std::string(file));
+				debug->Error("TextureManager : Texture data is nullptr!\n\tPath : " + std::string(path));
 				Sleep(1000);
 				return nullptr;
 			}
@@ -250,7 +262,7 @@ namespace SpaRcle {
 			texture->filter = filter;
 			texture->Alpha = image->alpha;
 
-			Textures.insert(std::make_pair(file, texture));
+			Textures.insert(std::make_pair(path, texture));
 
 			//?=====================================
 
@@ -260,14 +272,15 @@ namespace SpaRcle {
 
 		void Skybox::Draw(Shader* skybox_shader) {
 			if (!isGenerated) Generate();
-
-			glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
-			skybox_shader->Use();
-			// ... задание видовой и проекционной матриц
-			glBindVertexArray(VAO);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, this->cubemap);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-			glDepthFunc(GL_LESS); // set depth function back to default
+			else {
+				glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+				skybox_shader->Use();
+				// ... задание видовой и проекционной матриц
+				glBindVertexArray(VAO);
+				glBindTexture(GL_TEXTURE_CUBE_MAP, this->cubemap);
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+				glDepthFunc(GL_LESS); // set depth function back to default
+			}
 		}
 	}
 }
