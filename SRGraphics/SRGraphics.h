@@ -10,6 +10,8 @@ namespace SpaRcle {
 		class SRGraphics {
 		private:
 			std::string resources_folder;
+		public:
+			const bool EditorMode;
 		private:
 			bool isCreate;
 			bool isInit;
@@ -77,7 +79,7 @@ namespace SpaRcle {
 			}
 			std::string GetResourcesFolder() const { return resources_folder; };
 		public:
-			SRGraphics(int argcp, char** argv, Debug* debug);
+			SRGraphics(int argcp, char** argv, Debug* debug, bool EditorMode = false);
 			~SRGraphics() { if (!isClose) Close(); }
 
 			bool Create(Window* win, Render* render, Camera* camera);

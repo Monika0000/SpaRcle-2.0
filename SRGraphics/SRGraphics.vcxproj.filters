@@ -74,14 +74,14 @@
     <ClInclude Include="Mesh.h">
       <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Vectors.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="RayTracing.h">
       <Filter>RayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorBuffer.h">
+      <Filter>Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +123,9 @@
     </ClCompile>
     <ClCompile Include="RayTracing.cpp">
       <Filter>RayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorBuffer.cpp">
+      <Filter>Window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -170,6 +170,7 @@
     <ClInclude Include="SRString.h" />
     <ClInclude Include="TCP.h" />
     <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Vectors.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp" />

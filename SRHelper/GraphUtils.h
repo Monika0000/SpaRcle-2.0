@@ -8,6 +8,14 @@ namespace SpaRcle {
 	namespace Graphics {
         class GraphUtils {
         public:
+            static vec3f TransliteColor(unsigned int r, unsigned int g, unsigned int b) {
+                vec3f color = { r / 255.f, g / 255.f, b / 255.f };
+                return color;
+            }
+            static float* TransliteFloatColor(unsigned int r, unsigned int g, unsigned int b) {
+                float color[3] { r / 255.f, g / 255.f, b / 255.f };
+                return color;
+            }
             static Vector2i* GetDesktopResolution() {
                 Vector2i* size = new Vector2i();
 

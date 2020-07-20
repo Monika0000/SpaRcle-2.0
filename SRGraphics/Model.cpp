@@ -17,24 +17,24 @@ namespace SpaRcle {
 				if (!mat->isGenerate) mat->Generate();
 			}
 
-			for (size_t t = 0; t < meshes.size(); t++) {
+			for (t = 0; t < meshes.size(); t++) {
 				if (materials[t]->diffuse) {
 					glActiveTexture(GL_TEXTURE0);
 					glBindTexture(GL_TEXTURE_2D, materials[t]->diffuse->id);
-					GLuint texID = glGetUniformLocation(shader->ProgramID, "DiffuseMap");
+					texID = glGetUniformLocation(shader->ProgramID, "DiffuseMap");
 					glUniform1i(texID, 0); // This is GL_TEXTURE0
 				}
 				if (materials[t]->normal) {
 					glActiveTexture(GL_TEXTURE1);
 					glBindTexture(GL_TEXTURE_2D, materials[t]->normal->id);
-					GLuint texID = glGetUniformLocation(shader->ProgramID, "NormalMap");
+					texID = glGetUniformLocation(shader->ProgramID, "NormalMap");
 					glUniform1i(texID, 1); // This is GL_TEXTURE1
 				}
 
 				if (!meshes[t]->isGenerate) meshes[t]->Generate();
 				if (!meshes[t]->isBind) meshes[t]->Bind();
 
-				GLuint position = glGetUniformLocation(shader->ProgramID, "ObjPos");
+				position = glGetUniformLocation(shader->ProgramID, "ObjPos");
 				//glm::vec3 pos = { 10, 10, 100 };
 				glUniform3fv(position, 1, &meshes[t]->position[0]);
 
@@ -42,6 +42,26 @@ namespace SpaRcle {
 
 				glBindTexture(GL_TEXTURE_2D, 0);
 				glActiveTexture(GL_TEXTURE0);
+			}
+
+			return true;
+		}
+
+		void Model::FlatDraw(size_t number, Shader* shader) {
+			if (destroy) return;
+
+			for (t = 0; t < meshes.size(); t++) {
+				if (!meshes[t]->isGenerate) meshes[t]->Generate();
+				if (!meshes[t]->isBind) meshes[t]->Bind();
+
+				position = glGetUniformLocation(shader->ProgramID, "ObjPos");
+				glUniform3fv(position, 1, &meshes[t]->position[0]);
+
+				float* color = GraphUtils::TransliteFloatColor(number + 1, 0, 0);
+				texID = glGetUniformLocation(shader->ProgramID, "color");
+				glUniform3fv(texID, 1, &color[0]);
+
+				meshes[t]->FlatDraw();
 			}
 		}
 

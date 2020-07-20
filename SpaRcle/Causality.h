@@ -4,6 +4,7 @@
 #include <vector>
 #include "Neuron.h"
 #include "ISystem.h"
+#include <map>
 
 namespace SpaRcle {
 	class Core;
@@ -27,10 +28,11 @@ namespace SpaRcle {
 			std::string			   core_name;
 			std::vector<Neuron*>	n_adress;
 			std::vector<std::string> n_names;
-			unsigned short			   count;
+			//unsigned short		   count;
 		};
+		//!---------------------------------------------------------------------
 	public:
-		Causality(Debug* debug, Settings* settings) : ISystem(debug, settings) {
+		Causality(Debug* debug, Settings* settings, FileManager* fileManager) : ISystem(debug, settings, fileManager) {
 
 		}
 		~Causality() { Close(); }
@@ -60,8 +62,16 @@ namespace SpaRcle {
 			return true;
 		}
 	private:
-		std::vector<CausalCoreData> cores_data;
+		std::vector<CausalCoreData> cores_data = std::vector<CausalCoreData>();
+		std::map<std::string, Neuron*> Perhaps = std::map<std::string, Neuron*>();
 	public:
+		Neuron* GetPerhap(const std::string& name) {
+			auto find = Perhaps.find(name);
+			if (find == Perhaps.end())
+				return nullptr;
+			else return find->second;
+		}
+		Neuron* CreatePerhap(const std::string& name, std::vector<IKernel*> synapses);
 		bool AddCore(Core* core);
 		bool Remember(std::string core_name, std::string n_name, IKernel* kernel_data) {
 			///$TODO n_data

@@ -39,12 +39,12 @@ namespace SpaRcle {
 					return false;
 				}*/
 			}
-			static bool FixedGetKeyDown(KeyCode key) {
+			static bool FixedGetKeyDown(const KeyCode key) {
 				bool b = GetKeyDown(key);
 				GetKeyUp(key);
 				return b;
 			}
-			static bool GetKeyDown(KeyCode key) {
+			static bool GetKeyDown(const KeyCode key) {
 				bool b = GetKey(key);
 
 				if (pressed_keys[int(key)]) {
@@ -65,7 +65,7 @@ namespace SpaRcle {
 					return false; 
 				}*/
 			}
-			static bool GetKey(KeyCode key);
+			static bool GetKey(const KeyCode key);
 			static std::vector<int> GetPressKeyIndexes();
 			static void PrintPressIndexes();
 

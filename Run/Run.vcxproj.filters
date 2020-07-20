@@ -3,9 +3,12 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Moving.cpp" />
+    <ClCompile Include="Vision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Moving.h" />
     <ClInclude Include="MoveKernel.h" />
+    <ClInclude Include="Vision.h" />
+    <ClInclude Include="VisionKernel.h" />
   </ItemGroup>
 </Project>

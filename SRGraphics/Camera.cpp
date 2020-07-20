@@ -140,10 +140,27 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 			posy += spdy / 10;
 
 			viewMat = glm::lookAt(glm::vec3(posx + dxx, posy + dyy, posz - dxz), glm::vec3(posx, posy, posz), glm::vec3(0, 1, 0));
+			//pos = { posx, posy, posz };
 		}
 	}
 }
 
+void SpaRcle::Graphics::Camera::MoveSelector() {
+	if (isRun) {
+		if (!Selector) {
+			debug->Error("Camera::MoveSelector() : selector is nullptr!");
+			Sleep(1000);
+			return;
+		}
+		Selector->Use();
+		glUniformMatrix4fv(SelectorProjMat, 1, GL_FALSE, glm::value_ptr(*this->projective));
+		glUniformMatrix4fv(SelectorViewMat, 1, GL_FALSE, glm::value_ptr(viewMat));
+		if (SelectorCameraPosition != 4294967295) {
+			glm::vec3 pos(posx, posy, posz);
+			glUniform3fv(SelectorCameraPosition, 1, &pos[0]);
+		}
+	}
+}
 void SpaRcle::Graphics::Camera::Move() {
 	if (isRun) {
 		//if (shader) {
@@ -161,7 +178,7 @@ void SpaRcle::Graphics::Camera::Move() {
 			if (CameraPositionIdxes[t] != 4294967295) {
 				glm::vec3 pos(posx, posy, posz);
 				glUniform3fv(CameraPositionIdxes[t], 1, &pos[0]);
-			}
+			}		
 		}
 			//glUniformMatrix4fv(modelMatIdx, 1, GL_FALSE, glm::value_ptr(modelMat));
 			//}

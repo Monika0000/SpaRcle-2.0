@@ -60,5 +60,12 @@ namespace SpaRcle {
 
 			glBindTexture(GL_TEXTURE_2D, 0); //? IMPORTANT
 		}
+
+		void Mesh::FlatDraw() {
+			if ((unsigned long long)this == 0xdddddddddddddddd) return;
+			//glColor3ubv(&Obj[o].Color.v[0]);
+			glBindVertexArray(this->VAO);
+			glDrawArrays(GL_TRIANGLES, 0, count_vertices);
+		}
 	}
 }

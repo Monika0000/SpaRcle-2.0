@@ -10,7 +10,8 @@ namespace SpaRcle {
 				LeftSide = 10, RightSide = 11, UpSide = 12, DownSide = 15, Close = 20
 			};
 
-			/* [for msg] */
+			//* [for msg] */
+			/* [for param] */
 			enum class MouseClickInWorkspace {
 				Left = 1, Right = 2, Middle = 16
 			};
@@ -29,7 +30,7 @@ namespace SpaRcle {
 			};
 
 			enum Event {
-				Close, Collapse, Expand, Maximize, ALT_F4, Unknown
+				Close, Collapse, Expand, Maximize, ALT_F4, Unknown, LeftClick
 			};
 			static Event GetEvent(int msg, int param) {
 				if (msg == (int)MouseClickInToolBar::LeftDown && param == (int)MousePos::Close)
@@ -37,6 +38,8 @@ namespace SpaRcle {
 				else if (msg == (int)Keyboard::Down && param == (int)Keys::F11) {
 					return Event::Maximize;
 				}
+				else if (msg == 513 && param == (int)MouseClickInWorkspace::Left)
+					return Event::LeftClick;
 				else if (msg == 274 && param == 61536)
 					return Event::ALT_F4;
 				else { return Event::Unknown; }

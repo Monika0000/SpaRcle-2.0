@@ -6,6 +6,7 @@
 #include <consoleapi2.h>
 #include <WinBase.h>
 #include <Psapi.h>
+#include "Vectors.h"
 
 namespace SpaRcle {
 	namespace Helper {

@@ -11,17 +11,17 @@ struct MoveKernel : public IKernel, public IPackage {
 public:
 	MoveKernel() {
 		boneRotation = nullptr;
-		boneName = nullptr;
+		//boneName = nullptr;
 		isNew = false;
 	}
 	~MoveKernel() {
 		if (boneRotation) delete boneRotation;
-		if (boneName) delete[] boneName;
+		//if (boneName) delete[] boneName;
 	}
 private:
 	std::string Get()  { 
 		if (boneRotation) 
-			return std::string(boneName) + ";" + boneRotation->GetString();
+			return std::string(name) + ";" + boneRotation->GetString();
 		else {
 			Debug::InternalError("MoveKernel::Get() : boneRotation is nullptr!");
 			return "none";
@@ -57,7 +57,7 @@ private:
 			std::to_string(end) + "\n\tSize = " + std::to_string(default_size));
 
 		//boneName = String::ReadToChar(data, ';', 0, &index);
-		boneName = String::CopyStringToCharPointer(String::ReadToChar(data, ';', 0, &index));
+		name = String::CopyStringToCharPointer(String::ReadToChar(data, ';', 0, &index));
 		data = data.substr(index + 1);
 
 		boneRotation = Vector3::FromString(data);
@@ -69,7 +69,7 @@ public:
 	bool isNew;
 
 	/*Имя кости. Нейронам дается такое же название*/
-	char* boneName;
+	//char* boneName;
 	
 	/*Текущий поворот кости, либо поворот к которому необходимо стремиться*/
 	Vector3* boneRotation;
@@ -85,7 +85,7 @@ public:
 	MoveKernel* Copy() {
 		MoveKernel* new_kernel_move = new MoveKernel();
 
-		if (this->boneName) new_kernel_move->boneName = String::CopyChars(this->boneName);
+		if (this->name) new_kernel_move->name = String::CopyChars(this->name);
 		if (this->boneRotation) new_kernel_move->boneRotation = Vector3::Copy(this->boneRotation);
 		new_kernel_move->isNew = this->isNew;
 

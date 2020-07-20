@@ -16,7 +16,7 @@ namespace SpaRcle {
 
 		if (!file_manager) { debug->Error("CNS : file manager is nullptr!"); return false; } else this->file_manager = file_manager;
 
-		this->CSystem = new Causality(debug, settings);
+		this->CSystem = new Causality(debug, settings, this->file_manager);
 		this->LSystem = new Logicality();
 		this->RSystem = new Reality();
 		this->ESystem = new Emotionality();

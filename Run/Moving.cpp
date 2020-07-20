@@ -28,24 +28,39 @@ bool Moving::Update() {	// Running
 				///	Если он не существует, это не значит, что файла не существует!
 				RegisterBone((MoveKernel*)recive_data[t]);
 			} else {
-				MoveKernel* new_move = (MoveKernel*)recive_data[t];
-				Neuron* bone = static_cast<Neuron*>(this->file_manager->Load<Neuron>(new_move->boneName));
+				MoveKernel* new_move = (MoveKernel*)recive_data[t]; 
+				// Получаем новые значения ядра 
+
+				Neuron* bone = static_cast<Neuron*>(this->file_manager->Load<Neuron>(new_move->name)); 
+				// Загружаем нейрон по имени со старыми значениями ядра
+
 				if (!bone) {
-					debug->Error("Move : bone \"" + std::string(new_move->boneName) + "\" is not register!");
+					debug->Error("Move : bone \"" + std::string(new_move->name) + "\" is not register!");
 					return false;
 				}
 				//todo	Если нейрон отвечающий за кость существует
 				else {
-					MoveKernel* old_move = (MoveKernel*)bone->kernel;
-					//!--------------[Обрабатываем значения со старой кости, заменяя потом их на новые]--------------
+					MoveKernel* old_move = (MoveKernel*)bone->kernel; // Берем старые значения ядра нейрона
+					//!-----------------[Обрабатываем новую кость используя преддущие данные]------------------------
 
-					new_move->boneRotation->x += 0.555f;
 
+					//new_move->boneRotation->x += 0.555f;
+
+
+					//!------------[Обновляем ядро нейрона, отсылая измененные значения симуляции]-------------------
+					delete old_move;
 					tcp->Send(new_move);
+					bone->kernel = new_move->Copy();
+					//!-----------------------[Взаисодействуем с аксоном]--------------------------------------------
+					
+
+					Neuron* perhapsNode = causality->GetPerhap("perhaps_" + std::string(new_move->name));
+					if (!perhapsNode) perhapsNode = causality->CreatePerhap("perhaps_" + std::string(new_move->name), recive_data);
+
+					//Neuron* perhapsNode = static_cast<Neuron*>(this->file_manager->Load<Neuron>("perhaps_"+std::string(new_move->boneName)));
+					//if(!perhapsNode) 
 
 					//!----------------------------------------------------------------------------------------------
-					delete old_move;
-					bone->kernel = new_move->Copy();
 				}
 			}
 		}
@@ -77,17 +92,17 @@ bool Moving::RegisterBone(MoveKernel* kernel, Neuron* bone_neuron) { ///\see bon
 		return false;
 	}
 
-	std::string boneName = kernel->boneName;
+	std::string boneName = kernel->name;
 
 	if (!Array::Contains<std::string>(NBones, boneName)) {
 		//	TODO:  Здесь вероятно нужно попытаться загрузить нейрон, если не загрузится - создать новый
 		//	При загрузке устанавливаем ядро нейрону, по дефолту ядра не будет в нейроне, загружаться будут только аксоны, синапсы и дендриты
 		//
 		//	Нейроны будут зраниться в одной папке, а ядра, в другой
-		bone_neuron = static_cast<Neuron*>(file_manager->Load<Neuron>(kernel->boneName));
+		bone_neuron = static_cast<Neuron*>(file_manager->Load<Neuron>(kernel->name));
 
 		if (bone_neuron) {
-			NBones.push_back(kernel->boneName);
+			NBones.push_back(kernel->name);
 
 			if(bone_neuron->kernel)
 				delete (MoveKernel*)bone_neuron->kernel;
@@ -101,10 +116,10 @@ bool Moving::RegisterBone(MoveKernel* kernel, Neuron* bone_neuron) { ///\see bon
 			Neuron* n = new Neuron();
 			n->kernel = kernel->Copy();
 
-			if (file_manager->Save<Neuron>((ISavable*)n, kernel->boneName)) {
+			if (file_manager->Save<Neuron>((ISavable*)n, kernel->name)) {
 				debug->Log("Moving : register and saving new bone \"" + boneName + "\" has been successfully!");
 
-				NBones.push_back(kernel->boneName);
+				NBones.push_back(kernel->name);
 				NAdress.push_back(n);
 
 				//if (n->kernel) delete n->kernel;

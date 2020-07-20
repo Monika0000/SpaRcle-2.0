@@ -38,6 +38,7 @@ bool SpaRcle::Graphics::Render::Create(Camera* camera, SRGraphics* graph) {
 
 	this->shader = new Shader("shader", debug);
 	this->skyboxShader = new Shader("skybox", debug);
+	this->selectorShader = new Shader("selector", debug);
 
 	isCreate = true;
 	return true;
@@ -50,12 +51,24 @@ bool SpaRcle::Graphics::Render::Init() {
 
 	debug->Graph("Initializing render...");
 
+	this->EditorMode = this->graph->EditorMode;
+
 	this->shader->Compile();
 	this->skyboxShader->Compile();
 
+	if (EditorMode)
+		this->selectorShader->Compile();
+
+	/*
+		Сначала необходимо выполнить шейдер скайбокса, 
+		а только потом основной шейдер программы!
+		Иначе ничего не будет работать
+	*/
 	this->camera->AddShader(skyboxShader);
 	this->camera->AddShader(shader);
 
+	if (EditorMode)
+		this->camera->SetSelector(selectorShader);
 	//this->InitFog();
 
 	isInit = true;
@@ -86,6 +99,18 @@ void SpaRcle::Graphics::Render::Close() {
 }
 
 static size_t t = 0;
+void SpaRcle::Graphics::Render::DrawSelectorObjects() {
+	if (!isRun) return;
+ret: if (clear) goto ret;
+	render = true;
+
+	for (t = 0; t < this->count_models; t++)
+		models[t]->FlatDraw(t, selectorShader);
+
+	glUseProgram(0);
+
+	render = false;
+}
 void SpaRcle::Graphics::Render::DrawAllObjects() {
 	if (!isRun) return;
 ret: if (clear) goto ret;

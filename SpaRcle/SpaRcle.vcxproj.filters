@@ -19,6 +19,9 @@
     <Filter Include="NN">
       <UniqueIdentifier>{781b5c65-64e3-439a-9d26-98de55054b10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Kernels">
+      <UniqueIdentifier>{0b774856-96d4-493c-b3b8-8ef49fe49e09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SRFramework.h">
@@ -56,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="ISystem.h">
       <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="PerhapsKernel.h">
+      <Filter>Kernels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

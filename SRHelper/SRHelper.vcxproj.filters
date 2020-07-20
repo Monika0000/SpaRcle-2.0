@@ -72,6 +72,9 @@
     <ClInclude Include="Interfaces.h">
       <Filter>Helper</Filter>
     </ClInclude>
+    <ClInclude Include="Vectors.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">

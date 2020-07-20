@@ -47,14 +47,14 @@ int main(int argcp, char** argv) {
 	FileManager* file_manager = new FileManager();
 
 	//!-------------------------------------------------
-
+	/*
 	SRGraphics* graph = new SRGraphics(argcp, argv, debug);
 	if (!graph->Create(
 		new Window(
 			debug,
 			new Camera(debug),
 			"SpaRcle",
-			600, 500,
+			new Screen_720_576(),
 			false),
 		new Render(debug),
 		new Camera(debug))
@@ -70,7 +70,7 @@ int main(int argcp, char** argv) {
 		debug->Error("Failed running application! Graph run return's false.");
 		return false;
 	}
-
+	*/
 	//!-------------------------------------------------
 
 	SRFramework* framework = new SRFramework(debug, settings, file_manager);
@@ -79,7 +79,7 @@ int main(int argcp, char** argv) {
 	Moving* moving = new Moving(
 		"moving",
 		//new TCP("127.0.0.1", 1025, debug),
-		new TCP("127.0.0.1", 1025, debug),
+		new TCP("192.168.0.14", 1025, debug),
 		debug,
 		settings,
 		file_manager);
@@ -90,7 +90,7 @@ int main(int argcp, char** argv) {
 	framework->Run();
 	framework->Close();
 
-	graph->Close();
+	//kgraph->Close();
 
 	if (debug) delete debug;
 }

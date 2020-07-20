@@ -28,6 +28,7 @@ namespace SpaRcle {
 			float posx = 0.0;
 			float posy = 0.0; // 2.0
 			float posz = 0.0;
+			//glm::vec3 pos = { 0,0,0 };
 
 			POINT pt;
 			float prevX;
@@ -45,7 +46,12 @@ namespace SpaRcle {
 			std::vector<GLuint> CameraPositionIdxes;
 			std::vector<Shader*> shaders;
 			size_t count_shaders = 0;
-
+			//?=========================================
+			Shader* Selector = nullptr;
+			GLuint  SelectorProjMat = 0;
+			GLuint	SelectorViewMat = 0;
+			GLuint	SelectorCameraPosition = 0;
+			//?=========================================
 			WindowFormat** format = nullptr;
 			glm::mat4* projective = nullptr;
 			int* x_pos = nullptr; int* y_pos = nullptr;
@@ -68,17 +74,20 @@ namespace SpaRcle {
 			};
 			~Camera() { Close(); };
 		public:
-			bool Create(
-				WindowFormat** format,
-				//unsigned short& x_size, unsigned short& y_size,
-				int& x_pos, int& y_pos, glm::mat4& projective
-			);
+			bool Create(WindowFormat** format, int& x_pos, int& y_pos, glm::mat4& projective);
 			bool Init(bool& isMouseLock);
 			bool Run();
 			void SetCursorPosition(int x, int y) {
 				SetCursorPos(x, y);
 				prevX = x;
 				prevY = y;
+			}
+			void SetSelector(Shader* shader) {
+				Selector = shader;
+
+				SelectorProjMat = glGetUniformLocation(shader->ProgramID, "projMat");
+				SelectorViewMat = glGetUniformLocation(shader->ProgramID, "viewMat");
+				SelectorCameraPosition = glGetUniformLocation(shader->ProgramID, "CamPos");
 			}
 			void AddShader(Shader* shader) { 
 				this->shaders.push_back(shader);
@@ -91,6 +100,7 @@ namespace SpaRcle {
 			}
 			bool Close();
 			void Move();
+			void MoveSelector();
 		public:
 			//void CameraFunc();
 			void ResetCameraPos() {

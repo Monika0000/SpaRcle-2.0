@@ -18,9 +18,14 @@ namespace SpaRcle {
 			Save - возвращает содержимое в виде строки, которую можно сохранить в файл
 			Load - принимает ту самую строку и расшифровывает ее, "запихивая" данные внутрь себя
 		*/
+		//std::string name;
 	public:
-		IKernel() { };
-		~IKernel() { };
+		char* name;
+	public:
+		IKernel() { name = nullptr; };
+		~IKernel() { 
+			if (name) delete[] name;
+		};
 	public:
 		virtual std::string Save() = 0;// { return ""; }
 		virtual bool  Load(std::string data) = 0;// { return 0; }

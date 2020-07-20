@@ -18,6 +18,8 @@ namespace SpaRcle {
 			Render(Debug* debug);
 			~Render() { }
 		private:
+			bool EditorMode = false;
+		private:
 			bool isCreate = false;
 			bool isInit = false;
 			bool isRun = false;
@@ -44,6 +46,8 @@ namespace SpaRcle {
 			GLuint fogMode[3] = { GL_EXP, GL_EXP2, GL_LINEAR };	 // Хранит три типа тумана
 			GLfloat fogColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };	// Цвет тумана
 		public:
+			void DrawSelectorObjects();
+
 			void DrawAllObjects();
 			void DrawAllUI();
 
@@ -107,6 +111,16 @@ namespace SpaRcle {
 				}
 				else return this->matManager;
 			}
+			size_t GetCountModels() { return this->count_models; }
+
+			SRGraphics* GetGraphicsEngine() {
+				if (!this->graph) {
+					debug->Error("Render::GetGraphicsEngine() : graph is nullptr!");
+					Sleep(1000);
+					return nullptr;
+				}
+				else return this->graph;
+			}
 
 			void Clear() {
 			ret: if (render) goto ret;
@@ -121,6 +135,7 @@ namespace SpaRcle {
 			Camera* camera = nullptr;
 			Shader* shader = nullptr;
 			Shader* skyboxShader = nullptr;
+			Shader* selectorShader = nullptr;
 			Debug* debug = nullptr;
 
 			TextureManager* texManager = nullptr;

@@ -100,6 +100,7 @@ namespace SpaRcle {
 				//isBind = false;
 			}
 			void Draw();
+			void FlatDraw();
 			//void Bind() const {
 			//	glBindVertexArray(this->VAO);
 			//}

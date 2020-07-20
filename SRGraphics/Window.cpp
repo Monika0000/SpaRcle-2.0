@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "UI.h"
 #include <glm\ext\matrix_clip_space.hpp>
+#include "SRGraphics.h"
 
 namespace SpaRcle {
 	namespace Graphics {
@@ -194,6 +195,10 @@ namespace SpaRcle {
 					if (lock) this->MouseLock(true);
 					break;
 				}
+				case WindowEvents::LeftClick: {
+					if (EditorMode) if (!MouseLock()) this->SelectObject();
+					break;
+				}
 				default:
 					DispatchMessage(&msg);
 					break;
@@ -205,6 +210,8 @@ namespace SpaRcle {
 
 		bool Window::Create(int argcp, char** argv, std::string resources_folder) {
 			debug->Graph("Creating window...");
+
+			this->colorBuffer = new ColorBuffer();
 
 			this->resources_folder = resources_folder;
 
@@ -222,6 +229,8 @@ namespace SpaRcle {
 			return true;
 		}
 		bool Window::Init() {
+			this->EditorMode = render->GetGraphicsEngine()->EditorMode;
+
 			task = std::thread([this]() {
 				if (!InitGlfw()) {
 					debug->Error("Failed initializing glfw!");
@@ -417,15 +426,55 @@ namespace SpaRcle {
 			return true;
 		}
 
+		void Window::SelectObject() {
+			debug->Log("Select object");
+			
+			glClearColor(0.f, 0.f, 0.f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Без этого ничего не будет работать (очистка буфера)
+			glLoadIdentity();
+
+			camera->MoveSelector();
+
+			colorBuffer->InitNames(render->GetCountModels());
+			for (size_t t = 0; t < render->GetCountModels(); t++) {
+				vec3ui color{ t + 1, 0, 0 };
+				//debug->Log("Add color : "+  std::to_string(color.x) + " " + std::to_string(color.y) + " " + std::to_string(color.z));
+				colorBuffer->LoadName(t, color);
+			}
+			render->DrawSelectorObjects();
+
+			Vector2d* pos = this->GetMousePosition();
+
+			unsigned char pixel[3] = { 0 };
+			unsigned int x = pos->x * format->size_x;
+			unsigned int y = pos->y * format->size_y;
+
+			//debug->Log(std::to_string(x) + " " + std::to_string(y));
+
+			glReadPixels(x, this->GetYSize() - y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel[0]);
+
+			//debug->Log(std::to_string(pixel[0]) + " " + std::to_string(pixel[1]) + " " + std::to_string(pixel[2]));
+			debug->Log(std::to_string(colorBuffer->GetSelectColorObject(pixel)));
+
+			////glfwSwapBuffers(window); //TODO: IT IS TEST
+			//Sleep(1000);
+
+			delete pos;
+		}
+
 		void Window::Draw() {
+			//if (EditorMode) if (!MouseLock() && Input::GetKeyDown(KeyCode::MouseLeft)) SelectObject();
+
 			glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Без этого ничего не будет работать (очистка буфера)
 
 			//shader->Use();
 			camera->Move();
+			//camera->MoveSelector();
 
 			glPushMatrix(); // Сохранение матрици
 				render->DrawAllObjects();
+			//render->DrawSelectorObjects();
 			glPopMatrix();
 
 			render->DrawAllUI();
@@ -488,6 +537,7 @@ namespace SpaRcle {
 			if (task.joinable()) task.join();
 
 			delete this->format;
+			delete this->colorBuffer;
 
 			return true;
 		}

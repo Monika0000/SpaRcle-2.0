@@ -103,6 +103,10 @@ namespace SpaRcle {
 		class Shader;
 		class Model : public IComponent {
 		private:
+			GLuint position = 0;
+			GLuint texID    = 0;
+			size_t t        = 0;
+		private:
 			bool destroy = false;
 		public:
 			//Material* material;
@@ -112,6 +116,7 @@ namespace SpaRcle {
 		public:
 			void Destroy() { this->destroy = true; }
 			bool Draw(Shader* shader);
+			void FlatDraw(size_t number, Shader* shader);
 			void AddMesh(Mesh* mesh, Material* material) { meshes.push_back(mesh); materials.push_back(material); };
 		public:
 			Model() { }

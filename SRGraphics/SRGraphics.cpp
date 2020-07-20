@@ -9,7 +9,7 @@ namespace SpaRcle {
 	namespace Graphics {
 		SRGraphics* SRGraphics::global = nullptr;
 
-		SRGraphics::SRGraphics(int argcp, char** argv, Debug* debug) {
+		SRGraphics::SRGraphics(int argcp, char** argv, Debug* debug, bool EditorMode) : EditorMode(EditorMode) {
 			if (global) {
 				debug->Error("Graphics engine already create!");
 				return;

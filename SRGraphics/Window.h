@@ -21,6 +21,7 @@
 #include <GraphUtils.h>
 #include "Render.h"
 #include "ScreenFormats.h"
+#include "ColorBuffer.h"
 
 namespace SpaRcle {
 	namespace Graphics {
@@ -30,6 +31,7 @@ namespace SpaRcle {
 			friend class SRGraphics;
 			friend class UI;
 		private:
+			bool EditorMode = false;
 			bool isInitWindow = false;
 			bool isRun = false;
 			bool isMouseLock = true;
@@ -115,9 +117,12 @@ namespace SpaRcle {
 			}
 			void PollEvents();
 		private:
+			void SelectObject();
+		private:
 			static Window* global;
-			Debug* debug;
-			Vector2i* screen_size;
+			ColorBuffer* colorBuffer = nullptr;
+			Debug* debug = nullptr;
+			Vector2i* screen_size = nullptr;
 			std::thread task;
 
 			HWND hWnd;

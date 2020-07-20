@@ -9,8 +9,9 @@ namespace SpaRcle {
 		bool isRun;
 		Debug* debug;
 		Settings* settings;
+		FileManager* fileManager;
 	public:
-		ISystem(Debug*debug, Settings*settings) : isRun(false), debug(debug), settings(settings) {
+		ISystem(Debug*debug, Settings*settings, FileManager* fileManager) : isRun(false), debug(debug), settings(settings), fileManager(fileManager) {
 
 		}
 	public:
