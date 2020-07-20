@@ -437,9 +437,10 @@ namespace SpaRcle {
 
 			colorBuffer->InitNames(render->GetCountModels());
 			for (size_t t = 0; t < render->GetCountModels(); t++) {
-				vec3ui color{ t + 1, 0, 0 };
+				//vec3uc color = GraphUtils::IntToColor(t + 1);
+				//vec3uc color{ 0, 0, t + 1};
 				//debug->Log("Add color : "+  std::to_string(color.x) + " " + std::to_string(color.y) + " " + std::to_string(color.z));
-				colorBuffer->LoadName(t, color);
+				colorBuffer->LoadName(t, GraphUtils::IntToColor(t + 1));
 			}
 			render->DrawSelectorObjects();
 
@@ -456,7 +457,7 @@ namespace SpaRcle {
 			//debug->Log(std::to_string(pixel[0]) + " " + std::to_string(pixel[1]) + " " + std::to_string(pixel[2]));
 			debug->Log(std::to_string(colorBuffer->GetSelectColorObject(pixel)));
 
-			////glfwSwapBuffers(window); //TODO: IT IS TEST
+			//glfwSwapBuffers(window); //TODO: IT IS TEST
 			//Sleep(1000);
 
 			delete pos;

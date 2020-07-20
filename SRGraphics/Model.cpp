@@ -57,9 +57,15 @@ namespace SpaRcle {
 				position = glGetUniformLocation(shader->ProgramID, "ObjPos");
 				glUniform3fv(position, 1, &meshes[t]->position[0]);
 
-				float* color = GraphUtils::TransliteFloatColor(number + 1, 0, 0);
+				vec3uc c = GraphUtils::IntToColor(number + 1);
+				float* color = GraphUtils::TransliteFloatColor((unsigned int)c.x, (unsigned int)c.y, (unsigned int)c.z);
+				//float* color = GraphUtils::TransliteFloatColor(0, 0, number + 1);
+				//std::cout << "flat : " << color[0] << " " << color[1] << " " << color[2] << "\n";
+
 				texID = glGetUniformLocation(shader->ProgramID, "color");
 				glUniform3fv(texID, 1, &color[0]);
+
+				delete color;
 
 				meshes[t]->FlatDraw();
 			}

@@ -9,6 +9,7 @@ namespace SpaRcle {
 		struct vec3d { double x, y, z; };
 		struct vec3i { int x, y, z; };
 		struct vec3ui { unsigned int x, y, z; };
+		struct vec3uc { unsigned char x, y, z; };
 		struct vec3s { short x, y, z; };
 		struct vec3l { long x, y, z; };
 

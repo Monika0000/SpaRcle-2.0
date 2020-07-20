@@ -8,13 +8,19 @@ namespace SpaRcle {
 	namespace Graphics {
         class GraphUtils {
         public:
+            static vec3uc IntToColor(size_t index) {
+                unsigned char r = ((index >> 16) & 0xFF);  // Extract the RR byte
+                unsigned char g = ((index >> 8) & 0xFF);   // Extract the GG byte
+                unsigned char b = ((index) & 0xFF);        // Extract the BB byte
+
+                return { r, g, b };
+            }
             static vec3f TransliteColor(unsigned int r, unsigned int g, unsigned int b) {
                 vec3f color = { r / 255.f, g / 255.f, b / 255.f };
                 return color;
             }
             static float* TransliteFloatColor(unsigned int r, unsigned int g, unsigned int b) {
-                float color[3] { r / 255.f, g / 255.f, b / 255.f };
-                return color;
+                return new float[3] { r / 255.f, g / 255.f, b / 255.f };
             }
             static Vector2i* GetDesktopResolution() {
                 Vector2i* size = new Vector2i();

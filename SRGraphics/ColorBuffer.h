@@ -6,7 +6,7 @@ namespace SpaRcle {
 		class ColorBuffer {
 			struct cbInfo_t {
 				int Name;
-				vec3ui  Color;
+				vec3uc  Color;
 			};
 		public:
 			ColorBuffer() {
@@ -18,9 +18,9 @@ namespace SpaRcle {
 			size_t next = 0;
 		public:
 			void InitNames(size_t count_models);
-			void LoadName(size_t OBJECT_ID, vec3ui color);
+			void LoadName(size_t OBJECT_ID, vec3uc color);
 			int GetSelectColorObject(unsigned char* pixel);
-			bool CheckColor(vec3ui& one, unsigned char* two);
+			bool CheckColor(vec3uc& one, unsigned char* two);
 		};
 	}
 }

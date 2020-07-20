@@ -14,7 +14,7 @@ namespace SpaRcle {
 
 			next = 0;
 		}
-		void ColorBuffer::LoadName(size_t OBJECT_ID, vec3ui color) {
+		void ColorBuffer::LoadName(size_t OBJECT_ID, vec3uc color) {
 			Names[next].Name = OBJECT_ID;
 			Names[next].Color = color;
 			next++;
@@ -26,7 +26,7 @@ namespace SpaRcle {
 			}
 			return -1;
 		}
-		bool ColorBuffer::CheckColor(vec3ui& one, unsigned char* two) {
+		bool ColorBuffer::CheckColor(vec3uc& one, unsigned char* two) {
 			if (one.x == two[0] && one.y == two[1] && one.z == two[2])
 				return true;
 			return false;
