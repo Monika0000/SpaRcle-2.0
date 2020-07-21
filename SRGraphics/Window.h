@@ -120,7 +120,10 @@ namespace SpaRcle {
 			void SelectObject();
 		private:
 			static Window* global;
+
 			ColorBuffer* colorBuffer = nullptr;
+			Model* SelectedModel = nullptr;
+
 			Debug* debug = nullptr;
 			Vector2i* screen_size = nullptr;
 			std::thread task;

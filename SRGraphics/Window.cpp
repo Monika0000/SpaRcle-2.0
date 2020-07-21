@@ -98,7 +98,8 @@ namespace SpaRcle {
 			win->SetXSize(width);
 			win->SetYSize(height);
 			*/
-		 	if(win->GetIsRun()) win->Draw();
+
+		 	if(win->GetIsRun()) win->Draw(); // Re-draw
 		}
 
 		Vector2d* Window::GetMousePosition() {
@@ -427,8 +428,6 @@ namespace SpaRcle {
 		}
 
 		void Window::SelectObject() {
-			debug->Log("Select object");
-			
 			glClearColor(0.f, 0.f, 0.f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Без этого ничего не будет работать (очистка буфера)
 			glLoadIdentity();
@@ -455,7 +454,19 @@ namespace SpaRcle {
 			glReadPixels(x, this->GetYSize() - y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel[0]);
 
 			//debug->Log(std::to_string(pixel[0]) + " " + std::to_string(pixel[1]) + " " + std::to_string(pixel[2]));
-			debug->Log(std::to_string(colorBuffer->GetSelectColorObject(pixel)));
+
+			int select = colorBuffer->GetSelectColorObject(pixel);
+			debug->Log("Select object : " + std::to_string(select));
+
+			if (select == -1) {
+				if (SelectedModel) SelectedModel->isSelect = false;
+				SelectedModel = nullptr;
+			}
+			else {
+				if (SelectedModel) SelectedModel->isSelect = false;
+				SelectedModel = this->render->GetModel(select); 
+				if (SelectedModel) SelectedModel->isSelect = true;
+			}
 
 			//glfwSwapBuffers(window); //TODO: IT IS TEST
 			//Sleep(1000);
@@ -470,8 +481,10 @@ namespace SpaRcle {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Без этого ничего не будет работать (очистка буфера)
 
 			//shader->Use();
+			if (SelectedModel) camera->MoveStencil();
+			//if (SelectedModel) camera->MoveSelector();
+
 			camera->Move();
-			//camera->MoveSelector();
 
 			glPushMatrix(); // Сохранение матрици
 				render->DrawAllObjects();

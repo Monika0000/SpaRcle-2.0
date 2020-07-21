@@ -155,10 +155,22 @@ void SpaRcle::Graphics::Camera::MoveSelector() {
 		Selector->Use();
 		glUniformMatrix4fv(SelectorProjMat, 1, GL_FALSE, glm::value_ptr(*this->projective));
 		glUniformMatrix4fv(SelectorViewMat, 1, GL_FALSE, glm::value_ptr(viewMat));
-		if (SelectorCameraPosition != 4294967295) {
-			glm::vec3 pos(posx, posy, posz);
-			glUniform3fv(SelectorCameraPosition, 1, &pos[0]);
+		//if (SelectorCameraPosition != 4294967295) {
+		//	glm::vec3 pos(posx, posy, posz);
+		//	glUniform3fv(SelectorCameraPosition, 1, &pos[0]);
+		//}
+	}
+}
+void SpaRcle::Graphics::Camera::MoveStencil() {
+	if (isRun) {
+		if (!Selector) {
+			debug->Error("Camera::MoveStencil() : stencil is nullptr!");
+			Sleep(1000);
+			return;
 		}
+		Stencil->Use();
+		glUniformMatrix4fv(StencilProjMat, 1, GL_FALSE, glm::value_ptr(*this->projective));
+		glUniformMatrix4fv(StencilViewMat, 1, GL_FALSE, glm::value_ptr(viewMat));
 	}
 }
 void SpaRcle::Graphics::Camera::Move() {
@@ -170,15 +182,29 @@ void SpaRcle::Graphics::Camera::Move() {
 			//GLuint modelMatIdx = glGetUniformLocation(shader->ProgramID, "modelMat");
 			//std::cout << projMatIdx << " " << viewMatIdx << " " << modelMatIdx << std::endl;
 
+		if (Skybox) {
+			Skybox->Use();
+			glUniformMatrix4fv(SkyboxProjMat, 1, GL_FALSE, glm::value_ptr(*this->projective));
+			glUniformMatrix4fv(SkyboxViewMat, 1, GL_FALSE, glm::value_ptr(viewMat));
+			if (SkyboxCameraPosition != 4294967295) {
+				glm::vec3 pos(posx, posy, posz);
+				glUniform3fv(SkyboxCameraPosition, 1, &pos[0]);
+			}
+		}
 
 		for (size_t t = 0; t < count_shaders; t++) {
 			shaders[t]->Use();
 			glUniformMatrix4fv(projMatIdxes[t], 1, GL_FALSE, glm::value_ptr(*this->projective));
 			glUniformMatrix4fv(viewMatIdxes[t], 1, GL_FALSE, glm::value_ptr(viewMat));
-			if (CameraPositionIdxes[t] != 4294967295) {
-				glm::vec3 pos(posx, posy, posz);
-				glUniform3fv(CameraPositionIdxes[t], 1, &pos[0]);
-			}		
+			//if (CameraPositionIdxes[t] != 4294967295) {
+			//if (modelMatIdxes[t] != 4294967295) {
+				//glm::mat4 model = glm::mat4(1.0f);
+				//model = glm::translate(model, glm::vec3(posx, posy, posz));
+				//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+				//glUniformMatrix4fv(modelMatIdxes[t], 1, GL_FALSE, glm::value_ptr(viewMat));
+			//	glm::vec3 pos(posx, posy, posz);
+			//	glUniform3fv(CameraPositionIdxes[t], 1, &pos[0]);
+			//}		
 		}
 			//glUniformMatrix4fv(modelMatIdx, 1, GL_FALSE, glm::value_ptr(modelMat));
 			//}

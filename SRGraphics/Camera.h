@@ -43,14 +43,25 @@ namespace SpaRcle {
 			glm::mat4 viewMat;
 			std::vector<GLuint> projMatIdxes;
 			std::vector<GLuint> viewMatIdxes;
-			std::vector<GLuint> CameraPositionIdxes;
+			//std::vector<GLuint> CameraPositionIdxes;
+			//std::vector<GLuint> modelMatIdxes;
 			std::vector<Shader*> shaders;
 			size_t count_shaders = 0;
+			//?=========================================
+			Shader* Skybox = nullptr;
+			GLuint  SkyboxProjMat = 0;
+			GLuint	SkyboxViewMat = 0;
+			GLuint	SkyboxCameraPosition = 0;
 			//?=========================================
 			Shader* Selector = nullptr;
 			GLuint  SelectorProjMat = 0;
 			GLuint	SelectorViewMat = 0;
-			GLuint	SelectorCameraPosition = 0;
+			//GLuint	SelectorCameraPosition = 0;
+			//?=========================================
+			Shader* Stencil = nullptr;
+			GLuint  StencilProjMat = 0;
+			GLuint	StencilViewMat = 0;
+			//GLuint	StencilCameraPosition = 0;
 			//?=========================================
 			WindowFormat** format = nullptr;
 			glm::mat4* projective = nullptr;
@@ -82,25 +93,42 @@ namespace SpaRcle {
 				prevX = x;
 				prevY = y;
 			}
+
+			void SetSkybox(Shader* shader) {
+				Skybox = shader;
+
+				SkyboxProjMat = glGetUniformLocation(shader->ProgramID, "projMat");
+				SkyboxViewMat = glGetUniformLocation(shader->ProgramID, "viewMat");
+				SkyboxCameraPosition = glGetUniformLocation(shader->ProgramID, "CamPos");
+			}
 			void SetSelector(Shader* shader) {
 				Selector = shader;
 
 				SelectorProjMat = glGetUniformLocation(shader->ProgramID, "projMat");
 				SelectorViewMat = glGetUniformLocation(shader->ProgramID, "viewMat");
-				SelectorCameraPosition = glGetUniformLocation(shader->ProgramID, "CamPos");
+				//SelectorCameraPosition = glGetUniformLocation(shader->ProgramID, "CamPos");
+			}
+			void SetStencil(Shader* shader) {
+				Stencil = shader;
+
+				StencilProjMat = glGetUniformLocation(shader->ProgramID, "projMat");
+				StencilViewMat = glGetUniformLocation(shader->ProgramID, "viewMat");
+				//StencilCameraPosition = glGetUniformLocation(shader->ProgramID, "CamPos");
 			}
 			void AddShader(Shader* shader) { 
 				this->shaders.push_back(shader);
 
 				projMatIdxes.push_back(glGetUniformLocation(shader->ProgramID, "projMat"));
 				viewMatIdxes.push_back(glGetUniformLocation(shader->ProgramID, "viewMat"));
-				CameraPositionIdxes.push_back(glGetUniformLocation(shader->ProgramID, "CamPos"));
+				//CameraPositionIdxes.push_back(glGetUniformLocation(shader->ProgramID, "CamPos"));
+				//modelMatIdxes.push_back(glGetUniformLocation(shader->ProgramID, "ModelMat"));
 
 				count_shaders++;
 			}
 			bool Close();
 			void Move();
 			void MoveSelector();
+			void MoveStencil();
 		public:
 			//void CameraFunc();
 			void ResetCameraPos() {

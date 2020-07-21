@@ -65,9 +65,6 @@
     <ClInclude Include="Texture.h">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>RenderSystem</Filter>
     </ClInclude>
@@ -82,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="ColorBuffer.h">
       <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -112,9 +112,6 @@
     <ClCompile Include="Shader.cpp">
       <Filter>RenderSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
@@ -126,6 +123,9 @@
     </ClCompile>
     <ClCompile Include="ColorBuffer.cpp">
       <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

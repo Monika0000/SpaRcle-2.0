@@ -109,6 +109,7 @@ namespace SpaRcle {
 		private:
 			bool destroy = false;
 		public:
+			bool isSelect = false;
 			//Material* material;
 			//Mesh* mesh;
 			std::vector<Material*> materials = std::vector<Material*>();
@@ -116,7 +117,9 @@ namespace SpaRcle {
 		public:
 			void Destroy() { this->destroy = true; }
 			bool Draw(Shader* shader);
-			void FlatDraw(size_t number, Shader* shader);
+			void FlatDraw(size_t number, Shader* shader, float scale_modifer = 0.f);
+			void DrawSencil(Shader* stencil, Shader* shader);
+			void DrawSencil2(Shader* stencil);
 			void AddMesh(Mesh* mesh, Material* material) { meshes.push_back(mesh); materials.push_back(material); };
 		public:
 			Model() { }

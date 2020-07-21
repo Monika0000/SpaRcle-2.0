@@ -15,6 +15,9 @@ namespace SpaRcle {
 
 		class Render {
 		public:
+			inline static const GLuint defaultFBO = 0;
+			inline static const GLuint silhouetteFBO = 1;
+		public:
 			Render(Debug* debug);
 			~Render() { }
 		private:
@@ -45,6 +48,7 @@ namespace SpaRcle {
 			bool render;
 			GLuint fogMode[3] = { GL_EXP, GL_EXP2, GL_LINEAR };	 // Хранит три типа тумана
 			GLfloat fogColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };	// Цвет тумана
+			GLuint FBO = 0; //Frame buffer
 		public:
 			void DrawSelectorObjects();
 
@@ -71,6 +75,7 @@ namespace SpaRcle {
 			void SetFog(bool val) { this->fog = val; }
 			bool GetFog() { return this->fog; }
 
+			Model* GetModel(size_t index) { return this->models[index]; }
 			Material* GetDefMat() {
 				if (!this->def_mat) {
 					debug->Error("Default material is nullptr!");
@@ -133,9 +138,12 @@ namespace SpaRcle {
 		private:
 			SRGraphics* graph = nullptr;
 			Camera* camera = nullptr;
+
 			Shader* shader = nullptr;
 			Shader* skyboxShader = nullptr;
 			Shader* selectorShader = nullptr;
+			Shader* Stencil = nullptr;
+
 			Debug* debug = nullptr;
 
 			TextureManager* texManager = nullptr;

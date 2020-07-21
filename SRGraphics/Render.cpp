@@ -39,6 +39,7 @@ bool SpaRcle::Graphics::Render::Create(Camera* camera, SRGraphics* graph) {
 	this->shader = new Shader("shader", debug);
 	this->skyboxShader = new Shader("skybox", debug);
 	this->selectorShader = new Shader("selector", debug);
+	this->Stencil = new Shader("stencil", debug);
 
 	isCreate = true;
 	return true;
@@ -51,24 +52,32 @@ bool SpaRcle::Graphics::Render::Init() {
 
 	debug->Graph("Initializing render...");
 
+	glGenFramebuffers(1, &FBO);
+
 	this->EditorMode = this->graph->EditorMode;
 
 	this->shader->Compile();
 	this->skyboxShader->Compile();
 
-	if (EditorMode)
+	if (EditorMode) {
 		this->selectorShader->Compile();
+		this->Stencil->Compile();
+	}
 
 	/*
 		Сначала необходимо выполнить шейдер скайбокса, 
 		а только потом основной шейдер программы!
 		Иначе ничего не будет работать
 	*/
-	this->camera->AddShader(skyboxShader);
+
+	this->camera->SetSkybox(skyboxShader);
+	//this->camera->AddShader(skyboxShader);
 	this->camera->AddShader(shader);
 
-	if (EditorMode)
+	if (EditorMode) {
 		this->camera->SetSelector(selectorShader);
+		this->camera->SetStencil(Stencil);
+	}
 	//this->InitFog();
 
 	isInit = true;
@@ -139,11 +148,37 @@ ret: if (clear) goto ret;
 	raytracing->Enable();
 	
 	for (t = 0; t < this->count_models; t++)
-		if (models[t]) if (!models[t]->Draw(shader)) {
-			delete models[t]; models[t] = nullptr;
-			models.erase(models.begin() + t);
-			t--;
-			count_models--;
+		if (models[t]) {
+			if (!models[t]->isSelect) {
+				if (!models[t]->Draw(shader)) {
+					delete models[t]; models[t] = nullptr;
+					models.erase(models.begin() + t);
+					t--;
+					count_models--;
+				}
+			}
+			else {
+				glEnable(GL_STENCIL_TEST);
+				glStencilFunc(GL_ALWAYS, 1, 1);
+				glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+				glStencilMask(1);
+				glClearStencil(0);
+				glClear(GL_STENCIL_BUFFER_BIT);
+
+				models[t]->Draw(shader);
+
+				glStencilFunc(GL_EQUAL, 0, 1);
+				glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+				glStencilMask(0x00);
+
+				Stencil->Use();
+
+				models[t]->DrawSencil2(this->Stencil);
+
+				glDisable(GL_STENCIL_TEST);
+
+				shader->Use();
+			}
 		}
 
 	raytracing->Disable();
