@@ -1,132 +1,26 @@
 [Debug] Debugger is run!
-<5216 KB> [Info] Creating framework...
-<5444 KB> [Info] Creating CNS...
-<5472 KB> [Info] Creating hippocampus...
-<5476 KB> [Info] Initializing framework...
-<5476 KB> [Info] Initializing CNS...
-<5476 KB> [Info] Initializing hippocampus...
-<5476 KB> [Info] Initializing core "moving"...
-<5480 KB> [Info] Hippocampus : register core "moving"...
-<5520 KB> [Info] Running framework...
-<5520 KB> [Info] Running CNS...
-<5520 KB> [System] Causality has been started!
-<5520 KB> [Info] Running hippocampus...
-<5520 KB> [Info] Running core "moving"...
-<5520 KB> [Info] Running TCP client-server...
-	Ip   : 192.168.0.14
-	Port : 1025
-<5520 KB> [System] Loading WSAStartup dll...
-<5652 KB> [System] All systems are successfully activated!
-<6064 KB> [Network] TCP client-server listen to adress 192.168.0.14:1025
-<6112 KB> [Network] TCP client [192.168.0.14:1025, socket: 276] has been connected!
-<6148 KB> [Log] Moving : register and saving new bone "Bone 1" has been successfully!
-<6156 KB> [Log] Moving : register and saving new bone "Bone 2" has been successfully!
-<6156 KB> [Log] Moving : register and saving new bone "Bone 3" has been successfully!
-<6156 KB> [Log] Moving : register and saving new bone "Bone 4" has been successfully!
-<6156 KB> [Log] Moving : register and saving new bone "Bone 5" has been successfully!
-<6156 KB> [Log] Moving : register and saving new bone "Bone 6" has been successfully!
-<6156 KB> [Log] Moving : register and saving new bone "Bone 7" has been successfully!
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6180 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Network] Send : Bone 1;(-15.000000 7.600000 -16.000000)|
-<6204 KB> [Info] Completed framework!
-<6204 KB> [Info] Close framework...
-<6204 KB> [Info] Close CNS...
-<6204 KB> [System] Causality has been stopped!
-<6204 KB> [Info] Close core "moving"...
-<6204 KB> [Info] Core "moving" has been completed working.
-<6204 KB> [Info] Stopping TCP client-server...
-	Ip   : 192.168.0.14
-	Port : 1025
-<6204 KB> [Info] Close hippocampus...
-<6204 KB> [System] Destroying file manager...
-<6204 KB> [System] All system completed successfully!
-<6204 KB> [Debug] Debugger has been closed!
+<5192 KB> [Info] Creating framework...
+<5412 KB> [Info] Creating CNS...
+<5440 KB> [Info] Creating hippocampus...
+<5448 KB> [Info] Initializing framework...
+<5448 KB> [Info] Initializing CNS...
+<5448 KB> [Info] Initializing hippocampus...
+<5448 KB> [Info] Initializing core "moving"...
+<5448 KB> [Info] Hippocampus : register core "moving"...
+<5460 KB> [Info] Running framework...
+<5460 KB> [Info] Running CNS...
+<5460 KB> [System] Causality has been started!
+<5460 KB> [Info] Running hippocampus...
+<5460 KB> [Info] Running core "moving"...
+<5464 KB> [Info] Running TCP client-server...
+	Ip   : 192.168.0.11
+	Port : 1015
+<5464 KB> [System] Loading WSAStartup dll...
+<5584 KB> [System] All systems are successfully activated!
+<6080 KB> [Network] TCP client-server listen to adress 192.168.0.11:1015
+<6108 KB> [Network] TCP client [192.168.0.11:1015, socket: 292] has been connected!
+<6116 KB> [Info] Completed framework!
+<6116 KB> [Info] Close framework...
+<6116 KB> [Info] Close CNS...
+<6120 KB> [System] Causality has been stopped!
+<6136 KB> [Info] Close core "moving"...

@@ -21,21 +21,16 @@ namespace SpaRcle {
 		bool isWaitPackage;
 	protected:
 		bool isCanGetKernelPackages;
-		std::vector<IKernel*> recive_data;
-		void ClearRecivePackages() {
-			for (size_t t = 0; t < recive_data.size(); t++) {
-				//std::cout << "free " << recive_data[t] << std::endl;
-				FreeKernel(recive_data[t]);
+		bool HasPackages() { 
+			if (isWaitPackage) {
+				isWaitPackage = false;
+				return true;
 			}
-			recive_data.clear();
-			isWaitPackage = true;
+			else return false;
+			//return !isWaitPackage; 
 		}
-		bool HasPackages() { return !isWaitPackage; }
 	protected:
 		bool IsRun() const { return isRun; }
-
-		virtual IKernel* KernelPackagesReciveMethod() { return nullptr; }
-		virtual void FreeKernel(IKernel* kernel) { delete kernel; }
 
 		TCP* tcp;
 		Debug* debug;
@@ -49,8 +44,7 @@ namespace SpaRcle {
 		std::string core_name;
 	public:
 		Core(std::string core_name, TCP* tcp, Debug* debug, Settings* settings, FileManager*file_manager) 
-			: core_name(core_name), tcp(tcp), settings(settings), debug(debug), file_manager(file_manager)
-			,recive_data(std::vector<IKernel*>()) //new IKernel*[1000] std::vector<IKernel*>()
+			: core_name(core_name), tcp(tcp), settings(settings), debug(debug), file_manager(file_manager) //new IKernel*[1000] std::vector<IKernel*>()
 		{
 			isRun = false; 
 			task = std::thread();
@@ -90,14 +84,13 @@ namespace SpaRcle {
 
 					while (isRun) {
 						if (isWaitPackage) {
-							IKernel* mkernel = KernelPackagesReciveMethod();
-							if (mkernel) {
-								if (isCanGetKernelPackages)
-									recive_data.push_back(mkernel);
-								else FreeKernel(mkernel);
-							}
+							//if (tcp->GetState() == PackState::End)
+							//	tcp->Recv();
+							//else
+							//	if (tcp->GetState() == PackState::Begin)
+							//		isWaitPackage = true;
 
-							if(tcp->GetState() == PackState::End && isCanGetKernelPackages) isWaitPackage = false;
+							//if(tcp->GetState() == PackState::End && isCanGetKernelPackages) isWaitPackage = false;
 						}
 
 						if (!Update())

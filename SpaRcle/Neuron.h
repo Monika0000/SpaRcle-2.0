@@ -11,26 +11,6 @@ namespace SpaRcle {
 
 	class Neuron;
 
-	//__interface IKernel {
-	class IKernel {
-		/*
-			Данный интерфейс предназначен для описания хранимых данных внутри нейрона
-			Save - возвращает содержимое в виде строки, которую можно сохранить в файл
-			Load - принимает ту самую строку и расшифровывает ее, "запихивая" данные внутрь себя
-		*/
-		//std::string name;
-	public:
-		char* name;
-	public:
-		IKernel() { name = nullptr; };
-		~IKernel() { 
-			if (name) delete[] name;
-		};
-	public:
-		virtual std::string Save() = 0;// { return ""; }
-		virtual bool  Load(std::string data) = 0;// { return 0; }
-	};
-
 	struct Synapse {
 	public:
 		Synapse(char* name, Neuron* neuron) {
@@ -77,13 +57,10 @@ namespace SpaRcle {
 	public:
 		Neuron();
 		~Neuron();
+	//public:
+		//bool Save(std::ofstream file) override { return false; }
+		//bool Load(std::ifstream file) override { return false; }
 	public:
-		bool Save(std::ofstream file) override { return false; }
-		bool Load(std::ifstream file) override { return false; }
-	public:
-		IKernel* kernel;				// Ядро нейрона, хранит его данные
-	public:
-		//Vector3 position;
 		unsigned long usings;
 		Dendrite* dendr;
 		Akson* akson;					///%Следствия

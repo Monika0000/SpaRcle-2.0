@@ -4,7 +4,6 @@
 #include <string>
 #include <thread>
 #include <SRHelper.h>
-#include "MoveKernel.h"
 #include "Neuron.h"
 
 using namespace SpaRcle;
@@ -16,20 +15,10 @@ public:
 	Moving(std::string core_name, TCP* tcp, Debug* debug, Settings* settings, FileManager*file_manager) 
 		: Core(core_name, tcp, debug, settings, file_manager) 
 	{
-		NBones  = std::vector<std::string>();
-		NAdress = std::vector<Neuron*>();
+
 	}
 
 	bool Start() override;
-	IKernel* KernelPackagesReciveMethod() override {
-		MoveKernel* mkernel = new MoveKernel();
-		if (tcp->Recv(mkernel)) {
-			return mkernel;
-		}
-		delete mkernel;
-		return nullptr;
-	}
-	void FreeKernel(IKernel* kernel) override { delete (MoveKernel*)kernel; }
 
 	/*
 	void ClearRecivePackages() {
@@ -47,14 +36,12 @@ public:
 	bool Update() override;
 
 	bool Completed() override {	// Close
-		NBones.clear();
-		NAdress.clear();
 
 		return true;
 	}
+//private:
+	//bool RegisterBone(Neuron* bone_neuron);
 private:
-	bool RegisterBone(MoveKernel* kernel, Neuron* bone_neuron = nullptr);
-private:
-	std::vector<std::string> NBones;
-	std::vector<Neuron*> NAdress;
+	//std::vector<std::string> NBones;
+	//std::vector<Neuron*> NAdress;
 };

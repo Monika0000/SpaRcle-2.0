@@ -79,6 +79,7 @@ namespace SpaRcle {
 			const bool MouseLock() const { return isMouseLock; };
 			void SetCamera(Camera* camera) { this->camera = camera; };
 			void SetRender(Render* render) { this->render = render; };
+			Render* GetRender() { return render; };
 			HWND GetHWND() {
 				if (hWnd) return hWnd;
 				else {

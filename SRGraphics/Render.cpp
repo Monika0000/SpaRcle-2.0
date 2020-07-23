@@ -28,7 +28,7 @@ bool SpaRcle::Graphics::Render::Create(Camera* camera, SRGraphics* graph) {
 	this->texManager = new TextureManager(debug, graph);
 	this->matManager = new MaterialManager(debug, graph);
 
-	this->def_mat = new Material(texManager->LoadTexture("Textures\\default.png"));
+	this->def_mat = new Material(texManager->LoadTexture("default.png"));
 
 	this->modManager = new ModelManager(debug, graph, def_mat);
 
@@ -148,7 +148,7 @@ ret: if (clear) goto ret;
 	raytracing->Enable();
 	
 	for (t = 0; t < this->count_models; t++)
-		if (models[t]) {
+		if (models[t] && models[t]->enabled) {
 			if (!models[t]->isSelect) {
 				if (!models[t]->Draw(shader)) {
 					delete models[t]; models[t] = nullptr;
@@ -231,9 +231,14 @@ void SpaRcle::Graphics::Render::DrawAllUI() {
 		0, 1, 0);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_FOG); // Туман
+
+	bool mouse_left_down = Input::GetKeyDown(KeyCode::MouseLeft);
+	bool mouse_left_up   = Input::GetKeyUp(KeyCode::MouseLeft);
+
 	for (UI* ui : this->_ui_objects) {
-		ui->Draw();
+		ui->Draw(mouse_left_down, mouse_left_up);
 	}
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_FOG); // Туман
 }

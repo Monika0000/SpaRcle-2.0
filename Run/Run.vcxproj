@@ -165,10 +165,8 @@
     <ClCompile Include="Vision.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MoveKernel.h" />
     <ClInclude Include="Moving.h" />
     <ClInclude Include="Vision.h" />
-    <ClInclude Include="VisionKernel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

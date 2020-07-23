@@ -25,6 +25,7 @@ namespace SpaRcle {
 				return false;
 			}
 		}
+		/*
 		void Synchronize(std::string& core_name, std::vector<IKernel*> kernel_changes) {
 			int index = Array::IndexOf(core_names, core_name);
 			if (index != -1) {
@@ -35,7 +36,7 @@ namespace SpaRcle {
 
 				//! is synchronize!
 			} 
-		}
+		}*/
 	public:
 		bool Create(Debug*debug, Settings*settings, FileManager* file_manager);
 		bool Init();

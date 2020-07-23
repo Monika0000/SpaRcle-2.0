@@ -1,7 +1,6 @@
 #include "Moving.h"
 #include <TCP.h>
 #include "Neuron.h"
-#include "MoveKernel.h"
 #include "FileManager.h"
 
 using namespace SpaRcle;
@@ -19,54 +18,23 @@ bool Moving::Update() {	// Running
 	//!	Получить данные движения из tcp сервера
 	//!	Воздействовать на нейронные связи относящиеся к данному сектору
 
-	if (HasPackages()) {
-		tcp->Begin();
+	//if (HasPackages()) {
+		//tcp->Begin();
 
-		for (size_t t = 0; t < this->recive_data.size(); t++){
-			if (((MoveKernel*)recive_data[t])->isNew) {
-				///	Если нейрон отвечающий за кость не существует в нейронной сети, то регистрируем эту кость.
-				///	Если он не существует, это не значит, что файла не существует!
-				RegisterBone((MoveKernel*)recive_data[t]);
-			} else {
-				MoveKernel* new_move = (MoveKernel*)recive_data[t]; 
-				// Получаем новые значения ядра 
+		//std::cout << 1 << std::endl;
 
-				Neuron* bone = static_cast<Neuron*>(this->file_manager->Load<Neuron>(new_move->name)); 
-				// Загружаем нейрон по имени со старыми значениями ядра
+		std::string data = tcp->Recv();
+		while (!data.empty()) {
+			std::cout << data << std::endl;
+ 		}
 
-				if (!bone) {
-					debug->Error("Move : bone \"" + std::string(new_move->name) + "\" is not register!");
-					return false;
-				}
-				//todo	Если нейрон отвечающий за кость существует
-				else {
-					MoveKernel* old_move = (MoveKernel*)bone->kernel; // Берем старые значения ядра нейрона
-					//!-----------------[Обрабатываем новую кость используя преддущие данные]------------------------
-
-
-					//new_move->boneRotation->x += 0.555f;
-
-
-					//!------------[Обновляем ядро нейрона, отсылая измененные значения симуляции]-------------------
-					delete old_move;
-					tcp->Send(new_move);
-					bone->kernel = new_move->Copy();
-					//!-----------------------[Взаисодействуем с аксоном]--------------------------------------------
-					
-
-					Neuron* perhapsNode = causality->GetPerhap("perhaps_" + std::string(new_move->name));
-					if (!perhapsNode) perhapsNode = causality->CreatePerhap("perhaps_" + std::string(new_move->name), recive_data);
-
-					//Neuron* perhapsNode = static_cast<Neuron*>(this->file_manager->Load<Neuron>("perhaps_"+std::string(new_move->boneName)));
-					//if(!perhapsNode) 
-
-					//!----------------------------------------------------------------------------------------------
-				}
-			}
-		}
+		//tcp->Recv()
+		//for (size_t t = 0; t < this->recive_data.size(); t++){
+			
+		//}
 		//std::cout << recive_data.size() << std::endl;
 
-		hippocampus->Synchronize(core_name, recive_data);
+		//hippocampus->Synchronize(core_name, recive_data);
 
 		//for (size_t t = 0; t < this->NAdress.size(); t++) {
 			//IPackage* pack = (IPackage*)NAdress[t]->kernel;
@@ -77,15 +45,16 @@ bool Moving::Update() {	// Running
 		//	debug->Info(NAdress[t]->kernel->Save());
 		//}
 
-		ClearRecivePackages();
+		//ClearRecivePackages();
 
-		tcp->End();
-	}
+		//tcp->End();
+	//}
 	//!-----------------------------------------------------------------------------------------
 
 	return true;
 }
 
+/*
 bool Moving::RegisterBone(MoveKernel* kernel, Neuron* bone_neuron) { ///\see bone_neuron is nullptr
 	if (bone_neuron) {
 		debug->Error("Moving::RegisterBone() : Neuron does not have to be initialized!");
@@ -138,3 +107,4 @@ bool Moving::RegisterBone(MoveKernel* kernel, Neuron* bone_neuron) { ///\see bon
 	boneName.clear();
 	return true;
 }
+*/

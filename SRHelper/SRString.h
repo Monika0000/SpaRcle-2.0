@@ -25,6 +25,18 @@ namespace SpaRcle {
 			String() {  };
 			~String() {  };
 		public:
+			static std::string ToLower(std::string str) {
+				for (size_t t = 0; t < str.size(); t++)
+					str[t] = tolower(str[t]);
+				return str;
+			}
+			static std::string MakePath(std::string str) {
+				str = String::ReplaceAll(str, "\\\\", "\\");
+				str = String::ReplaceAll(str, "/", "\\");
+				str = String::ToLower(str);
+				return str;
+			}
+
 			static std::string RandomString(int size) {
 				std::ostringstream oss;
 				for (std::size_t i = 0; i < size; ++i)

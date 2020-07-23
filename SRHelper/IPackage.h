@@ -14,8 +14,8 @@ namespace SpaRcle {
 				 ласс, который реализует этот интерфейс, может быть передан в метод Send, и отправлен клиенту, благодар€ методу GetData,
 				а метод Recv возвращает указанный тип данных, заполн€€ его пол€ данных, использу€ метод SetData
 			*/
-			virtual std::string GetSendData() = 0;
-			virtual bool SetData(std::string data) = 0;
+			//virtual std::string GetSendData() = 0;
+			//virtual bool SetData(std::string data) = 0;
 			//operator char*() { return str; }
 		};
 	}

@@ -124,6 +124,10 @@ namespace SpaRcle {
 				//SetPosition(pos);
 				if(count_vertices == Math::size_t_max)
 					this->count_vertices = vertices.size();
+				if (this->count_vertices == 0) {
+					Debug::InternalError("Mesh constructor : count_vertices == 0!");
+					Sleep(1000);
+				}
 				//this->Compile();
 			}
 			~Mesh() {

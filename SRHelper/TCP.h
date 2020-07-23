@@ -77,6 +77,7 @@ namespace SpaRcle {
 		public:
 			PackState GetState() { return state; }
 			//!------------------------------------------
+			/*
 			bool Send(IPackage* data) {
 				if (!data) {
 					debug->Error("Failed send message to [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(server_sock) + "] Data is nullptr!");
@@ -105,6 +106,7 @@ namespace SpaRcle {
 
 				return result;
 			}
+			*/
 			bool Send(const char* data) {
 				if (!data) {
 					debug->Error("Failed send message to [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(server_sock) + "] Data is nullptr!");
@@ -164,7 +166,7 @@ namespace SpaRcle {
 				}
 			}
 			*/
-			bool Recv(IPackage* pack) {
+			std::string Recv() {
 			ret:
 				if (!isSend) {
 					isRecv = true;
@@ -177,25 +179,29 @@ namespace SpaRcle {
 						}
 						else {
 							state = PackState::Reciving;
-							if (!pack->SetData(recive_data[0])) {
+
+							std::string data = recive_data[0];
+							//if (!pack->SetData(recive_data[0])) {
 								//debug->Error("Failed recv message from [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(client_sock) + "]");
-								debug->Error("Failed recv message from [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(server_sock) + "]");
-							}
-							else {
-								recive_data.erase(recive_data.begin());
-								return true;
-							}
+								//debug->Error("Failed recv message from [" + ip + ":" + std::to_string(port) + ", socket: " + std::to_string(server_sock) + "]");
+							//}
+							//else {
+							recive_data.erase(recive_data.begin());
+
+							return data;
+							//	return true;
+							//}
 						}
 
 						recive_data.erase(recive_data.begin());
 
 						isRecv = false;
-						return false;
+						return "";
 					}
 					else {
 						state = PackState::NoneData;
 						isRecv = false;
-						return false;
+						return "";
 					}
 				}
 				else goto ret;

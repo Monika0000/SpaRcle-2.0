@@ -1,6 +1,7 @@
 #pragma once
 #include "Texture.h"
 #include "Resource.h"
+#include <glm/glm.hpp>
 
 namespace SpaRcle {
 	namespace Graphics {
@@ -34,15 +35,27 @@ namespace SpaRcle {
 				this->specular   = nullptr;
 				this->glossiness = nullptr;
 			};
-			Material(Texture* diffuse, Texture* normal) : diffuse(diffuse), normal(normal), isGenerate(false) { };
-			Material(Texture* diffuse, Texture* normal, Texture* specular, Texture* glossiness) :
-				diffuse(diffuse), normal(normal), specular(specular), glossiness(glossiness), isGenerate(false) { };
+			Material(Texture* diffuse, Texture* normal) : diffuse(diffuse), normal(normal), isGenerate(false) { 
+
+			};
+			Material(
+				Texture* diffuse, Texture* normal, Texture* specular, Texture* glossiness, 
+				glm::vec4 Color = { 1, 1, 1, 1 }, bool use_light = true)
+				:
+				diffuse(diffuse), normal(normal), specular(specular), glossiness(glossiness), 
+				isGenerate(false), Color(Color), use_light(use_light)
+			{ 
+
+			};
 			~Material() {
 				diffuse    = nullptr;
 				normal     = nullptr;
 				specular   = nullptr;
 				glossiness = nullptr;
 			};
+		public:
+			glm::vec4 Color     = { 1, 1, 1, 1 };
+			bool use_light		= true;
 		public:
 			Texture* diffuse    = nullptr;
 			Texture* normal     = nullptr;

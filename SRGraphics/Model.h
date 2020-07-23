@@ -110,27 +110,33 @@ namespace SpaRcle {
 			bool destroy = false;
 		public:
 			bool isSelect = false;
+			bool enabled  = true;
 			//Material* material;
 			//Mesh* mesh;
 			std::vector<Material*> materials = std::vector<Material*>();
 			std::vector<Mesh*>	   meshes    = std::vector<Mesh*>();
 		public:
-			void Destroy() { this->destroy = true; }
+			void Destroy() { this->destroy = true; enabled = false; }
 			bool Draw(Shader* shader);
 			void FlatDraw(size_t number, Shader* shader, float scale_modifer = 0.f);
 			void DrawSencil(Shader* stencil, Shader* shader);
 			void DrawSencil2(Shader* stencil);
 			void AddMesh(Mesh* mesh, Material* material) { meshes.push_back(mesh); materials.push_back(material); };
 		public:
-			Model() { }
+			Model() { 
+				enabled = true;
+			}
 			Model(std::vector<Material*> materials) {
+				enabled = true;
 				this->materials = materials;
 			}
 			Model(Mesh* mesh, Material* material) {
+				enabled = true;
 				this->materials.push_back(material);
 				this->meshes.push_back(mesh);
 			}
 			~Model() {
+				enabled = false;
 				for (auto mesh : meshes)   mesh = nullptr;
 				for (auto mat : materials) mat = nullptr;
 			}
@@ -148,6 +154,13 @@ namespace SpaRcle {
 			~ModelManager() {
 				//TODO: Delete all meshes!
 			}
+		private:
+			std::vector<glm::vec3> verts = std::vector<glm::vec3>();
+			std::vector<glm::vec2> uvs = std::vector<glm::vec2>();
+			std::vector<glm::vec3> normals = std::vector<glm::vec3>();
+			std::vector<Vertex> final_verts = std::vector<Vertex>();
+			std::string Current_mesh = "";
+			size_t count_meshes = 0; size_t count_uncorrect_triangles = 0;
 		private:
 			std::string pos_1 = "";
 			std::string pos_2 = "";
@@ -273,6 +286,8 @@ namespace SpaRcle {
 				result.push_back({ verts[face.w - 1], uvs[uv.z - 1], {0,0,0} });
 				result.push_back({ verts[face.x - 1], uvs[uv.x - 1], {0,0,0} });
 			}
+
+			bool AddMeshToModel(Model* model, std::string name, std::vector<Material*>& mats, glm::vec3& pos);
 
 			Model* LoadModelFromObj(const char* path, glm::vec3 pos = { 0, 0, 0 }) { return LoadModelFromObj(path, { }, pos); }
 			Model* LoadModelFromObj(const char* file, std::vector<Material*> mats, glm::vec3 pos = { 0, 0, 0 });

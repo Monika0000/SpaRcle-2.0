@@ -182,8 +182,8 @@ namespace SpaRcle {
 			return jpg;
 		}
 
-		Image* TextureManager::LoadImage(const char* file) {
-			debug->Log("Loading image : \"" + std::string(file)+"\"");
+		Image* TextureManager::LoadImage(const char* file, bool log) {
+			if(log) debug->Log("Loading image : \"" + std::string(file)+"\"");
 
 			Image* image = nullptr;
 			std::string extension = Helper::String::BackReadToChar(file, '.');
@@ -211,6 +211,8 @@ namespace SpaRcle {
 		Skybox* TextureManager::LoadSkybox(const char* file_base, Image::Type format) {
 			static const std::string files[6] { "_right", "_left", "_top", "_bottom", "_front", "_back" };
 			
+			debug->Log("Loading skybox : " + graph->GetResourcesFolder() + "\\" + std::string(file_base) + "\\skybox");
+
 			Skybox* skybox = new Skybox();	
 
 			for (unsigned int i = 0; i < 6; i++){
@@ -220,17 +222,18 @@ namespace SpaRcle {
 			return skybox;
 		}
 
-		Texture* TextureManager::LoadTexture(const char* file, Texture::Type type_texture, Texture::Filter filter) {
-			std::string path = graph->GetResourcesFolder() + "\\" + std::string(file);
+		Texture* TextureManager::LoadTexture(const char* file, bool log, Texture::Type type_texture, Texture::Filter filter) {
+			std::string path = graph->GetResourcesFolder() + "\\Textures\\" + std::string(file);
 
-			path = String::ReplaceAll(path, "\\\\", "\\");
-			path = String::ReplaceAll(path, "/", "\\");
+			//path = String::ReplaceAll(path, "\\\\", "\\");
+			//path = String::ReplaceAll(path, "/", "\\");
+			path = String::MakePath(path);
 
 			auto find = Textures.find(path);
 			if (find != Textures.end())
 				return find->second;
 
-			Image* image = this->LoadImage(path.c_str());
+			Image* image = this->LoadImage(path.c_str(), log);
 
 			if (!image) {
 				debug->Error("TextureManager : Failed loading texture!\n\tPath : " + std::string(path));

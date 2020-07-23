@@ -286,9 +286,14 @@ namespace SpaRcle {
 			Image* LoadTGA(const char* path);
 			Image* LoadJPG(const char* path);
 
-			Image* LoadImage(const char* file);
+			Image* LoadImage(const char* file, bool log = true);
 			Skybox* LoadSkybox(const char* file_base, Image::Type format);
-			Texture* LoadTexture(const char* file, Texture::Type type_texture = Texture::Type::Diffuse, Texture::Filter filter = Texture::Filter::NEAREST);
+			Texture* LoadTexture(const char* file,
+				Texture::Type type_texture = Texture::Type::Diffuse, Texture::Filter filter = Texture::Filter::NEAREST) 
+			{
+				return LoadTexture(file, true, type_texture, filter);
+			}
+			Texture* LoadTexture(const char* file, bool log, Texture::Type type_texture = Texture::Type::Diffuse, Texture::Filter filter = Texture::Filter::NEAREST);
 		};
 	}
 }

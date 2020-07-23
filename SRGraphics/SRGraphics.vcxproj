@@ -167,6 +167,7 @@
     <ClInclude Include="SRGraphics.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="UIList.h" />
     <ClInclude Include="UIString.h" />
     <ClInclude Include="UIWindow.h" />
     <ClInclude Include="Window.h" />
@@ -190,6 +191,7 @@
     <ClCompile Include="SRGraphics.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="UIList.cpp" />
     <ClCompile Include="UIWindow.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>

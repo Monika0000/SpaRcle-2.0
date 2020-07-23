@@ -11,7 +11,7 @@ namespace SpaRcle {
 			std::string name,
 			float x_pos, float y_pos,
 			Window* win,
-			float x_size, float y_size) : UI(x_pos, y_pos, x_size, y_size) {
+			float x_size, float y_size, bool CanMove) : UI(x_pos, y_pos, x_size, y_size), CanMove(CanMove) {
 			this->isMove = false;
 
 			this->name = new UIString(name,
@@ -25,7 +25,7 @@ namespace SpaRcle {
 			this->mouse_pos = win->GetMousePosition();
 		};
 
-		void UIWindow::Draw() {
+		void UIWindow::Draw(bool mouse_left_down, bool mouse_left_up) {
 			//(y_pos - 1.21f) / -2.49f; - if x == 1
 			//(y_pos - 0.21f) / -2.49f; - if x == 2
 			//min = 0.71 //(y_pos - 0.71)
@@ -41,7 +41,9 @@ namespace SpaRcle {
 			//std::cout << "vec_y = " << vec->y << " " << << std::endl;
 			//std::cout << x_pos << " " << vec->x << std::endl;
 
-			if (!win->MouseLock()) {
+			float x_pos_correct = x_pos * win->format->x_left_side_pos_magic_number / 2.20625f;
+
+			if (CanMove) if (!win->MouseLock()) {
 				x_mouse = mouse_pos->x;
 				y_mouse = mouse_pos->y;
 				delete mouse_pos;
@@ -52,9 +54,9 @@ namespace SpaRcle {
 				//!std::cout << "mouse_y = " << mouse_pos->y << "; win_y = " << (2.485431f - (this->y_pos + 0.788201f)) / 2.485431f << std::endl;
 				//const float y_up = (2.485431f - (this->y_pos + 0.788201f)) / 2.485431f;//-(y_pos - (win->format->y_side_magic_number - (y_size - 1.f)) + up_size) / 2.4f; // -2.49f
 
-				const float x_left = (this->x_pos + win->format->x_left_side_pos_magic_number) / (win->format->x_left_side_pos_magic_number * 2.f);//(x_pos + win->format->x_side_magic_number) / win->format->x_side_magic_number / 2.f;
+				const float x_left = (x_pos_correct + win->format->x_left_side_pos_magic_number) / (win->format->x_left_side_pos_magic_number * 2.f);//(x_pos + win->format->x_side_magic_number) / win->format->x_side_magic_number / 2.f;
 				const float y_up = -((this->y_pos - (2.197257f - y_size)) / 2.48549f);//-(y_pos - (win->format->y_side_magic_number - (y_size - 1.f)) + up_size) / 2.4f; // -2.49f
-				const float x_right = (this->x_pos + x_size + win->format->x_left_side_pos_magic_number) / (win->format->x_left_side_pos_magic_number * 2.f);
+				const float x_right = (x_pos_correct + x_size + win->format->x_left_side_pos_magic_number) / (win->format->x_left_side_pos_magic_number * 2.f);
 				const float y_down = -((this->y_pos - (2.197257f + up_size)) / 2.48549f);;
 				//const float y_down = (2.485431f - (((this->y_pos - y_size - up_size) + 0.788201f))) / 2.485431f;
 				
@@ -62,11 +64,11 @@ namespace SpaRcle {
 				//std::cout << mouse_pos->y << " == " << y_down << std::endl;
 				//std::cout << mouse_pos->x << " == " << x_right << "; " << mouse_pos->y << " == " << y_down << std::endl;
 
-				bool click = false;
-				if (Input::GetKeyDown(KeyCode::MouseLeft))
-					click = true;
+				//bool click = false;
+				//if (Input::GetKeyDown(KeyCode::MouseLeft))
+				//	click = true;
 
-				if(click)
+				if(mouse_left_down)
 					//if (mouse_pos->x > x&& mouse_pos->x < (double)(x + win->format->x_mouse_magic_number * x_size)
 						//&& mouse_pos->y > y && mouse_pos->y < (double)(y + win->format->y_mouse_magic_number * y_size + up_size / 2.f)
 					if (mouse_pos->x > x_left && mouse_pos->x < x_right 
@@ -80,46 +82,50 @@ namespace SpaRcle {
 					x_pos -= (x_mouse - mouse_pos->x) * 5.f;
 					y_pos += (y_mouse - mouse_pos->y) * 2.5f;
 
-					name->SetPosition(x_pos + 0.015f, y_pos + y_size + up_size / 4.f);
+					//name->SetPosition(x_pos_correct + 0.015f, y_pos + y_size + up_size / 4.f);
 				}
-
-				if (Input::GetKeyUp(KeyCode::MouseLeft))
+				
+				if (mouse_left_up)
 					isMove = false;
-				if (Input::FixedGetKeyDown(KeyCode::DownArrow))
-					y_pos -= 0.001f;
-				if (Input::FixedGetKeyDown(KeyCode::UpArrow))
-					y_pos += 0.001f;
+				//if (Input::GetKeyUp(KeyCode::MouseLeft))
+				//	isMove = false;
+				//if (Input::FixedGetKeyDown(KeyCode::DownArrow))
+				//	y_pos -= 0.001f;
+				//if (Input::FixedGetKeyDown(KeyCode::UpArrow))
+				//	y_pos += 0.001f;
 			}
+
+			name->SetPosition(x_pos_correct + 0.015f, y_pos + y_size + up_size / 4.f);
 
 			{glColor4f(0.2, 0.2, 0.2, 0.8f);
 				glRectf(
-					x_pos,		    y_pos,
-					x_pos + x_size, y_pos + y_size
+					x_pos_correct,		    y_pos,
+					x_pos_correct + x_size, y_pos + y_size
 				);
 			glBegin(GL_LINE_LOOP);
 				glColor3f(0.f, 0.f, 0.f);
-				glVertex2f(x_size + x_pos, y_pos);
-				glVertex2f(x_pos,		   y_pos);
-				glVertex2f(x_pos,		   y_size + y_pos);
-				glVertex2f(x_size + x_pos, y_size + y_pos);
+				glVertex2f(x_size + x_pos_correct, y_pos);
+				glVertex2f(x_pos_correct,		   y_pos);
+				glVertex2f(x_pos_correct,		   y_size + y_pos);
+				glVertex2f(x_size + x_pos_correct, y_size + y_pos);
 			glEnd();}
 
 			//!--------------------------------------------------
 
 			{glColor4f(0.3f, 0.6f, 0.3f, 0.9f);
 				glRectf(
-					x_pos,			y_pos + y_size,
-					x_pos + x_size, y_pos + y_size + up_size // Семщение вверх
+					x_pos_correct,			y_pos + y_size,
+					x_pos_correct + x_size, y_pos + y_size + up_size // Семщение вверх
 				);
 			glBegin(GL_LINE_LOOP);
 				glColor3f(0.f, 0.f, 0.f);
-				glVertex2f(x_size + x_pos,  y_pos + y_size);
-				glVertex2f(x_pos,		    y_pos + y_size);
-				glVertex2f(x_pos,		    y_pos + y_size + up_size);
-				glVertex2f(x_size + x_pos,  y_pos + y_size + up_size);
+				glVertex2f(x_size + x_pos_correct,  y_pos + y_size);
+				glVertex2f(x_pos_correct,		    y_pos + y_size);
+				glVertex2f(x_pos_correct,		    y_pos + y_size + up_size);
+				glVertex2f(x_size + x_pos_correct,  y_pos + y_size + up_size);
 			glEnd();}
 
-			name->Draw();
+			name->Draw(mouse_left_down, mouse_left_up);
 		}
 	}
 }

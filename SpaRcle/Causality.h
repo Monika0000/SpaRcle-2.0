@@ -71,11 +71,10 @@ namespace SpaRcle {
 				return nullptr;
 			else return find->second;
 		}
-		Neuron* CreatePerhap(const std::string& name, std::vector<IKernel*> synapses);
 		bool AddCore(Core* core);
-		bool Remember(std::string core_name, std::string n_name, IKernel* kernel_data) {
+		//bool Remember(std::string core_name, std::string n_name, IKernel* kernel_data) {
 			///$TODO n_data
-		}
+		//}
 	};
 }
 

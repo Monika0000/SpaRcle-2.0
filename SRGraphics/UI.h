@@ -29,7 +29,7 @@ namespace SpaRcle {
 			//Vector2f* pos;
 			//Vector2f* size;
 		public:
-			virtual void Draw() = 0;
+			virtual void Draw(bool mouse_left_down, bool mouse_left_up) = 0;
 		public:
 			UI(
 				float x_pos, float y_pos,

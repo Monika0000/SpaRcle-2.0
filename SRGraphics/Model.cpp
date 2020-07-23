@@ -9,6 +9,7 @@
 
 namespace SpaRcle {
 	namespace Graphics {
+		Material* model_temp_material = nullptr;
 		bool SpaRcle::Graphics::Model::Draw(Shader* shader) {
 			if (destroy) return false;
 
@@ -18,18 +19,28 @@ namespace SpaRcle {
 			}
 
 			for (t = 0; t < meshes.size(); t++) {
-				if (materials[t]->diffuse) {
+				model_temp_material = materials[t];
+
+				//std::cout << meshes.size() << std::endl;
+
+				if (model_temp_material->diffuse) {
 					glActiveTexture(GL_TEXTURE0);
-					glBindTexture(GL_TEXTURE_2D, materials[t]->diffuse->id);
-					texID = glGetUniformLocation(shader->ProgramID, "DiffuseMap");
-					glUniform1i(texID, 0); // This is GL_TEXTURE0
+					glBindTexture(GL_TEXTURE_2D, model_temp_material->diffuse->id);
+					glUniform1i(glGetUniformLocation(shader->ProgramID, "DiffuseMap"), 0); // This is GL_TEXTURE0
 				}
-				if (materials[t]->normal) {
+				if (model_temp_material->normal) {
 					glActiveTexture(GL_TEXTURE1);
-					glBindTexture(GL_TEXTURE_2D, materials[t]->normal->id);
-					texID = glGetUniformLocation(shader->ProgramID, "NormalMap");
-					glUniform1i(texID, 1); // This is GL_TEXTURE1
+					glBindTexture(GL_TEXTURE_2D, model_temp_material->normal->id);
+					glUniform1i(glGetUniformLocation(shader->ProgramID, "NormalMap"), 1); // This is GL_TEXTURE1
 				}
+
+				glm::vec4 c = model_temp_material->Color;
+
+				//std::cout << c.r << " " << c.g << " " << c.b << "\n";
+
+				glUniform4fv(glGetUniformLocation(shader->ProgramID, "color"), 1, &model_temp_material->Color[0]);
+				//std::cout << model_temp_material->use_light << std::endl;
+				glUniform1i(glGetUniformLocation(shader->ProgramID, "use_light"), model_temp_material->use_light);
 
 				if (!meshes[t]->isGenerate) meshes[t]->Generate();
 				if (!meshes[t]->isBind) meshes[t]->Bind();
@@ -132,11 +143,174 @@ namespace SpaRcle {
 			}
 		}
 
-		Model* SpaRcle::Graphics::ModelManager::LoadModelFromObj(const char* file, std::vector<Material*> mats, glm::vec3 pos) {
-			std::string path = graph->GetResourcesFolder() + "\\" + std::string(file);
 
-			path = String::ReplaceAll(path, "\\\\", "\\");
-			path = String::ReplaceAll(path, "/", "\\");
+
+		bool ModelManager::AddMeshToModel(Model* model, std::string name, std::vector<Material*>& mats, glm::vec3& pos) {
+			if (Current_mesh == "") {
+				Current_mesh = name;
+				return true;
+			}
+
+			if(final_verts.size() != 0)
+				debug->Log("Add mesh to model : " + Current_mesh);
+			else {
+				debug->Error("Failed add mesh to model : " + Current_mesh);
+				return false;
+			}
+
+			//?=========================================================
+			Mesh* mesh = new Mesh(final_verts, pos);
+
+			count_meshes++;
+
+			if (count_meshes == 0) {
+				if (mats.size() > 0) {
+					if (mats[0])
+						model->AddMesh(mesh, mats[0]);
+					else
+						model->AddMesh(mesh, DefMat);
+				}
+				else model->AddMesh(mesh, DefMat);
+			}
+			else if (mats.size() >= count_meshes) {
+				if (mats[count_meshes - 1])
+					model->AddMesh(mesh, mats[count_meshes - 1]);
+				else model->AddMesh(mesh, DefMat);
+			}
+			else model->AddMesh(mesh, DefMat);
+
+			final_verts.clear();
+
+			//?=========================================================
+
+			Current_mesh = name;
+			return true;
+		}
+
+		std::string ReadLine(FILE*pFile) {
+			char buffer[256] = { 0 };
+			fgets(buffer, sizeof(buffer), pFile);
+			std::string line = buffer;
+			line.resize(line.size() - 1);
+			return line.substr(1);
+		}
+
+		Model* ModelManager::LoadModelFromObj(const char* file, std::vector<Material*> mats, glm::vec3 pos) {
+			std::string path = graph->GetResourcesFolder() + "\\Models\\" + std::string(file);
+			path = String::MakePath(path);
+			auto find = Models.find(path);
+			if (find != Models.end())
+				return find->second;
+
+			debug->Log("Loading obj model : " + std::string(path));
+
+			verts.clear(); uvs.clear(); normals.clear(); final_verts.clear(); Current_mesh = ""; count_meshes = 0; count_uncorrect_triangles = 0;
+
+			Model* model = new Model();
+
+			char buffer[256] = { 0 }; std::string temp = ""; std::vector<std::string> components;
+			FILE* pFile = fopen(path.c_str(), "r");
+			bool stop = false;
+
+			if (!pFile) {
+				debug->Error("LoadModelFromObj() : Failed loading obj model!\n\tPath : " + std::string(path));
+				Sleep(1000);
+				return nullptr;
+			}
+
+			while (fscanf(pFile, "%s", buffer) != EOF && !stop) {
+				switch (buffer[0]) {
+					//!=========================[MESH NAME]==========================
+					case '#': {
+						auto sp = String::Split(ReadLine(pFile), " ");
+						if (sp.size() > 1) if (sp[0] == "object") AddMeshToModel(model, sp[1], mats, pos);
+						break;
+					}
+					case 'g': {
+						AddMeshToModel(model, ReadLine(pFile), mats, pos);
+						break;
+					}
+					case 'o': {
+						if (std::string(buffer) == "off") break;
+						AddMeshToModel(model, ReadLine(pFile), mats, pos);
+						break;
+					}
+					//!=========================[MESH NAME]==========================
+					case 'v': {
+						switch (buffer[1]) {
+							case '\0': { // v
+								glm::vec3 pos;
+								int i = fscanf(pFile, "%f %f %f", &pos.x, &pos.y, &pos.z);
+								verts.push_back(pos);
+								//? Needed setlocale(LC_NUMERIC, "C"); 
+								//? std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
+								break;
+							}//?=======================
+							case 'n': { // vn
+								glm::vec3 pos;
+								int i = fscanf(pFile, "%f %f %f", &pos.x, &pos.y, &pos.z);
+								normals.push_back(pos);
+								break;
+							} //?=======================
+							case 't': { // vt
+								glm::vec2 pos;
+
+								fgets(buffer, sizeof(buffer), pFile);
+								temp = buffer; temp = temp.substr(1); temp.resize(temp.size() - 1); //TODO: Or  temp.resize(temp.size() - 2);
+								components = String::Split(temp, " ", true);
+								pos.x = atof(components[0].c_str());
+								pos.y = atof(components[1].c_str());
+
+								//fscanf(pFile, "%f %f", &pos.x, &pos.y);
+								uvs.push_back(pos);
+								break;
+							} //?=======================
+							default: break;
+						}
+
+						break;
+					}
+					case 'f': {
+						fgets(buffer, sizeof(buffer), pFile);
+						temp = buffer; temp = temp.substr(1); temp.resize(temp.size() - 1);
+
+						components = String::Split(temp, " ", true);
+
+						if (components.size() == 3)
+							AddTriangle(final_verts, verts, uvs, normals, components);
+						else count_uncorrect_triangles++;
+
+						break;
+					}
+					default: fgets(buffer, sizeof(buffer), pFile); break;
+				}
+			}
+
+			AddMeshToModel(model, "end", mats, pos);
+
+			fclose(pFile);
+
+			if (count_meshes > 0) {
+				this->Models.insert(std::make_pair(path, model));
+				if (count_uncorrect_triangles > 0)
+					debug->Warn("When loading the model, incorrect polygons were found, possibly triangulation is required. \n\tPath : " +
+						path + "\n\tCount error polygons : " + std::to_string(count_uncorrect_triangles));
+				return model;
+			}
+			else {
+				debug->Error("Failed loading model : " + path + 
+					"\n\tReason : count meshes is zero!\n\tSolution : possibly triangulation is required");
+				return nullptr;
+			}
+		}
+		
+		/*
+		Model* SpaRcle::Graphics::ModelManager::LoadModelFromObj(const char* file, std::vector<Material*> mats, glm::vec3 pos) {
+			std::string path = graph->GetResourcesFolder() + "\\Models\\" + std::string(file);
+
+			//path = String::ReplaceAll(path, "\\\\", "\\");
+			//path = String::ReplaceAll(path, "/", "\\");
+			path = String::MakePath(path);
 
 			auto find = Models.find(path);
 			if (find == Models.end()) {
@@ -218,7 +392,36 @@ namespace SpaRcle {
 
 						break;
 					}
-							//!=========================[MESH NAME]==========================
+					case 'g': {
+						temp = ReadLine(pFile);
+						//fgets(buffer, sizeof(buffer), pFile);
+						//std::string line = buffer;
+						//line.resize(line.size() - 1);
+
+						//debug->Log("Add mesh to model : " + line.substr(1) + " (g)");
+						debug->Log("Add mesh to model : " + temp + " (g)");
+
+						if (count_meshes > 0)
+							if (!addMesh()) return nullptr;
+						count_meshes++;
+						break;
+					}
+					case 'o': {
+						if (std::string(buffer) == "off") break;
+
+						temp = ReadLine(pFile);
+						//fgets(buffer, sizeof(buffer), pFile);
+						//std::string line = buffer;
+						//line.resize(line.size() - 1);
+
+						//debug->Log("Add mesh to model : " + line.substr(1) + " (o)");
+						debug->Log("Add mesh to model : " + temp + " (o)");
+						if (count_meshes > 0)
+							if (!addMesh()) return nullptr;
+						count_meshes++;
+						break;
+					}
+					//!=========================[MESH NAME]==========================
 
 					case 'v': {
 						switch (buffer[1]) {
@@ -227,7 +430,7 @@ namespace SpaRcle {
 							glm::vec3 pos;
 							int i = fscanf(pFile, "%f %f %f", &pos.x, &pos.y, &pos.z);
 							verts.push_back(pos);
-							/* Needed setlocale(LC_NUMERIC, "C"); */
+							// Needed setlocale(LC_NUMERIC, "C"); 
 							//std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
 							break;
 						}//?=======================
@@ -293,5 +496,6 @@ namespace SpaRcle {
 			}
 			else return find->second;
 		}
+		*/
 	}
 }

@@ -60,9 +60,6 @@
     <ClInclude Include="ISystem.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="PerhapsKernel.h">
-      <Filter>Kernels</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

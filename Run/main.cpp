@@ -79,7 +79,7 @@ int main(int argcp, char** argv) {
 	Moving* moving = new Moving(
 		"moving",
 		//new TCP("127.0.0.1", 1025, debug),
-		new TCP("192.168.0.14", 1025, debug),
+		new TCP("192.168.0.11", 1015, debug),
 		debug,
 		settings,
 		file_manager);

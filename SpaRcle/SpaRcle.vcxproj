@@ -163,7 +163,6 @@
     <ClInclude Include="Neuron.h" />
     <ClInclude Include="Emotionality.h" />
     <ClInclude Include="Logicality.h" />
-    <ClInclude Include="PerhapsKernel.h" />
     <ClInclude Include="Reality.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SRFramework.h" />

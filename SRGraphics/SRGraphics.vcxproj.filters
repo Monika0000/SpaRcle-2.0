@@ -83,6 +83,9 @@
     <ClInclude Include="Model.h">
       <Filter>Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="UIList.h">
+      <Filter>UIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SRGraphics.cpp">
@@ -126,6 +129,9 @@
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="UIList.cpp">
+      <Filter>UIElements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

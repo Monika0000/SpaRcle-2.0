@@ -5,6 +5,7 @@
 
 using namespace SpaRcle;
 
+/*
 Neuron* Causality::CreatePerhap(const std::string& name, std::vector<IKernel*> synapses) {
 	Neuron* perhap = new Neuron();
 	//!---------[Loading neuron synapses]---------
@@ -14,7 +15,7 @@ Neuron* Causality::CreatePerhap(const std::string& name, std::vector<IKernel*> s
 	}
 
 	return perhap;
-}
+}*/
 
 bool SpaRcle::Causality::AddCore(Core* core) {
 	if (!isRun) { debug->Error("Causality is not running!"); return false; }
