@@ -22,7 +22,7 @@ namespace SpaRcle {
 				this->text = String::CopyStringToCharPointer(str.c_str());
 				*t_len = strlen(text);
 			}
-			void Draw(bool mouse_left_down, bool mouse_left_up) override {
+			void Draw(vec2b mouse_left, vec2d mouse_pos) override {
 				glPushMatrix();
 				glColor4f(
 					_color->r,

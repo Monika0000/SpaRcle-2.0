@@ -22,11 +22,25 @@
 namespace SpaRcle {
 	namespace Helper {
 		class Math {
+			/*
+				angle = angle * pi / 180
+				rad   = rad * 180 / pi 
+
+				angle = rad * pi / 180
+				rad   = angle * 180 / pi
+			*/
 		private:
 			Math() {};
 			~Math() {};
 		public:
-			inline static const size_t size_t_max = 18446744073709551615;
+			inline static const double PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825;
+			static const double RadToAngle(double rad) noexcept {
+				return rad * PI / 180.0;
+			}
+			static const double AngleToRad(double angle) noexcept {
+				return angle * 180.0 / PI;
+			}
+			inline static const size_t size_t_max = 18446744073709551615; //18446744073709551615
 			inline static double Round(double x) { return ((x * 100) / 100); /*return floor(x * 100) / 100;*/ }
 		};
 
@@ -63,6 +77,11 @@ namespace SpaRcle {
 			Utils() {};
 			~Utils() {};
 		public:
+			inline static const CONTEXT GetContext() noexcept {
+				CONTEXT context;
+				GetThreadContext(GetCurrentThread(), &context);
+				return context;
+			}
 			inline static std::string GetPathToExe() {
 				TCHAR cwd[100];
 				GetCurrentDirectory(100, cwd);

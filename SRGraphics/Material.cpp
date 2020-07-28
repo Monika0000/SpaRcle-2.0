@@ -32,7 +32,7 @@ namespace SpaRcle {
 
 			float r, g, b, a; r = g = b = a = 1;
 
-			bool use_light = true;
+			//bool use_light = true;
 
 			//, Texture::Type::Diffuse, Texture::Filter::NEAREST_MIPMAP_LINEAR
 
@@ -53,14 +53,14 @@ namespace SpaRcle {
 
 						break;
 					}
-					case 'u': {
-						if (std::string(buffer).substr(1) == "use_light") {
-							fscanf(pFile, "%s", buffer);
-							if (std::string(buffer) == "false") use_light = false; else use_light = true;
-						} else 
-							fscanf(pFile, "%s", buffer);
-						break;
-					}
+					//case 'u': {
+					//	if (std::string(buffer).substr(1) == "use_light") {
+					//		fscanf(pFile, "%s", buffer);
+					//		if (std::string(buffer) == "false") use_light = false; else use_light = true;
+					//	} else 
+					//		fscanf(pFile, "%s", buffer);
+					//	break;
+					//}
 					case 'd': {
 						fscanf(pFile, "%s", buffer);
 						diffuse = graph->GetRender()->GetTextureManager()->LoadTexture(buffer, false, 
@@ -95,7 +95,7 @@ namespace SpaRcle {
 					break;
 				}
 			}
-			Material* mat = new Material(diffuse, normal, specular, glossiness, { r, g, b, a }, use_light);
+			Material* mat = new Material(diffuse, normal, specular, glossiness, { r, g, b, a });
 			//std::cout << r << " " << g << " " << b << " " << a << "\n";
 			//std::cout << use_light << "\n";
 

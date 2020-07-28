@@ -137,6 +137,7 @@ namespace SpaRcle {
 			}
 		private:
 			SRGraphics* graph = nullptr;
+			Window* win = nullptr;
 			Camera* camera = nullptr;
 
 			Shader* shader = nullptr;

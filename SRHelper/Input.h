@@ -44,7 +44,7 @@ namespace SpaRcle {
 				GetKeyUp(key);
 				return b;
 			}
-			static bool GetKeyDown(const KeyCode key) {
+			inline static bool GetKeyDown(const KeyCode key) {
 				bool b = GetKey(key);
 
 				if (pressed_keys[int(key)]) {

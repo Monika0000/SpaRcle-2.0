@@ -114,30 +114,34 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 				else if (Input::GetKey(KeyCode::D)) spdz += -0.05;
 				else spdz = 0.0;
 			}
+			else 
+				GetCursorPos(&pt);
+			
+			if (*isMouseLock) {
+				dx = pt.x - prevX;              // бшвхякъел ялеыемхе йспянпю гю 10 лхкхяейсмд он ьхпхме
+				dy = pt.y - prevY;              // бшвхякъел ялеыемхе йспянпю гю 10 лхкхяейсмд он бшянре
 
-			dx = pt.x - prevX;              // бшвхякъел ялеыемхе йспянпю гю 10 лхкхяейсмд он ьхпхме
-			dy = pt.y - prevY;              // бшвхякъел ялеыемхе йспянпю гю 10 лхкхяейсмд он бшянре
+				yaw -= dx / 1000.0;             // ялеыемхе он ьхпхме мюйюокхбюеряъ б сцнк бпюыемхъ бопюбн-бкебн
+				ptc -= dy / 1000.0;
 
-			yaw -= dx / 1000.0;             // ялеыемхе он ьхпхме мюйюокхбюеряъ б сцнк бпюыемхъ бопюбн-бкебн
-			ptc -= dy / 1000.0;
+				if (abs(ptc) >= 2.f) ptc = 2.f * (ptc / abs(ptc));
 
-			if (abs(ptc) >= 2.f) ptc = 2.f * (ptc / abs(ptc));
+				// цнпхгнмрюкэмни окняйнярэч ъбкъеряъ X-Z
+				dxx = sin(yaw); // dxx - онкнфемхе рнвйх нрмняхрекэмн нях X
+				dxz = cos(yaw); // dxz - онкнфемхе рнвйх нрмняхрекэмн нях Z
+				dyy = sin(ptc / 4.f) * 4.f; // dyy - онкнфемхе рнвйх нрмняхрекэмн нях Y
 
-			// цнпхгнмрюкэмни окняйнярэч ъбкъеряъ X-Z
-			dxx = sin(yaw); // dxx - онкнфемхе рнвйх нрмняхрекэмн нях X
-			dxz = cos(yaw); // dxz - онкнфемхе рнвйх нрмняхрекэмн нях Z
-			dyy = sin(ptc / 4.f) * 4.f; // dyy - онкнфемхе рнвйх нрмняхрекэмн нях Y
-
-			//std::cout << "sin(" << ptc << ") = " << dyy << std::endl;
+				//std::cout << "sin(" << ptc << ") = " << dyy << std::endl;
 
 
-			// йнппейрхпсел яйнпнярэ оепелеыемхъ б гюбхяхлнярх нр сцкю онбнпнрю йюлепш
-			// врнаш йюлепю дбхцюкюяэ рсдю, йсдю ялнрпхр, ю ме бднкэ няеи X х Z
-			posz += spdz * dxx;
-			posx += spdx * dxx;
-			posx += spdz * dxz;
-			posz -= spdx * dxz;
-			posy += spdy / 10;
+				// йнппейрхпсел яйнпнярэ оепелеыемхъ б гюбхяхлнярх нр сцкю онбнпнрю йюлепш
+				// врнаш йюлепю дбхцюкюяэ рсдю, йсдю ялнрпхр, ю ме бднкэ няеи X х Z
+				posz += spdz * dxx;
+				posx += spdx * dxx;
+				posx += spdz * dxz;
+				posz -= spdx * dxz;
+				posy += spdy / 10;
+			}
 
 			viewMat = glm::lookAt(glm::vec3(posx + dxx, posy + dyy, posz - dxz), glm::vec3(posx, posy, posz), glm::vec3(0, 1, 0));
 			//pos = { posx, posy, posz };

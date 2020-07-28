@@ -34,13 +34,12 @@ namespace SpaRcle {
 					glUniform1i(glGetUniformLocation(shader->ProgramID, "NormalMap"), 1); // This is GL_TEXTURE1
 				}
 
-				glm::vec4 c = model_temp_material->Color;
-
+				//glm::vec4 c = model_temp_material->Color;
 				//std::cout << c.r << " " << c.g << " " << c.b << "\n";
 
 				glUniform4fv(glGetUniformLocation(shader->ProgramID, "color"), 1, &model_temp_material->Color[0]);
 				//std::cout << model_temp_material->use_light << std::endl;
-				glUniform1i(glGetUniformLocation(shader->ProgramID, "use_light"), model_temp_material->use_light);
+				//glUniform1i(glGetUniformLocation(shader->ProgramID, "use_light"), model_temp_material->use_light);
 
 				if (!meshes[t]->isGenerate) meshes[t]->Generate();
 				if (!meshes[t]->isBind) meshes[t]->Bind();
@@ -48,10 +47,10 @@ namespace SpaRcle {
 				//position = glGetUniformLocation(shader->ProgramID, "ObjPos");
 				//glUniform3fv(position, 1, &meshes[t]->position[0]);
 
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3{ meshes[t]->position.x, meshes[t]->position.y, meshes[t]->position.z });
-				model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-				glUniformMatrix4fv(glGetUniformLocation(shader->ProgramID, "modelMat"), 1, GL_FALSE, glm::value_ptr(model));
+				//glm::mat4 model = glm::mat4(1.0f);
+				//model = glm::translate(model, meshes[t]->position);
+				//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+				glUniformMatrix4fv(glGetUniformLocation(shader->ProgramID, "modelMat"), 1, GL_FALSE, glm::value_ptr(meshes[t]->model));
 
 				meshes[t]->Draw();
 
@@ -62,8 +61,8 @@ namespace SpaRcle {
 			return true;
 		}
 
-		void Model::FlatDraw(size_t number, Shader* shader, float scale_modifer) {
-			if (destroy) return;
+		void Model::FlatDraw(size_t number, Shader* shader) {//, float scale_modifer
+			if (destroy || !CanSelect) return;
 
 			for (t = 0; t < meshes.size(); t++) {
 				if (!meshes[t]->isGenerate) meshes[t]->Generate();
@@ -72,10 +71,10 @@ namespace SpaRcle {
 				//position = glGetUniformLocation(shader->ProgramID, "ObjPos");
 				//glUniform3fv(position, 1, &meshes[t]->position[0]);
 
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3{ meshes[t]->position.x, meshes[t]->position.y, meshes[t]->position.z });
-				model = glm::scale(model, glm::vec3(1.f + scale_modifer, 1.f + scale_modifer, 1.f + scale_modifer));
-				glUniformMatrix4fv(glGetUniformLocation(shader->ProgramID, "modelMat"), 1, GL_FALSE, glm::value_ptr(model));
+				//glm::mat4 model = glm::mat4(1.0f);
+				//model = glm::translate(model, meshes[t]->position);
+				//model = glm::scale(model, glm::vec3(1.f + scale_modifer, 1.f + scale_modifer, 1.f + scale_modifer));
+				glUniformMatrix4fv(glGetUniformLocation(shader->ProgramID, "modelMat"), 1, GL_FALSE, glm::value_ptr(meshes[t]->model));
 
 				vec3uc c = GraphUtils::IntToColor(number + 1);
 				float* color = GraphUtils::TransliteFloatColor((unsigned int)c.x, (unsigned int)c.y, (unsigned int)c.z);
@@ -91,6 +90,7 @@ namespace SpaRcle {
 			}
 		}
 
+		/*
 		void Model::DrawSencil(Shader* stencil, Shader* shader) {
 			if (destroy) return;
 
@@ -129,8 +129,8 @@ namespace SpaRcle {
 			glEnable(GL_DEPTH_TEST);
 
 			//glBindFramebuffer(GL_FRAMEBUFFER, Render::defaultFBO);
-		}
-		void Model::DrawSencil2(Shader* shader) {
+		}*/
+		void Model::DrawSencil(Shader* shader) {
 			for (t = 0; t < meshes.size(); t++) {
 				if (!meshes[t]->isGenerate) meshes[t]->Generate();
 				if (!meshes[t]->isBind) meshes[t]->Bind();

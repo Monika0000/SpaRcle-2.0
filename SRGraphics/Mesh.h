@@ -6,6 +6,11 @@
 #include <vector>
 #include <Vector3.h>
 #include <SRHelper.h>
+#include <glm/glm.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/matrix.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace SpaRcle {
 	namespace Graphics {
@@ -37,6 +42,11 @@ namespace SpaRcle {
 			friend class Render;
 			friend class Model;
 			friend class ModelManager;
+		public:
+			float min_x = 0.f, min_y = 0.f, min_z = 0.f,
+				  max_x = 0.f, max_y = 0.f, max_z = 0.f;
+		private:
+			void UpdateMatrix();
 		private:
 			size_t count_vertices;
 			std::vector<Vertex> vertices;
@@ -44,9 +54,15 @@ namespace SpaRcle {
 			//std::vector<glm::vec2> uvs;
 			GLuint VAO, VBO;//, EBO, UV;
 
+			glm::mat4 model = glm::mat4(1.0f);
+
 			bool isGenerate;
 			bool isBind;
-			glm::vec3 position;
+
+			glm::vec3 position = { 0, 0, 0 };
+			glm::vec3 rotation = { 0, 0, 0 };
+			//glm::quat rotation = { 0,0,0, 0 };
+			glm::vec3 scale	   = { 1, 1, 1 };
 		private:
 			void Bind() {
 				glBindVertexArray(VAO);
@@ -83,27 +99,25 @@ namespace SpaRcle {
 				isGenerate = true;
 			}
 		public:
-			void SetPosition(glm::vec3 pos) {
-				position = pos;
-				//vec3f p_temp = pos;
-				//pos.x -= position.x;
-				////pos.y -= position.y;
-				//pos.z -= position.z;
-				//position = p_temp;
+			void SetPosition(glm::vec3 pos) { position = pos; UpdateMatrix(); }
+			void SetRotation(glm::vec3 rot) { 
+				//const float angle = 1.f; // radians
 
-				//for (auto& v : vertices) {
-				//	v.Position.x += pos.x;
-				//	v.Position.y += pos.y;
-				//	v.Position.z += pos.z;
-				//}
+				//float x = rot.x * sin(angle / 2.f); //RotationAngle / 2
+				//float y = rot.y * sin(angle / 2.f); //RotationAngle / 2
+				//float z = rot.z * sin(angle / 2.f); //RotationAngle / 2
+				//float w =         cos(angle / 2.f); //RotationAngle / 2
 
-				//isBind = false;
+				//rotation = glm::angleAxis(angle, rot);
+				//rotation = { x, y, z, w };
+
+				rotation = rot;
+				UpdateMatrix();
 			}
+			void SetScale   (glm::vec3 scl) { scale    = scl; UpdateMatrix(); }
+		public:
 			void Draw();
 			void FlatDraw();
-			//void Bind() const {
-			//	glBindVertexArray(this->VAO);
-			//}
 		public:
 			Mesh(std::vector<Vertex> vertices, glm::vec3 pos = { 0.f, 0.f, 0.f }, size_t count_vertices = Math::size_t_max) {
 			//Mesh(Data* data, vec3f pos = { 0.f, 0.f, 0.f }) {
@@ -116,7 +130,6 @@ namespace SpaRcle {
 				this->isGenerate= false;
 
 				this->position = pos;
-				//position = { 0.f, 0.f, 0.f };
 
 				this->vertices = vertices;
 				//this->uvs= uvs;
@@ -127,8 +140,30 @@ namespace SpaRcle {
 				if (this->count_vertices == 0) {
 					Debug::InternalError("Mesh constructor : count_vertices == 0!");
 					Sleep(1000);
+				} else {
+					max_x = vertices[0].Position.x;
+					min_x = vertices[0].Position.x;
+
+					max_y = vertices[0].Position.y;
+					min_y = vertices[0].Position.y;
+
+					max_z = vertices[0].Position.z;
+					min_z = vertices[0].Position.z;
+
+					for (size_t t = 1; t < this->count_vertices; t++) {
+						if (vertices[t].Position.x > max_x) max_x = vertices[t].Position.x;
+						else if (vertices[t].Position.x < min_x) min_x = vertices[t].Position.x;
+
+						if (vertices[t].Position.y > max_y) max_y = vertices[t].Position.y;
+						else if (vertices[t].Position.y < min_y) min_y = vertices[t].Position.y;
+
+						if (vertices[t].Position.z > max_z) max_z = vertices[t].Position.z;
+						else if (vertices[t].Position.z < min_z) min_z = vertices[t].Position.z;
+					}
 				}
 				//this->Compile();
+
+				this->UpdateMatrix();
 			}
 			~Mesh() {
 				//this->verts.clear();

@@ -31,7 +31,7 @@ namespace SpaRcle {
 
 		class Debug {
 		 	enum class Type {
-				_Log, _Info, _System, _Warning, _Error, _Fatal, _Debug, _Network, _Library, _Graph, _Shader
+				_Log, _Info, _System, _Warning, _Error, _Fatal, _Debug, _Network, _Library, _Graph, _Shader, _Script, _ScriptError
 			};
 		public:
 			Debug(std::string path, bool init_color_therme = true);
@@ -40,14 +40,16 @@ namespace SpaRcle {
 			inline void SetConsoleEnable(bool v) { isConsole = v; }
 			void SetShowMemoryLoad(bool v) { show_use_memory = v; }
 		public:
-			inline void Log(std::string msg, int deep_level = 0) { Print(msg, Type::_Log, deep_level); }
-			inline void Info(std::string msg, int deep_level = 0) { Print(msg, Type::_Info, deep_level); }
-			inline void Warn(std::string msg, int deep_level = 0) { Print(msg, Type::_Warning, deep_level); }
-			inline void Error(std::string msg, int deep_level = 0) { Print(msg, Type::_Error, deep_level); }
-			inline void System(std::string msg, int deep_level = 0) { Print(msg, Type::_System, deep_level); }
-			inline void Network(std::string msg, int deep_level = 0) { Print(msg, Type::_Network, deep_level); }
-			inline void Graph(std::string msg, int deep_level = 0) { Print(msg, Type::_Graph, deep_level); }
-			inline void Shader(std::string msg, int deep_level = 0) { Print(msg, Type::_Shader, deep_level); }
+			inline void Log(std::string msg) { Print(msg, Type::_Log, 0); } //, int deep_level = 0
+			inline void Info(std::string msg) { Print(msg, Type::_Info, 0); }	
+			inline void Warn(std::string msg) { Print(msg, Type::_Warning, 0); }
+			inline void Error(std::string msg) { Print(msg, Type::_Error, 0); }
+			inline void System(std::string msg) { Print(msg, Type::_System, 0); }
+			inline void Network(std::string msg) { Print(msg, Type::_Network, 0); }
+			inline void Graph(std::string msg) { Print(msg, Type::_Graph, 0); }
+			inline void Shader(std::string msg) { Print(msg, Type::_Shader, 0); }
+			inline void Script(std::string msg) { Print(msg, Type::_Script, 0); }
+			inline void ScriptError(std::string msg) { Print(msg, Type::_ScriptError, 0); }
 
 			static inline void SysGraphError(std::string msg) { 
 				HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);

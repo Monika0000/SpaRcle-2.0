@@ -109,18 +109,23 @@ namespace SpaRcle {
 		private:
 			bool destroy = false;
 		public:
-			bool isSelect = false;
-			bool enabled  = true;
+			bool isSelect  = false;
+			bool CanSelect = true;
+			bool enabled   = true;
 			//Material* material;
 			//Mesh* mesh;
 			std::vector<Material*> materials = std::vector<Material*>();
 			std::vector<Mesh*>	   meshes    = std::vector<Mesh*>();
 		public:
+			void SetPosition(glm::vec3 val) { for (auto& a : this->meshes) a->SetPosition(val); }
+			void SetRotation(glm::vec3 val) { for (auto& a : this->meshes) a->SetRotation(val); }
+			void SetScale   (glm::vec3 val) { for (auto& a : this->meshes) a->SetScale   (val); }
+		public:
 			void Destroy() { this->destroy = true; enabled = false; }
 			bool Draw(Shader* shader);
-			void FlatDraw(size_t number, Shader* shader, float scale_modifer = 0.f);
-			void DrawSencil(Shader* stencil, Shader* shader);
-			void DrawSencil2(Shader* stencil);
+			void FlatDraw(size_t number, Shader* shader); //, float scale_modifer = 0.f
+			//void DrawSencil(Shader* stencil, Shader* shader);
+			void DrawSencil(Shader* stencil);
 			void AddMesh(Mesh* mesh, Material* material) { meshes.push_back(mesh); materials.push_back(material); };
 		public:
 			Model() { 

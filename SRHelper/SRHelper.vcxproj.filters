@@ -22,14 +22,11 @@
     <Filter Include="Graphics">
       <UniqueIdentifier>{0d6b819d-1fb5-4505-915f-6a3885e6372d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{9e929512-7fa1-429e-9649-97560675e092}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KeyCodes.h">
-      <Filter>Console</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Console</Filter>
-    </ClInclude>
     <ClInclude Include="FileManager.h">
       <Filter>Files</Filter>
     </ClInclude>
@@ -75,12 +72,18 @@
     <ClInclude Include="Vectors.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="KeyCodes.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debug.cpp">
-      <Filter>Console</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp">
       <Filter>Console</Filter>
     </ClCompile>
     <ClCompile Include="FileManager.cpp">
@@ -100,6 +103,12 @@
     </ClCompile>
     <ClCompile Include="SRString.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

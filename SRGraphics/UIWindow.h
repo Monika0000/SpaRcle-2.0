@@ -14,7 +14,7 @@ namespace SpaRcle {
 			bool CanMove = true;
 			Vector2d* mouse_pos = nullptr;
 		public:
-			void Draw(bool mouse_left_down, bool mouse_left_up) override;
+			void Draw(vec2b mouse_left, vec2d mouse_pos) override;
 			virtual void DrawElements() {  };
 		public:
 			UIWindow(

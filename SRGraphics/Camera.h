@@ -30,7 +30,7 @@ namespace SpaRcle {
 			float posz = 0.0;
 			//glm::vec3 pos = { 0,0,0 };
 
-			POINT pt;
+			POINT pt = { 0, 0 };
 			float prevX;
 			float prevY;
 		private:
@@ -88,11 +88,14 @@ namespace SpaRcle {
 			bool Create(WindowFormat** format, int& x_pos, int& y_pos, glm::mat4& projective);
 			bool Init(bool& isMouseLock);
 			bool Run();
+			const vec2l GetMousePos() const noexcept { return { (long)pt.x, (long)pt.y }; }
 			void SetCursorPosition(int x, int y) {
 				SetCursorPos(x, y);
 				prevX = x;
 				prevY = y;
 			}
+
+			inline const vec3f GetPosition() const noexcept { return { posx, posy, posz }; }
 
 			void SetSkybox(Shader* shader) {
 				Skybox = shader;

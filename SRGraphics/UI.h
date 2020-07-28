@@ -18,8 +18,8 @@ namespace SpaRcle {
 	namespace Graphics {
 		class UI {
 		protected:
-			float x_mouse;
-			float y_mouse;
+			double x_mouse;
+			double y_mouse;
 
 			float x_pos;
 			float y_pos;
@@ -29,7 +29,7 @@ namespace SpaRcle {
 			//Vector2f* pos;
 			//Vector2f* size;
 		public:
-			virtual void Draw(bool mouse_left_down, bool mouse_left_up) = 0;
+			virtual void Draw(vec2b mouse_left, vec2d mouse_pos) = 0;
 		public:
 			UI(
 				float x_pos, float y_pos,

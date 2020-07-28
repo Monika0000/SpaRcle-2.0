@@ -70,6 +70,8 @@ bool SpaRcle::Graphics::Render::Init() {
 		Иначе ничего не будет работать
 	*/
 
+	this->win = graph->GetWindow();
+
 	this->camera->SetSkybox(skyboxShader);
 	//this->camera->AddShader(skyboxShader);
 	this->camera->AddShader(shader);
@@ -140,10 +142,10 @@ ret: if (clear) goto ret;
 		deleteModels.erase(deleteModels.begin());
 	}*/
 
-	if (fog)
-		InitFog();
-	else
-		glDisable(GL_FOG);
+	//if (fog)
+	//	InitFog();
+	//else
+	//	glDisable(GL_FOG);
 
 	raytracing->Enable();
 	
@@ -173,13 +175,16 @@ ret: if (clear) goto ret;
 
 				Stencil->Use();
 
-				models[t]->DrawSencil2(this->Stencil);
+				models[t]->DrawSencil(this->Stencil);
 
 				glDisable(GL_STENCIL_TEST);
 
 				shader->Use();
 			}
 		}
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE0);
 
 	raytracing->Disable();
 
@@ -235,8 +240,14 @@ void SpaRcle::Graphics::Render::DrawAllUI() {
 	bool mouse_left_down = Input::GetKeyDown(KeyCode::MouseLeft);
 	bool mouse_left_up   = Input::GetKeyUp(KeyCode::MouseLeft);
 
+	vec2d pos =  win->GetMousePos();
+	//std::cout << "mouse_x = " << pos.x << "; mouse_y = " << pos.y << std::endl;
+
 	for (UI* ui : this->_ui_objects) {
-		ui->Draw(mouse_left_down, mouse_left_up);
+		ui->Draw(
+			{ mouse_left_down, mouse_left_up },  
+			pos
+		);
 	}
 
 	glEnable(GL_DEPTH_TEST);

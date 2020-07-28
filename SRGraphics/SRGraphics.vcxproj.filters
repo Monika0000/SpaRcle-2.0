@@ -86,6 +86,12 @@
     <ClInclude Include="UIList.h">
       <Filter>UIElements</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>RayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="UIButton.h">
+      <Filter>UIElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SRGraphics.cpp">
@@ -132,6 +138,9 @@
     </ClCompile>
     <ClCompile Include="UIList.cpp">
       <Filter>UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>RayTracing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

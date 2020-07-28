@@ -1,5 +1,6 @@
 #pragma once
 #include <GL\glew.h>
+#include "Light.h"
 
 namespace SpaRcle {
 	namespace Graphics {

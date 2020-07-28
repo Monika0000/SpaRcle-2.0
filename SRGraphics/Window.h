@@ -69,6 +69,7 @@ namespace SpaRcle {
 		public:
 			bool GetIsRun() const { return isRun; };
 			Vector2d* GetMousePosition();
+			vec2d GetMousePos();
 			void MouseLock(const bool val) {
 				if(val)
 					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);

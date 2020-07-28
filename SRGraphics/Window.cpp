@@ -102,6 +102,14 @@ namespace SpaRcle {
 		 	if(win->GetIsRun()) win->Draw(); // Re-draw
 		}
 
+		vec2d Window::GetMousePos() {
+			vec2d pos = { 0, 0 };
+			if (window)
+				glfwGetCursorPos(window, &pos.x, &pos.y);
+			pos.x /= this->format->size_x;
+			pos.y /= this->format->size_y;
+			return pos;
+		}
 		Vector2d* Window::GetMousePosition() {
 			Vector2d* vec = new Vector2d{ 0, 0 };
 			if(window)
@@ -267,6 +275,7 @@ namespace SpaRcle {
 			debug->Graph("Initializing glfw...");
 			if (glfwInit()) {
 				glfwWindowHint(GLFW_SAMPLES, 4); // 4x сглаживание
+				//glfwWindowHint(GLFW_SAMPLES, 16); // 16x сглаживание
 
 				/* Дальнейшие функции являются причиной некорректной работы, а именно, отсутствием рендера */
 				//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // нам нужен OpenGL 3.3
