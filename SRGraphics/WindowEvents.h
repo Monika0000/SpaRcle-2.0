@@ -30,7 +30,7 @@ namespace SpaRcle {
 			};
 
 			enum Event {
-				Close, Collapse, Expand, Maximize, ALT_F4, Unknown, LeftClick
+				Close, Collapse, Expand, Maximize, ALT_F4, Unknown, LeftClick, MouseIdle
 			};
 			static Event GetEvent(int msg, int param) {
 				if (msg == (int)MouseClickInToolBar::LeftDown && param == (int)MousePos::Close)
@@ -42,6 +42,8 @@ namespace SpaRcle {
 					return Event::LeftClick;
 				else if (msg == 274 && param == 61536)
 					return Event::ALT_F4;
+				else if (msg == 512 && param == 0)
+					return Event::MouseIdle;
 				else { return Event::Unknown; }
 			}
 		private:

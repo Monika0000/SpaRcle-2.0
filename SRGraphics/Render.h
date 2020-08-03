@@ -8,6 +8,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "RayTracing.h"
+#include "Terrain.h"
 
 namespace SpaRcle {
 	namespace Graphics {
@@ -34,23 +35,28 @@ namespace SpaRcle {
 			void Close();
 		private: //! ====== [Resources sector] ======
 			//?=====================================
-			std::vector<Model*> models = std::vector<Model*>();
-			std::vector<Model*> deleteModels = std::vector<Model*>();
+			std::vector<Model*> models		  = std::vector<Model*>();
+			std::vector<Mesh*>  aiming_meshes = std::vector<Mesh*> ();
+			std::vector<UI*>    _ui_objects	  = std::vector<UI*>   ();
 
-			size_t count_models;
-			Material* def_mat = nullptr;
-			Skybox* skybox = nullptr;
-			RayTracing* raytracing = nullptr;
+			Terrain* terrain			= nullptr;
+
+			size_t count_models			= 0;
+			size_t count_aiming_meshes	= 0;
+			Material* def_mat			= nullptr;
+			Skybox* skybox				= nullptr;
+			RayTracing* raytracing		= nullptr;
 			//?=====================================
 		private:
 			bool fog;
-			bool clear;
-			bool render;
+			//bool clear;
+			//bool render;
 			GLuint fogMode[3] = { GL_EXP, GL_EXP2, GL_LINEAR };	 // Хранит три типа тумана
 			GLfloat fogColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };	// Цвет тумана
 			GLuint FBO = 0; //Frame buffer
 		public:
 			void DrawSelectorObjects();
+			void DrawAimingObjects();
 
 			void DrawAllObjects();
 			void DrawAllUI();
@@ -59,7 +65,12 @@ namespace SpaRcle {
 
 			//bool RemoveModel(Model* model);
 			void AddModel(Model* model);
+			void AddAimingMesh(Mesh* mesh); 
+			bool RemoveAimingMesh(Mesh* mesh);
 			void AddUI(UI* ui);
+
+			Mesh* GetAimingMesh();
+			Model* GetSelectedModel();
 
 			void InitFog() {
 				//! ========== FOG ==========
@@ -126,15 +137,6 @@ namespace SpaRcle {
 				}
 				else return this->graph;
 			}
-
-			void Clear() {
-			ret: if (render) goto ret;
-				clear = true;
-				//for (Object3D* obj : this->_3d_objects)
-				//	if (obj) delete obj;
-				//_3d_objects.clear();
-				clear = false;
-			}
 		private:
 			SRGraphics* graph = nullptr;
 			Window* win = nullptr;
@@ -150,8 +152,6 @@ namespace SpaRcle {
 			TextureManager* texManager = nullptr;
 			ModelManager* modManager = nullptr;
 			MaterialManager* matManager = nullptr;
-		private:
-			std::vector<UI*> _ui_objects;
 		};
 	}
 }

@@ -30,6 +30,9 @@
     <Filter Include="RayTracing">
       <UniqueIdentifier>{6794af43-00af-428d-a274-518d3ff1342c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry\Terrain">
+      <UniqueIdentifier>{b4e172ae-bedd-4148-aa69-79209593b0b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -92,6 +95,12 @@
     <ClInclude Include="UIButton.h">
       <Filter>UIElements</Filter>
     </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Geometry\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Chunk.h">
+      <Filter>Geometry\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SRGraphics.cpp">
@@ -141,6 +150,15 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>RayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="UIButton.cpp">
+      <Filter>UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Geometry\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Chunk.cpp">
+      <Filter>Geometry\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

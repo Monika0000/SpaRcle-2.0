@@ -16,6 +16,7 @@
 namespace SpaRcle {
 	using namespace Helper;
 	namespace Graphics {
+		class Window;
 		class UI {
 		protected:
 			double x_mouse;
@@ -26,12 +27,16 @@ namespace SpaRcle {
 
 			float x_size;
 			float y_size;
+
+			Window* win = nullptr;
 			//Vector2f* pos;
 			//Vector2f* size;
 		public:
 			virtual void Draw(vec2b mouse_left, vec2d mouse_pos) = 0;
 		public:
-			UI(
+			float XPosCorrect() const;
+		public:
+			UI( Window* win,
 				float x_pos, float y_pos,
 				float x_size, float y_size) 
 			{
@@ -43,6 +48,9 @@ namespace SpaRcle {
 
 				this->x_mouse = 0.f;
 				this->y_mouse = 0.f;
+
+				this->win = win;
+
 				//pos  = new Vector2f { x_pos, y_pos };
 				//size = new Vector2f{ x_size, y_size };
 			}

@@ -103,23 +103,43 @@ namespace SpaRcle {
 		class Shader;
 		class Model : public IComponent {
 		private:
-			GLuint position = 0;
-			GLuint texID    = 0;
-			size_t t        = 0;
+			//GLuint position = 0;
+			GLuint texID = 0;
+			size_t t = 0;
+
+			glm::vec3 position = { 0,0,0 };
 		private:
 			bool destroy = false;
 		public:
-			bool isSelect  = false;
+			bool isSelect = false;
 			bool CanSelect = true;
-			bool enabled   = true;
+			bool enabled = true;
+			bool DepthTesting = true;
 			//Material* material;
 			//Mesh* mesh;
 			std::vector<Material*> materials = std::vector<Material*>();
-			std::vector<Mesh*>	   meshes    = std::vector<Mesh*>();
+			std::vector<Mesh*>	   meshes = std::vector<Mesh*>();
 		public:
-			void SetPosition(glm::vec3 val) { for (auto& a : this->meshes) a->SetPosition(val); }
+			void SetPosition(glm::vec3 val) {
+				this->position = val;
+				for (auto& a : this->meshes)
+					a->SetPosition(val);
+			}
+			void SetPosition(float x, float y, float z) { this->position = { x,y,z }; for (auto& a : this->meshes) a->SetPosition({ x,y,z }); }
+			glm::vec3 GetPosition() { return this->position; }
+
 			void SetRotation(glm::vec3 val) { for (auto& a : this->meshes) a->SetRotation(val); }
-			void SetScale   (glm::vec3 val) { for (auto& a : this->meshes) a->SetScale   (val); }
+			void SetRotation(float x, float y, float z) { for (auto& a : this->meshes) a->SetRotation({ x,y,z }); }
+
+			void SetScale(glm::vec3 val) { for (auto& a : this->meshes) a->SetScale(val); }
+			void SetScale(float x, float y, float z) { for (auto& a : this->meshes) a->SetScale({ x,y,z }); }
+		public:
+			std::vector<Mesh*>& GetMeshes() { return this->meshes; }
+			int GetMeshIndex(Mesh* mesh) {
+				for (size_t t = 0; t < this->meshes.size(); t++)
+					if (meshes[t] == mesh) return t;
+				return -1;
+			}
 		public:
 			void Destroy() { this->destroy = true; enabled = false; }
 			bool Draw(Shader* shader);
@@ -128,6 +148,7 @@ namespace SpaRcle {
 			void DrawSencil(Shader* stencil);
 			void AddMesh(Mesh* mesh, Material* material) { meshes.push_back(mesh); materials.push_back(material); };
 		public:
+			Model* Copy();
 			Model() { 
 				enabled = true;
 			}
@@ -292,7 +313,7 @@ namespace SpaRcle {
 				result.push_back({ verts[face.x - 1], uvs[uv.x - 1], {0,0,0} });
 			}
 
-			bool AddMeshToModel(Model* model, std::string name, std::vector<Material*>& mats, glm::vec3& pos);
+			bool AddMeshToModel(Model* model, std::string name, std::vector<Material*>& mats, glm::vec3 pos);
 
 			Model* LoadModelFromObj(const char* path, glm::vec3 pos = { 0, 0, 0 }) { return LoadModelFromObj(path, { }, pos); }
 			Model* LoadModelFromObj(const char* file, std::vector<Material*> mats, glm::vec3 pos = { 0, 0, 0 });

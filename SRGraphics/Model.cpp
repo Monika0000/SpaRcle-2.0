@@ -52,9 +52,20 @@ namespace SpaRcle {
 				//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 				glUniformMatrix4fv(glGetUniformLocation(shader->ProgramID, "modelMat"), 1, GL_FALSE, glm::value_ptr(meshes[t]->model));
 
+				//if (!DepthTesting) {
+				//	glDepthFunc(GL_ALWAYS);
+				//}
+					//glDepthMask(GL_FALSE);
+				//	glDisable(GL_DEPTH_TEST);
+
 				meshes[t]->Draw();
 
-				glBindTexture(GL_TEXTURE_2D, 0);
+				//if (!DepthTesting) {
+				//	glDepthFunc(GL_LESS);
+				//}
+				//	glEnable(GL_DEPTH_TEST);
+
+				//glBindTexture(GL_TEXTURE_2D, 0); // Уже определено в mesh->Draw();
 				glActiveTexture(GL_TEXTURE0);
 			}
 
@@ -76,7 +87,7 @@ namespace SpaRcle {
 				//model = glm::scale(model, glm::vec3(1.f + scale_modifer, 1.f + scale_modifer, 1.f + scale_modifer));
 				glUniformMatrix4fv(glGetUniformLocation(shader->ProgramID, "modelMat"), 1, GL_FALSE, glm::value_ptr(meshes[t]->model));
 
-				vec3uc c = GraphUtils::IntToColor(number + 1);
+				vec3uc c = GraphUtils::IntToColor(number + 10);
 				float* color = GraphUtils::TransliteFloatColor((unsigned int)c.x, (unsigned int)c.y, (unsigned int)c.z);
 				//float* color = GraphUtils::TransliteFloatColor(0, 0, number + 1);
 				//std::cout << "flat : " << color[0] << " " << color[1] << " " << color[2] << "\n";
@@ -135,17 +146,36 @@ namespace SpaRcle {
 				if (!meshes[t]->isGenerate) meshes[t]->Generate();
 				if (!meshes[t]->isBind) meshes[t]->Bind();
 
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3{ meshes[t]->position.x, meshes[t]->position.y, meshes[t]->position.z });
-				glUniformMatrix4fv(glGetUniformLocation(shader->ProgramID, "modelMat"), 1, GL_FALSE, glm::value_ptr(model));
+				//glm::mat4 model = glm::mat4(1.0f);
+				//model = glm::translate(model, glm::vec3{ meshes[t]->position.x, meshes[t]->position.y, meshes[t]->position.z });
+				glUniformMatrix4fv(glGetUniformLocation(shader->ProgramID, "modelMat"), 1, GL_FALSE, glm::value_ptr(meshes[t]->model));
 
 				meshes[t]->FlatDraw();
 			}
 		}
 
+		Model* Model::Copy() {
+			std::vector<Mesh*> copy_meshes = std::vector<Mesh*>();
+			for (auto m : meshes)
+				copy_meshes.push_back(m->Copy());
+
+			Model* model = new Model();
+			model->meshes = copy_meshes;
+			model->materials = materials;
+			model->DepthTesting = DepthTesting;
+			model->CanSelect = CanSelect;
+			model->enabled = enabled;
+
+			model->SetPosition(position);
+			//TODO model->SetRotation(); 
+			//TODO model->SetScale(); 
+
+			return model;
+		}
 
 
-		bool ModelManager::AddMeshToModel(Model* model, std::string name, std::vector<Material*>& mats, glm::vec3& pos) {
+
+		bool ModelManager::AddMeshToModel(Model* model, std::string name, std::vector<Material*>& mats, glm::vec3 pos) {
 			if (Current_mesh == "") {
 				Current_mesh = name;
 				return true;
@@ -199,14 +229,18 @@ namespace SpaRcle {
 			std::string path = graph->GetResourcesFolder() + "\\Models\\" + std::string(file);
 			path = String::MakePath(path);
 			auto find = Models.find(path);
-			if (find != Models.end())
-				return find->second;
+			if (find != Models.end()) {
+				Model* m = find->second->Copy();
+				m->materials = mats;
+				m->SetPosition(pos);
+				return m;
+			}
 
 			debug->Log("Loading obj model : " + std::string(path));
 
 			verts.clear(); uvs.clear(); normals.clear(); final_verts.clear(); Current_mesh = ""; count_meshes = 0; count_uncorrect_triangles = 0;
 
-			Model* model = new Model();
+			Model* model = new Model(); 
 
 			char buffer[256] = { 0 }; std::string temp = ""; std::vector<std::string> components;
 			FILE* pFile = fopen(path.c_str(), "r");
@@ -295,6 +329,7 @@ namespace SpaRcle {
 				if (count_uncorrect_triangles > 0)
 					debug->Warn("When loading the model, incorrect polygons were found, possibly triangulation is required. \n\tPath : " +
 						path + "\n\tCount error polygons : " + std::to_string(count_uncorrect_triangles));
+
 				return model;
 			}
 			else {

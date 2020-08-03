@@ -4,7 +4,10 @@
 #include <GL\glew.h>
 #include <GL\freeglut_std.h>
 #include "SRGraphics.h"
+#include <glm\gtc\type_ptr.hpp>
 //#pragma comment(lib, "glew32s.lib")
+
+static size_t t = 0;
 
 SpaRcle::Graphics::Render::Render(Debug* debug) {
 	this->fog = true;
@@ -12,7 +15,7 @@ SpaRcle::Graphics::Render::Render(Debug* debug) {
 	this->texManager = NULL;
 	this->count_models = 0;
 	this->models = std::vector<Model*>();
-	this->clear = false;
+	//this->clear = false;
 	this->isCreate = false;
 	this->isInit = false;
 	this->isRun = false;
@@ -109,23 +112,39 @@ void SpaRcle::Graphics::Render::Close() {
 	delete raytracing;
 }
 
-static size_t t = 0;
 void SpaRcle::Graphics::Render::DrawSelectorObjects() {
-	if (!isRun) return;
-ret: if (clear) goto ret;
-	render = true;
+//	if (!isRun) return;
+//ret: if (clear) goto ret;
+//	render = true;
 
 	for (t = 0; t < this->count_models; t++)
 		models[t]->FlatDraw(t, selectorShader);
 
 	glUseProgram(0);
 
-	render = false;
+//	render = false;
 }
+void SpaRcle::Graphics::Render::DrawAimingObjects() {
+	for (t = 0; t < this->count_aiming_meshes; t++) {
+		glUniformMatrix4fv(glGetUniformLocation(selectorShader->ProgramID, "modelMat"), 1, GL_FALSE, glm::value_ptr(aiming_meshes[t]->model));
+
+		vec3uc c = GraphUtils::IntToColor(t + 10);
+		float* color = GraphUtils::TransliteFloatColor((unsigned int)c.x, (unsigned int)c.y, (unsigned int)c.z);
+
+		GLuint texID = glGetUniformLocation(selectorShader->ProgramID, "color");
+		glUniform3fv(texID, 1, &color[0]);
+
+		delete color;
+
+		aiming_meshes[t]->FlatDraw();
+	}
+	glUseProgram(0);
+}
+
 void SpaRcle::Graphics::Render::DrawAllObjects() {
-	if (!isRun) return;
-ret: if (clear) goto ret;
-	render = true;
+//	if (!isRun) return;
+//ret: if (clear) goto ret;
+//	render = true;
 
 	/*
 	for (auto del : deleteModels) {
@@ -149,7 +168,10 @@ ret: if (clear) goto ret;
 
 	raytracing->Enable();
 	
-	for (t = 0; t < this->count_models; t++)
+	for (t = 0; t < this->count_models; t++)// {
+		//std::cout << models[t]->GetPosition().x << " "
+		//	<< models[t]->GetPosition().y << " "
+		//	<< models[t]->GetPosition().z << "\n";
 		if (models[t] && models[t]->enabled) {
 			if (!models[t]->isSelect) {
 				if (!models[t]->Draw(shader)) {
@@ -182,6 +204,7 @@ ret: if (clear) goto ret;
 				shader->Use();
 			}
 		}
+	//}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glActiveTexture(GL_TEXTURE0);
@@ -226,7 +249,7 @@ ret: if (clear) goto ret;
 	}
 	*/
 
-	render = false;
+//	render = false;
 }
 void SpaRcle::Graphics::Render::DrawAllUI() {
 	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
@@ -254,11 +277,6 @@ void SpaRcle::Graphics::Render::DrawAllUI() {
 	glEnable(GL_FOG); // Туман
 }
 
-//bool SpaRcle::Graphics::Render::RemoveModel(Model* model) {
-//	deleteModels.push_back(model);
-//	return true;
-//}
-
 void SpaRcle::Graphics::Render::AddModel(Model* model) {
 	if ((unsigned long long)model == 0xdddddddddddddddd) {
 		debug->Error("Render::AddModel() : model has adress 0xdddddddddddddddd!");
@@ -266,6 +284,25 @@ void SpaRcle::Graphics::Render::AddModel(Model* model) {
 	}
 	this->models.push_back(model);
 	this->count_models++;
+	//std::cout << "New model added : " << model << "; pos = " 
+	//	<<		  model->GetPosition().x
+	//	<< " " << model->GetPosition().y 
+	//	<< " " << model->GetPosition().z << std::endl;
+}
+void SpaRcle::Graphics::Render::AddAimingMesh(Mesh* model) {
+//	model->CanSelect = false; //? Я так хочу.
+	this->aiming_meshes.push_back(model);
+	this->count_aiming_meshes++;
+//	AddModel(model);
+}
+bool SpaRcle::Graphics::Render::RemoveAimingMesh(Mesh* mesh) {
+	for (size_t t = 0; t < count_aiming_meshes; t++)
+		if (aiming_meshes[t] == mesh) {
+			count_aiming_meshes--; //!!!!!
+			aiming_meshes.erase(aiming_meshes.begin() + t);
+			return true;
+		}
+	return false;
 }
 void SpaRcle::Graphics::Render::AddUI(UI* ui) {
 	if ((unsigned long long)ui == 0xdddddddddddddddd) {
@@ -273,4 +310,74 @@ void SpaRcle::Graphics::Render::AddUI(UI* ui) {
 		return;
 	}
 	this->_ui_objects.push_back(ui);
+}
+
+SpaRcle::Graphics::Mesh* SpaRcle::Graphics::Render::GetAimingMesh() {
+	if (count_aiming_meshes == 0) return nullptr;
+	else {
+		glClearColor(0.f, 0.f, 0.f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Без этого ничего не будет работать (очистка буфера)
+		glLoadIdentity();
+
+		camera->MoveSelector();
+
+		win->colorBuffer->InitNames(count_aiming_meshes);
+		for (t = 0; t < count_aiming_meshes; t++) {
+			if (!aiming_meshes[t]) {
+				count_aiming_meshes--;
+				aiming_meshes.erase(aiming_meshes.begin() + t);
+				return nullptr;
+			}
+			win->colorBuffer->LoadName(t, GraphUtils::IntToColor(t + 10));
+		}
+		DrawAimingObjects();
+
+		vec2d pos = this->win->GetMousePos();
+
+		unsigned char pixel[3] = { 0 };
+		unsigned int x = pos.x * win->format->size_x;
+		unsigned int y = pos.y * win->format->size_y;
+
+		glReadPixels(x, this->win->GetYSize() - y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel[0]);
+
+		int i = win->colorBuffer->GetSelectColorObject(pixel);
+
+		if (i != -1) return aiming_meshes[i];
+		else return nullptr;
+	}
+}
+SpaRcle::Graphics::Model* SpaRcle::Graphics::Render::GetSelectedModel() {
+	glClearColor(0.f, 0.f, 0.f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Без этого ничего не будет работать (очистка буфера)
+	glLoadIdentity();
+
+	camera->MoveSelector();
+
+	win->colorBuffer->InitNames(GetCountModels());
+	for (size_t t = 0; t < GetCountModels(); t++) {
+		//vec3uc color = GraphUtils::IntToColor(t + 1);
+		//vec3uc color{ 0, 0, t + 1};
+		//debug->Log("Add color : "+  std::to_string(color.x) + " " + std::to_string(color.y) + " " + std::to_string(color.z));
+		win->colorBuffer->LoadName(t, GraphUtils::IntToColor(t + 10));
+	}
+	DrawSelectorObjects();
+
+	//Vector2d* pos = this->GetMousePosition();
+	vec2d pos = this->win->GetMousePos();
+
+	unsigned char pixel[3] = { 0 };
+	unsigned int x = pos.x * win->format->size_x;
+	unsigned int y = pos.y * win->format->size_y;
+
+	//debug->Log(std::to_string(x) + " " + std::to_string(y));
+
+	glReadPixels(x, this->win->GetYSize() - y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel[0]);
+
+	//debug->Log(std::to_string(pixel[0]) + " " + std::to_string(pixel[1]) + " " + std::to_string(pixel[2]));
+
+	int select = win->colorBuffer->GetSelectColorObject(pixel);
+	debug->Log("Select object : " + std::to_string(select));
+
+	if (select != -1) return models[select];
+	else return nullptr;
 }

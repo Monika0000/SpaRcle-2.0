@@ -78,8 +78,11 @@ namespace SpaRcle {
 				isMouseLock = val; 
 			};
 			const bool MouseLock() const { return isMouseLock; };
+
 			void SetCamera(Camera* camera) { this->camera = camera; };
 			void SetRender(Render* render) { this->render = render; };
+
+			Camera* GetCamera() { return camera; };
 			Render* GetRender() { return render; };
 			HWND GetHWND() {
 				if (hWnd) return hWnd;
@@ -88,6 +91,10 @@ namespace SpaRcle {
 					return nullptr;
 				}
 			}
+
+			Mesh*  GetAimedMesh()	  { return AimedMesh; }
+			Model* GetSelectedModel() { return SelectedModel; }
+		public:
 			Window(
 				Debug* debug, Camera* camera = NULL, 
 				const char*name = "SpaRcle Engine", 
@@ -120,14 +127,15 @@ namespace SpaRcle {
 			void PollEvents();
 		private:
 			void SelectObject();
+			void AimMesh();
 		private:
 			static Window* global;
 
-			ColorBuffer* colorBuffer = nullptr;
-			Model* SelectedModel = nullptr;
+			Model* SelectedModel	 = nullptr;
+			Mesh* AimedMesh		     = nullptr;
 
-			Debug* debug = nullptr;
-			Vector2i* screen_size = nullptr;
+			Debug* debug			 = nullptr;
+			Vector2i* screen_size	 = nullptr;
 			std::thread task;
 
 			HWND hWnd;
@@ -135,8 +143,10 @@ namespace SpaRcle {
 			//int handle;
 		private:
 			//!======== UI ======== 
-			UIString* fps;
+			UIString* fps = nullptr;
 			//!======== UI ======== 
+		public:
+			ColorBuffer* colorBuffer = nullptr;
 		public:
 			void Draw();
 			static Window* Get() {

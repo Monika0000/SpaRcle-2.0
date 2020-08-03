@@ -97,6 +97,16 @@ namespace SpaRcle {
 
 			inline const vec3f GetPosition() const noexcept { return { posx, posy, posz }; }
 
+			float Distance(glm::vec3 pos) {
+				return sqrtf(
+					pow(pos.x - this->posx, 2) +
+					pow(pos.y - this->posy, 2) +
+					pow(pos.z - this->posz, 2) 
+				);
+			}
+
+			glm::vec3 dXYZ() { return glm::vec3{ dxx, dyy, dxz }; }
+
 			void SetSkybox(Shader* shader) {
 				Skybox = shader;
 

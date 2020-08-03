@@ -3,6 +3,16 @@
 
 namespace SpaRcle {
 	namespace Engine {
+		void World::RegisterGameObject(GameObject* game) {
+			ret:
+			auto find = this->gameObjects.find(game->name);
+			if (find == gameObjects.end())
+				gameObjects.insert(std::make_pair(game->name, game));
+			else {
+				game->name += " (Copy)";
+				goto ret;
+			}
+		}
 		bool World::Rename(GameObject* object, std::string name) {
 			return false;
 		}

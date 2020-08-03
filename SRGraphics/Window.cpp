@@ -183,6 +183,10 @@ namespace SpaRcle {
 					glfwTerminate();
 					break;
 				}
+				case WindowEvents::MouseIdle: {
+					if (EditorMode) if (!this->isMouseLock) this->AimMesh();
+					break;
+				}
 				case WindowEvents::Maximize: {
 					bool lock = MouseLock();
 					if(lock) this->MouseLock(false);
@@ -205,7 +209,7 @@ namespace SpaRcle {
 					break;
 				}
 				case WindowEvents::LeftClick: {
-					if (EditorMode) if (!MouseLock()) this->SelectObject();
+					if (EditorMode) if (!MouseLock()) if(!AimedMesh) this->SelectObject();
 					break;
 				}
 				default:
@@ -232,7 +236,7 @@ namespace SpaRcle {
 			this->argcp = argcp;
 			this->argv  = argv;
 
-			fps = new UIString("FPS : " + std::to_string(GraphUtils::GetFPS()), 0.5f, 0.25f, new color { 0.f, 1.f, 0.1f, 0.7f });
+			fps = new UIString(this, "FPS : " + std::to_string(GraphUtils::GetFPS()), 0.5f, 0.25f, new color { 0.f, 1.f, 0.1f, 0.7f });
 			render->AddUI(fps);
 
 			return true;
@@ -437,50 +441,21 @@ namespace SpaRcle {
 		}
 
 		void Window::SelectObject() {
-			glClearColor(0.f, 0.f, 0.f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Без этого ничего не будет работать (очистка буфера)
-			glLoadIdentity();
+			Model* select = render->GetSelectedModel();
 
-			camera->MoveSelector();
-
-			colorBuffer->InitNames(render->GetCountModels());
-			for (size_t t = 0; t < render->GetCountModels(); t++) {
-				//vec3uc color = GraphUtils::IntToColor(t + 1);
-				//vec3uc color{ 0, 0, t + 1};
-				//debug->Log("Add color : "+  std::to_string(color.x) + " " + std::to_string(color.y) + " " + std::to_string(color.z));
-				colorBuffer->LoadName(t, GraphUtils::IntToColor(t + 1));
-			}
-			render->DrawSelectorObjects();
-
-			Vector2d* pos = this->GetMousePosition();
-
-			unsigned char pixel[3] = { 0 };
-			unsigned int x = pos->x * format->size_x;
-			unsigned int y = pos->y * format->size_y;
-
-			//debug->Log(std::to_string(x) + " " + std::to_string(y));
-
-			glReadPixels(x, this->GetYSize() - y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &pixel[0]);
-
-			//debug->Log(std::to_string(pixel[0]) + " " + std::to_string(pixel[1]) + " " + std::to_string(pixel[2]));
-
-			int select = colorBuffer->GetSelectColorObject(pixel);
-			debug->Log("Select object : " + std::to_string(select));
-
-			if (select == -1) {
+			if (!select) {
 				if (SelectedModel) SelectedModel->isSelect = false;
 				SelectedModel = nullptr;
 			}
 			else {
 				if (SelectedModel) SelectedModel->isSelect = false;
-				SelectedModel = this->render->GetModel(select); 
+				SelectedModel = select; 
 				if (SelectedModel) SelectedModel->isSelect = true;
 			}
-
-			//glfwSwapBuffers(window); //TODO: IT IS TEST
-			//Sleep(1000);
-
-			delete pos;
+		}
+		void Window::AimMesh() {
+			AimedMesh = render->GetAimingMesh();
+			//if(AimedMesh) std::cout << AimedMesh << std::endl;
 		}
 
 		void Window::Draw() {

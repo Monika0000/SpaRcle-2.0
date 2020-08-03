@@ -2,6 +2,8 @@
 #define GLEW_STATIC
 #define NOMINMAX
 
+//#pragma comment(lib,"SOIL.lib")
+
 #include "Resource.h"
 
 namespace SpaRcle {

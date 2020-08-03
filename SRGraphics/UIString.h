@@ -50,9 +50,10 @@ namespace SpaRcle {
 			}
 		public:
 			UIString(
+				Window* win,
 				std::string str, 
 				float x_pos, float y_pos, color* _color = NULL,
-				float size = 1.f) : UI(x_pos, y_pos, size, size)
+				float size = 1.f) : UI(win, x_pos, y_pos, size, size)
 			{
 				if (!_color)
 					this->_color = new color{ 255.f, 255.f, 255.f, 255.f };

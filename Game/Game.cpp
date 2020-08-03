@@ -54,9 +54,18 @@ int main(int argcp, char* argv) {
 
 	render->SetSkybox(texManager->LoadSkybox("Skyboxes\\Winter", Image::Type::JPG));
 
-	//GameObject* Sina		 = engine->LoadPrefab("sina");
-	GameObject* Sphere		 = engine->LoadPrefab("sphere");
-	Sphere->transform.SetPosition({ 10, 0,0 });
+	GameObject* Sina		 = engine->LoadPrefab("sina");
+	//Sina->transform.SetRotation(0, 270, 0);
+	Sina->transform.SetScale(0.3, 0.3, 0.3);
+
+	GameObject* Sphere = engine->LoadPrefab("sphere");
+	Sphere->transform.SetPosition(10, 0, 0);
+
+	GameObject* Sphere2 = engine->LoadPrefab("sphere");
+	Sphere2->transform.SetPosition(14, 0, 0);
+
+	//GameObject* Sphere3 = engine->LoadPrefab("sphere");
+	//Sphere3->transform.SetPosition(3, 5, -2);
 
 	/*
 	Material* player_body    = matManager->LoadMaterial("body");
@@ -97,11 +106,11 @@ int main(int argcp, char* argv) {
 	//render->AddModel(model5);
 	//render->AddModel(model6);
 
-	engine->GetCompiler()->AddScript(new Script("script"));
+	//engine->GetCompiler()->AddScript(new Script("script"));
 
 	//?========================================================================================================
 
-	render->AddUI(new UIWindow("Console", -2.15f, -0.2f, win, 1.0f, 0.5f, true));
+	render->AddUI(new UIWindow(win, "Console", -2.15f, -0.2f, 1.0f, 0.5f, true));
 
 	engine->Init();
 

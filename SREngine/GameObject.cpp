@@ -1,9 +1,48 @@
 #include "pch.h"
 #include "GameObject.h"
 #include "Render.h"
+#include "SREngine.h"
+#include <Windows.h>
+#include <Model.h>
 
 namespace SpaRcle {
+	using namespace Graphics;
 	namespace Engine {
+
+		GameObject::GameObject(SREngine* engine, std::string name) : transform(this) {
+			this->engine = engine;
+
+			this->render = engine->GetRender();
+			this->debug  = engine->GetDebug();
+			this->name	 = name;
+			//this->transform = Transform(this);
+			this->model  = nullptr;
+		};
+
+		void GameObject::Move(float x, float y, float z) {
+			for (auto g : Childs)
+				g->Move(x, y, z);
+			transform.Move(x, y, z);
+		}
+		void GameObject::Move(glm::vec3 dir) {
+			for (auto g : Childs)
+				g->Move(dir);
+			transform.Move(dir);
+		}
+
+		void GameObject::SetAimingEnabled(bool val) {
+			if (!canAiming && val) {
+				if (model)
+					for (auto& m : model->meshes)
+						render->AddAimingMesh(m);
+				canAiming = true;
+			}  else if (canAiming && !val) {
+				if (model)
+					for (auto& m : model->meshes)
+						render->RemoveAimingMesh(m);
+				canAiming = false;
+			}
+		}
 		void GameObject::SetModel(Model* model) {
 			if (this->model) { this->model->Destroy(); }
 			this->model = model;
@@ -13,7 +52,10 @@ namespace SpaRcle {
 			if (this->enabled == enabled) return;
 			this->enabled = enabled;
 
-			if (model) model->enabled = enabled;
+			if (model) { 
+				model->enabled = enabled;
+				SetAimingEnabled(enabled);
+			}
 
 			if (this->enabled) {
 
@@ -22,6 +64,8 @@ namespace SpaRcle {
 
 			}
 		}
+
+		//?=============================================================================
 
 		void Transform::SetPosition(glm::vec3 val) {
 			this->position = val;
@@ -36,14 +80,53 @@ namespace SpaRcle {
 			if (this->gameObject->model) this->gameObject->model->SetScale(val);
 		}
 
+		void Transform::SetPosition(float x, float y, float z) {
+			this->position = { x,y,z };
+			if (this->gameObject->model) this->gameObject->model->SetPosition(position);
+		}
+		void Transform::SetRotation(float x, float y, float z) {
+			this->rotation = { x,y,z };
+			if (this->gameObject->model) this->gameObject->model->SetRotation(rotation);
+		}
+		void Transform::SetScale(float x, float y, float z) {
+			this->scale = { x,y,z };
+			if (this->gameObject->model) this->gameObject->model->SetScale(scale);
+		}
+
 		void Transform::Rotate(glm::vec3 val) {
 			this->rotation += val;
 
-			std::cout << rotation.x << " " << rotation.y << " " << rotation.z << std::endl;
+			//std::cout << rotation.x << " " << rotation.y << " " << rotation.z << std::endl;
 
 			//std::cout << rotation.x << std::endl;
 
 			if (this->gameObject->model) this->gameObject->model->SetRotation(rotation);
 		}
+
+		void Transform::Move(float x, float y, float z) {
+			this->position += glm::vec3 {x, y, z};
+			if (this->gameObject->model) this->gameObject->model->SetPosition(this->position);
+		}
+		void Transform::Move(glm::vec3 dir) {
+			this->position += dir;
+			if (this->gameObject->model) this->gameObject->model->SetPosition(this->position);
+		}
+
+		//template <typename T> T GameObject::GetComponent() {
+		/*	if (std::is_same<T, Model*>::value) {
+				if (model) return model;
+				else {
+					engine->GetDebug()->Error("GameObject::GetComponent<Model*>() : this is not contains \"Model*\"!");
+					Sleep(1000);
+					return nullptr;
+				}
+			}
+			else {
+				engine->GetDebug()->Error("GameObject::GetComponent<>() : unknow type \"" + typeid(T).name() + "\"!");
+				Sleep(1000);
+				return nullptr;
+			}
+			*/
+		//}
 	}
 }

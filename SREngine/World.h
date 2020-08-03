@@ -24,6 +24,16 @@ namespace SpaRcle {
 
 			}
 		public:
+			void RegisterGameObject(GameObject* game);
+
+			GameObject* Find(Model* model) {
+				for (std::map<std::string, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it) {
+					if (it->second->model == model)
+						return it->second;
+				}
+				return nullptr;
+			}
+
 			bool Rename(GameObject* object, std::string name);
 			bool Rename(std::string oldName, std::string newName);
 

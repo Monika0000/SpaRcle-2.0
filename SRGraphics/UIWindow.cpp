@@ -8,21 +8,22 @@ namespace SpaRcle {
 		const float up_size = 0.045f;
 
 		UIWindow::UIWindow(
+			Window* win,
 			std::string name,
 			float x_pos, float y_pos,
-			Window* win,
-			float x_size, float y_size, bool CanMove) : UI(x_pos, y_pos, x_size, y_size), CanMove(CanMove) {
+			float x_size, float y_size, bool CanMove) : UI(win, x_pos, y_pos, x_size, y_size), CanMove(CanMove) {
 			this->isMove = false;
 
-			this->name = new UIString(name,
+			this->name = new UIString(
+				win, name,
 				x_pos + 0.015f,
 				y_pos + y_size + up_size / 4.f,  // + win_name_pos[1]
 				new color{ 1.f, 1.f, 1.f, 1.f },
 				0.25f
 			);
 
-			this->win = win;
-			this->mouse_pos = win->GetMousePosition();
+			//this->win = win;
+			//this->mouse_pos = win->GetMousePosition();
 		};
 
 		void UIWindow::Draw(vec2b mouse_left, vec2d mouse_pos) {
@@ -41,7 +42,7 @@ namespace SpaRcle {
 			//std::cout << "vec_y = " << vec->y << " " << << std::endl;
 			//std::cout << x_pos << " " << vec->x << std::endl;
 
-			float x_pos_correct = x_pos * win->format->x_left_side_pos_magic_number / 2.20625f;
+			float x_pos_correct = XPosCorrect();//x_pos * win->format->x_left_side_pos_magic_number / 2.20625f;
 
 			if (CanMove) if (!win->MouseLock()) {
 

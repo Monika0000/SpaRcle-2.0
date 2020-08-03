@@ -68,6 +68,8 @@ bool SpaRcle::Graphics::Shader::Compile() {
     if (InfoLogLength != 0) {
         std::vector<char> VertexShaderErrorMessage(InfoLogLength);
         glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+		if (VertexShaderErrorMessage.size() > 10)
+			debug->Error("Failed compiling vertex shader!\n\tReason : " + std::string(VertexShaderErrorMessage.data()));
     }
     ///error = String::FromCharVector(VertexShaderErrorMessage);
     ///if (error.size() == 0) error = "Shader is nullptr!";
@@ -88,6 +90,9 @@ bool SpaRcle::Graphics::Shader::Compile() {
     if (InfoLogLength != 0) {
         std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
         glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+		if (FragmentShaderErrorMessage.size() > 10)
+			debug->Error("Failed compiling fragment shader!\n\tReason : " + std::string(FragmentShaderErrorMessage.data()));
+		//std::cout << FragmentShaderErrorMessage.data() << std::endl;
     }
    /// error = String::FromCharVector(FragmentShaderErrorMessage);
     ///if (error.size() == 0) error = "Shader is nullptr!";

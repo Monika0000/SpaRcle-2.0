@@ -3,6 +3,7 @@
 #include <Interfaces.h>
 #include <string>
 #include <Model.h>
+#include <Debug.h>
 
 namespace SpaRcle {
 	namespace Engine {
@@ -10,6 +11,7 @@ namespace SpaRcle {
 		using namespace Graphics;
 
 		class GameObject;
+		class SREngine;
 
 		class Transform : public IComponent {
 		private:
@@ -29,39 +31,66 @@ namespace SpaRcle {
 			void SetRotation(glm::vec3 val);
 			void SetScale   (glm::vec3 val);
 
+			void SetPosition(float x, float y, float z);
+			void SetRotation(float x, float y, float z);
+			void SetScale(float x, float y, float z);
+
 			void Rotate(glm::vec3 val);
-			//void Move(glm::vec3 dir) {  };
+			void Move(float x, float y, float z);
+			void Move(glm::vec3 dir);
 		public:
-			glm::vec3 position;
-			glm::vec3 rotation;
-			glm::vec3 scale;
+			glm::vec3 position = { 0,0,0 };
+			glm::vec3 rotation = { 0,0,0 };
+			glm::vec3 scale    = { 0,0,0 };
 		};
 
 		class GameObject {
 			friend class SREngine;
 		private:
-			GameObject(Render* render, std::string name = "New game object") : transform(this) {
-				this->render    = render;
-				this->name		= name;
-				//this->transform = Transform(this);
-				this->model		= nullptr;
-			};
+			GameObject(SREngine* engine, std::string name = "New game object");
 			~GameObject() {  };
 		private:
-			Render* render = nullptr;
-			bool enabled = true;
+			GameObject* Parent = nullptr;
+			std::vector<GameObject*> Childs;
+
+			SREngine* engine = nullptr;
+			Debug*	debug	 = nullptr;
+			Render* render   = nullptr;
+			bool enabled     = true;
+			bool canAiming   = false;
 		public:
 			std::string name;
 			Transform   transform;	
-			Model*		model;
+			Model*		model = nullptr;
 		public:
+			void Move(float x, float y, float z);
+			void Move(glm::vec3 dir);
+		public:
+			void SetAimingEnabled(bool val);
 			void SetModel(Model* model);
 			void SetActive(bool enabled);
 
-			template <typename T> T GetComponent() {
-
-			}
+			template <typename T> T GetComponent();
 		};
+
+		template<typename T>
+		inline T GameObject::GetComponent()
+		{
+			if (std::is_same<T, Model*>::value) {
+				if (model) return (T)model;
+				else {
+					debug->Error("GameObject::GetComponent<Model*>() : this is not contains \"Model*\"!");
+					Sleep(1000);
+					//return (Model*)nullptr;
+					return (T)nullptr;
+				}
+			}
+			else {
+				debug->Error("GameObject::GetComponent<>() : unknow type \"" + std::string(typeid(T).name()) + "\"!");
+				Sleep(1000);
+				return T();
+			}
+		}
 	}
 }
 

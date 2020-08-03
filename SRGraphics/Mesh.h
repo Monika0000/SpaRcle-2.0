@@ -119,6 +119,26 @@ namespace SpaRcle {
 			void Draw();
 			void FlatDraw();
 		public:
+			Mesh* Copy() {
+				Mesh* mesh = new Mesh(vertices);
+				mesh->SetPosition(position);
+				mesh->SetRotation(rotation);
+				mesh->SetScale(scale);
+				mesh->isBind = isBind;
+				mesh->isGenerate = isGenerate;
+
+				mesh->max_x = max_x; mesh->min_x = min_x;
+				mesh->max_y = max_y; mesh->min_y = min_y;
+				mesh->max_z = max_z; mesh->min_z = min_z;
+
+				mesh->model = model;
+
+				mesh->VAO = VAO;
+				mesh->VBO = VBO;
+				mesh->count_vertices = count_vertices;
+
+				return mesh;
+			}
 			Mesh(std::vector<Vertex> vertices, glm::vec3 pos = { 0.f, 0.f, 0.f }, size_t count_vertices = Math::size_t_max) {
 			//Mesh(Data* data, vec3f pos = { 0.f, 0.f, 0.f }) {
 			//Mesh(std::vector<glm::vec3> vertices, std::vector<glm::vec2> uvs, vec3f pos = { 0.f, 0.f, 0.f }) {
@@ -169,7 +189,7 @@ namespace SpaRcle {
 				//this->verts.clear();
 			}
 		};
-
+		/*
 		class _3D_Models {
 		private:
 			_3D_Models() { };
@@ -252,7 +272,7 @@ namespace SpaRcle {
 				// BOTTOM
 				{ { 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f }, { 0, 0, 0 } },		{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },
 				{ { 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f }, { 0, 0, 0 } },		{ { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 0, 0, 0 } },		{ { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 0, 0, 0 } },
-			};*/
-		};
+			};
+		}; */
 	}
 }

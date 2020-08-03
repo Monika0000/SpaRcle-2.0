@@ -22,7 +22,7 @@ namespace SpaRcle {
 				//auto a = &debug->Log;
 				//void (Debug:: * p)(std::string) = &Debug::Log;
 
-				auto a = []() {};
+				
 				auto b = foo;
 				//auto c = std::function<void>();
 
