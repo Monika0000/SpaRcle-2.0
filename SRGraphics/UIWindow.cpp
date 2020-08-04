@@ -56,10 +56,10 @@ namespace SpaRcle {
 				//!std::cout << "mouse_y = " << mouse_pos->y << "; win_y = " << (2.485431f - (this->y_pos + 0.788201f)) / 2.485431f << std::endl;
 				//const float y_up = (2.485431f - (this->y_pos + 0.788201f)) / 2.485431f;//-(y_pos - (win->format->y_side_magic_number - (y_size - 1.f)) + up_size) / 2.4f; // -2.49f
 
-				const float x_left = (x_pos_correct + win->format->x_left_side_pos_magic_number) / (win->format->x_left_side_pos_magic_number * 2.f);//(x_pos + win->format->x_side_magic_number) / win->format->x_side_magic_number / 2.f;
-				const float y_up = -((this->y_pos - (2.197257f - y_size)) / 2.48549f);//-(y_pos - (win->format->y_side_magic_number - (y_size - 1.f)) + up_size) / 2.4f; // -2.49f
-				const float x_right = (x_pos_correct + x_size + win->format->x_left_side_pos_magic_number) / (win->format->x_left_side_pos_magic_number * 2.f);
-				const float y_down = -((this->y_pos - (2.197257f + up_size)) / 2.48549f);;
+				x_left = (x_pos_correct + win->format->x_left_side_pos_magic_number) / (win->format->x_left_side_pos_magic_number * 2.f);//(x_pos + win->format->x_side_magic_number) / win->format->x_side_magic_number / 2.f;
+				y_up = -((this->y_pos - (2.197257f - y_size)) / 2.48549f);//-(y_pos - (win->format->y_side_magic_number - (y_size - 1.f)) + up_size) / 2.4f; // -2.49f
+				x_right = (x_pos_correct + x_size + win->format->x_left_side_pos_magic_number) / (win->format->x_left_side_pos_magic_number * 2.f);
+				y_down = -((this->y_pos - (2.197257f + up_size)) / 2.48549f);;
 				//const float y_down = (2.485431f - (((this->y_pos - y_size - up_size) + 0.788201f))) / 2.485431f;
 				
 				//std::cout << mouse_pos->x << " == " << x_left << "; " << mouse_pos->y << " == " << y << std::endl;
@@ -130,6 +130,11 @@ namespace SpaRcle {
 			glEnd();}
 
 			name->Draw(mouse_left, mouse_pos);
+
+			DrawElements(mouse_left, mouse_pos);
+		}
+		void UIWindow::DrawElements(vec2b mouse_left, vec2d mouse_pos)
+		{
 		}
 	}
 }

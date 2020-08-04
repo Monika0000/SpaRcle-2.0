@@ -36,8 +36,9 @@ namespace SpaRcle {
 			void SetScale(float x, float y, float z);
 
 			void Rotate(glm::vec3 val);
-			void Move(float x, float y, float z);
+			void Rotate(float x, float y, float z);
 			void Move(glm::vec3 dir);
+			void Move(float x, float y, float z);
 		public:
 			glm::vec3 position = { 0,0,0 };
 			glm::vec3 rotation = { 0,0,0 };
@@ -63,8 +64,14 @@ namespace SpaRcle {
 			Transform   transform;	
 			Model*		model = nullptr;
 		public:
+			void SetPosition(float x, float y, float z);
+			void SetRotation(float x, float y, float z);
+			void SetScale(float x, float y, float z);
+
 			void Move(float x, float y, float z);
 			void Move(glm::vec3 dir);
+
+			void Rotate(float x, float y, float z);
 		public:
 			void SetAimingEnabled(bool val);
 			void SetModel(Model* model);

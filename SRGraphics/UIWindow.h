@@ -7,6 +7,11 @@ namespace SpaRcle {
 	namespace Graphics {
 		class Window;
 		class UIWindow : public UI {
+		protected:
+			float x_left = 0;
+			float y_up = 0;
+			float x_right = 0;
+			float y_down = 0;
 		private:
 			UIString* name = nullptr;
 			bool isMove = false;
@@ -14,7 +19,7 @@ namespace SpaRcle {
 			//Vector2d* mouse_pos = nullptr;
 		public:
 			void Draw(vec2b mouse_left, vec2d mouse_pos) override;
-			virtual void DrawElements() {  };
+			virtual void DrawElements(vec2b mouse_left, vec2d mouse_pos);
 		public:
 			UIWindow(
 				Window* win,

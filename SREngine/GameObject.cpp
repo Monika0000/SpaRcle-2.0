@@ -19,6 +19,19 @@ namespace SpaRcle {
 			this->model  = nullptr;
 		};
 
+		void GameObject::SetPosition(float x, float y, float z) {
+			for (auto g : Childs) g->SetPosition(x, y, z);
+			transform.SetPosition(x, y, z);
+		}
+		void GameObject::SetRotation(float x, float y, float z) {
+			for (auto g : Childs) g->SetRotation(x, y, z);
+			transform.SetRotation(x, y, z);
+		}
+		void GameObject::SetScale(float x, float y, float z) {
+			for (auto g : Childs) g->SetScale(x, y, z);
+			transform.SetScale(x, y, z);
+		}
+
 		void GameObject::Move(float x, float y, float z) {
 			for (auto g : Childs)
 				g->Move(x, y, z);
@@ -28,6 +41,12 @@ namespace SpaRcle {
 			for (auto g : Childs)
 				g->Move(dir);
 			transform.Move(dir);
+		}
+
+		void GameObject::Rotate(float x, float y, float z) {
+			for (auto g : Childs)
+				g->Rotate(x, y, z);
+			transform.Rotate(x, y, z);
 		}
 
 		void GameObject::SetAimingEnabled(bool val) {
@@ -100,6 +119,10 @@ namespace SpaRcle {
 
 			//std::cout << rotation.x << std::endl;
 
+			if (this->gameObject->model) this->gameObject->model->SetRotation(rotation);
+		}
+		void Transform::Rotate(float x, float y, float z) {
+			this->rotation += glm::vec3{x,y,z};
 			if (this->gameObject->model) this->gameObject->model->SetRotation(rotation);
 		}
 

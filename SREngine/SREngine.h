@@ -27,7 +27,7 @@ namespace SpaRcle {
 			GameObject* Arrows = nullptr;
 			GameObject* Rings  = nullptr;
 
-			UIList* Hierarchy  = nullptr;
+			UIList<GameObject*>* Hierarchy  = nullptr;
 
 			bool toolsEnabled  = false;
 			ToolMode tool	   = ToolMode::Locate;
@@ -106,7 +106,7 @@ namespace SpaRcle {
 				return graph->GetRender(); 
 			};
 			//?=========================================================
-			GameObject* LoadPrefab(const std::string name, bool active = true, glm::vec3 pos = {0,0,0}) {
+			GameObject* LoadPrefab(const std::string name, std::string object_name = "", bool active = true, glm::vec3 pos = {0,0,0}) {
 				if (!world) {
 					debug->Error("LoadPrefab : world is nullptr!");
 					Sleep(1000);
@@ -178,6 +178,8 @@ namespace SpaRcle {
 
 						is.close();
 
+						if (object_name != "")
+							gameObject->name = object_name;
 						world->RegisterGameObject(gameObject);
 						return gameObject;
 					} else {

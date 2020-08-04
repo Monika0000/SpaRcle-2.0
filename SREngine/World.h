@@ -26,6 +26,12 @@ namespace SpaRcle {
 		public:
 			void RegisterGameObject(GameObject* game);
 
+			GameObject* Find(std::string name) {
+				auto find = gameObjects.find(name);
+				if (find == gameObjects.end())
+					return nullptr;
+				else return find->second;
+			}
 			GameObject* Find(Model* model) {
 				for (std::map<std::string, GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end(); ++it) {
 					if (it->second->model == model)

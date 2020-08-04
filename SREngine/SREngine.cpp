@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 #include "SREngine.h"
 #include "Window.h"
+#include <Shlobj_core.h> 
+#include <UIList.h>
 
 namespace SpaRcle {
 	using namespace Graphics;
@@ -36,12 +38,16 @@ namespace SpaRcle {
 
 				Arrows = LoadPrefab("Engine//Arrows"); //Arrows->model->DepthTesting = false;
 				Rings  = LoadPrefab("Engine//Rings");  //Rings->model->DepthTesting  = false;
-				//Arrows->transform.SetRotation({ 45, 0, 0 });
-				//Arrows->SetActive(false);
 				SetToolMode(ToolMode::None);
 
-				this->Hierarchy = new UIList(win, "Hierarchy", -2.21f, -0.25f, 0.60f, 2.45f);
+				//!====================================================================================================
+				this->Hierarchy = new UIList<GameObject*>(win, "Hierarchy", -2.2075f, -0.25f, 0.60f, 2.45f);
+				Hierarchy->SetList(world->gameObjects);
+				//std::next(world->gameObjects.begin(), 1)->second;
+				Hierarchy->SetEvent_GetName([](GameObject* gm) -> std::string { return gm->name; });
+
 				render->AddUI(this->Hierarchy);
+				//!====================================================================================================
 
 				return true;
 			} else return false;
@@ -58,7 +64,7 @@ namespace SpaRcle {
 				//for (Mesh* mesh : Arrows->GetComponent<Model*>()->meshes) {
 				//	this->window->GetRender()->AddAimingMesh(mesh);
 				//}
-				SetToolMode(ToolMode::Locate);
+				SetToolMode(ToolMode::Locate); DisableTools();
 
 				isInit = true;
 				return true;
@@ -77,25 +83,56 @@ namespace SpaRcle {
 
 			//Texture* texture = graph->GetRender()->GetTextureManager()->LoadTexture((graph->GetResourcesFolder() + "\\Textures\\rock.bmp").c_str());
 
-			float num_fps_limit = 60.f;
+			float num_fps_limit = 120.f;
 			float fps_limit_timer = 0.f;
 			float fps_lim = 1 / num_fps_limit;
 			float frameDeltaTime;
 			int now = 0, then = 0;
 
+			float frame = 0;
+
 			debug->System("All systems are running successfully!");
+
+			for (auto script : compiler->scripts)
+				if (script->IsCompile())
+					script->Start();
+
 			while (true) {
 				if (EventsManager::PopEvent(EventsManager::Events::Exit)
-					|| EventsManager::PopEvent(EventsManager::Events::Error))
+					|| EventsManager::PopEvent(EventsManager::Events::Error)) {
+					debug->System("Exit or error message has been recived!");
 					break;
+				}
 
-				if (Input::FixedGetKeyDown(KeyCode::Esc))
+				if (Input::FixedGetKeyDown(KeyCode::Esc)) {
+					debug->System("Escape key has been pressed!");
 					break;
+				}
 				if (Input::FixedGetKeyDown(KeyCode::M))
 					std::cout << ("Current memory load is " + std::to_string(Utils::GetCurrentMemoryLoad() / 1024) + "Kb\n");
 				if (Input::FixedGetKeyDown(KeyCode::L))
 					this->window->MouseLock(!this->window->MouseLock());
+				else if (Input::FixedGetKeyDown(KeyCode::O)) {
+					/*
+					OPENFILENAME l = { sizeof(l), };
+					TCHAR buf[1024];
 
+					HWND hwnd = ::CreateWindowA("STATIC", "explore", WS_VISIBLE, 0, 0, 100, 100, NULL, NULL, NULL, NULL);
+					l.hwndOwner = hwnd;
+					//l.lpstrFilter = L"ZIP Files\0*.zip\0All Files\0*.*\0";
+					l.lpstrFilter = L"*.*\0";
+					l.lpstrFile = buf;
+					l.nMaxFile = 1023;
+					l.lpstrTitle =L"Open resource";
+					//l.lpstrDefExt = L"zip";
+					l.lpstrInitialDir = String::CharsToLPWSTR(graph->GetResourcesFolder().c_str());
+					l.Flags = OFN_HIDEREADONLY | OFN_EXPLORER | OFN_PATHMUSTEXIST;
+					buf[0] = 0;
+					if (GetOpenFileName(&l)) {
+
+					}
+					*/
+				}
 				//?========================================================
 
 				now = clock();
@@ -107,15 +144,19 @@ namespace SpaRcle {
 
 					for (auto script : compiler->scripts)
 						if (!script->HasErrors() && script->IsCompile())
-							if (!script->Update()) {
+							if (!script->Update(frame)) {
 								//debug->ScriptError("Engine::Run() : An exception has been occured!\n\tFile script : " + script->GetName());
 								//Sleep(500);
 							}
+					frame += 0.001;
+					if (frame == 1) frame = 0;
 
 					if (graph->EditorMode) {
 						Model* model = window->GetSelectedModel();
-						if (model) {
+						if (model) {						
 							vec2d mouse = window->GetMousePos();
+
+
 							bool left = Input::GetKey(KeyCode::MouseLeft);
 
 							if (TempSelectedModel != model) {
@@ -138,6 +179,14 @@ namespace SpaRcle {
 							}
 
 							if (!this->window->MouseLock() && left) {
+								POINT p; auto size = window->GetScreenSize();
+								GetCursorPos(&p);
+								if (p.x >= size->x - 1) { SetCursorPos(0, p.y); mouse = mouse_pos = window->GetMousePos(); }
+								else if (p.x <= 0) { SetCursorPos(size->x - 1, p.y); mouse = mouse_pos = window->GetMousePos(); }
+								else 
+								if (p.y >= size->y - 1) { SetCursorPos(p.x, 0); mouse = mouse_pos = window->GetMousePos(); }
+								else if (p.y <= 0) { SetCursorPos(p.x, size->y - 1); mouse = mouse_pos = window->GetMousePos(); }
+
 								Mesh* mesh = window->GetAimedMesh();
 								if (mesh) {
 									float dx = mouse.x - mouse_pos.x;
@@ -190,7 +239,7 @@ namespace SpaRcle {
 					then = now;
 				}
 				//!========================================================
-
+				/*
 				if (Input::GetKey(KeyCode::R)) {
 					//continue; //TODO: add texture
 					int x = rand() % 100;
@@ -218,7 +267,7 @@ namespace SpaRcle {
 					Sleep(10);
 					#endif
 				}
-
+				*/
 				//if (Input::FixedGetKeyDown(KeyCode::C)) {
 				//	this->graph->GetRender()->Clear();
 				//}

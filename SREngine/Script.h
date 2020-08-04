@@ -51,7 +51,7 @@ namespace SpaRcle {
 			public:
 				bool Init();
 				bool Start();
-				bool Update();
+				bool Update(float time);
 				bool Close();
 			};
 		}

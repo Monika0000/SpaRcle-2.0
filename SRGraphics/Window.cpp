@@ -104,11 +104,16 @@ namespace SpaRcle {
 
 		vec2d Window::GetMousePos() {
 			vec2d pos = { 0, 0 };
+			
 			if (window)
 				glfwGetCursorPos(window, &pos.x, &pos.y);
 			pos.x /= this->format->size_x;
 			pos.y /= this->format->size_y;
 			return pos;
+		}
+		void Window::SetMousePos(float x, float y) {
+			if (window)
+				glfwSetCursorPos(window, x, y);
 		}
 		Vector2d* Window::GetMousePosition() {
 			Vector2d* vec = new Vector2d{ 0, 0 };

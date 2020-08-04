@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "pch.h"	
 #include "Script.h"
 #include <SRHelper.h>
 #include "SREngine.h"
@@ -11,11 +11,11 @@ namespace SpaRcle {
 
 			SREngine* Script::engine = nullptr;
 
-			void foo(std::string str) {
-				std::cout << "foo = " << str << std::endl;
-			}
+			//void foo(std::string str) {
+			//	std::cout << "foo = " << str << std::endl;
+			//}
 
-			void Lambda(std::function<void()> fun) { fun(); }
+			//void Lambda(std::function<void()> fun) { fun(); }
 
 			bool Script::RegisterStandartFunctions() {
 				/*
@@ -43,16 +43,46 @@ namespace SpaRcle {
 				//	Script::engine->GetDebug()->Script(s);
 				//	}
 				*/
+				//void (*a)(float x, float y, float z) = GameObject::Move;
+				//void (SpaRcle::Engine::GameObject::*a)(bool b) = GameObject::SetActive;
+				//void (SpaRcle::Engine::GameObject::*a)(float x, float y, float z) = GameObject::Move;
+				//void (*a)(bool b) = GameObject::SetActive;
+				//auto a = &GameObject::Move;
 
 				luabridge::getGlobalNamespace(L)
-					.beginNamespace("Debug")
-						.addFunction("Log", static_cast<void(*)(std::string)>([](std::string s) {
-							Script::engine->GetDebug()->Script(s);
-						}))
-						.addFunction("Error", static_cast<void(*)(std::string)>([](std::string s) {
+					.beginClass<SREngine>("Engine")
+						.addStaticFunction("LoadPrefab", static_cast<GameObject*(*)(std::string)>([](std::string s) -> GameObject* {
+								return engine->LoadPrefab(s); }))
+					.endClass()
+
+					.beginClass<Script>("Script")
+					.endClass()
+
+					.beginClass<World>("World")
+						.addStaticFunction("Find", static_cast<GameObject*(*)(std::string)>([](std::string s) -> GameObject* {
+							return Script::engine->GetCurrentWorld()->Find(s); }))
+					.endClass()
+
+					.beginClass<GameObject>("GameObject")
+						.addFunction("SetPosition", (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z)) & GameObject::SetPosition)
+						.addFunction("SetRotation", (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z)) & GameObject::SetRotation)
+						.addFunction("SetScale", (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z)) & GameObject::SetScale)
+						.addFunction("Move",   (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z) )&GameObject::Move)
+						.addFunction("Rotate", (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z) )&GameObject::Rotate)
+					.endClass()
+
+					.beginClass<Debug>("Debug")
+						.addStaticFunction("Log", static_cast<void(*)(std::string)>([](std::string s) {
+							Script::engine->GetDebug()->Script(s); }))
+						.addStaticFunction("Log", static_cast<void(*)(double)>([](double s) {
+							Script::engine->GetDebug()->Script(std::to_string(s)); }))
+						.addStaticFunction("Log", static_cast<void(*)(int)>([](int s) {
+							Script::engine->GetDebug()->Script(std::to_string(s)); }))
+
+						.addStaticFunction("Error", static_cast<void(*)(std::string)>([](std::string s) {
 							Script::engine->GetDebug()->ScriptError(s);
 						}))
-					.endNamespace()
+					.endClass()
 					//?========================
 
 					//.beginClass<Test>("Test")
@@ -102,12 +132,13 @@ namespace SpaRcle {
 					lua_pcall(L, 0, 0, 0);
 
 					debug->Script("Compile : " + lua_script);
-
+					
 					if(true)
 					{ //?================ INIT LUA ================ 
 						static const luaL_Reg lualibs[] = {
 							{"base", luaopen_base},
 							{"io", luaopen_io},
+							{"math", luaopen_math },
 							{NULL, NULL}
 						};
 
@@ -138,16 +169,30 @@ namespace SpaRcle {
 				return false;
 			}
 			bool Script::Start() {
-
-				return false;
+				if (isCompile) {
+					r = lua_getglobal(L, "Start");
+					if (lua_pcall(L, 0, 0, 0)) {
+						debug->ScriptError("Filed call \"Start()\"! File " + this->lua_script);
+						return false;
+					}
+					return true;
+				}
+				else {
+					debug->ScriptError("Script::Start() : file is not compiled!\n\t" + lua_script);
+					return false;
+				}
 			}
-			bool Script::Update() {
+			bool Script::Update(float time) {
 				if (isCompile) {
 					//luaL_dofile(lua_state, lua_script.c_str());
 					//int r = lua_getfield(lua_state, LUA_REGISTRYINDEX, "Update");
 					//std::cout << r << std::endl;
 
 					r = lua_getglobal(L, "Update");
+
+					lua_pushnumber(L, time);
+					lua_setglobal(L, "Time");
+
 					if (lua_pcall(L, 0, 0, 0)) {
 						debug->ScriptError("Run-time error! File " + this->lua_script);
 						this->hasErrors = true;

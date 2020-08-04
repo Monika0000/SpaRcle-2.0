@@ -70,6 +70,7 @@ namespace SpaRcle {
 			bool GetIsRun() const { return isRun; };
 			Vector2d* GetMousePosition();
 			vec2d GetMousePos();
+			void SetMousePos(float x, float y);
 			void MouseLock(const bool val) {
 				if(val)
 					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -94,6 +95,7 @@ namespace SpaRcle {
 
 			Mesh*  GetAimedMesh()	  { return AimedMesh; }
 			Model* GetSelectedModel() { return SelectedModel; }
+			Vector2i* GetScreenSize() { return screen_size; }
 		public:
 			Window(
 				Debug* debug, Camera* camera = NULL, 
