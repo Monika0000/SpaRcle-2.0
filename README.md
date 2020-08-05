@@ -1,12 +1,12 @@
 # SpaRcle-2.0
 
 (Lua scripting)
-All base functions : 
+* All base functions : 
    * function Start  () -- call at starup engine
-   * function Update () -- call every tick (120 tick / sek)
-All global variables : 
-   * Time (float)
-All classes :
+   * function Update () -- call every tick (120 tick / sek) 
+* All global variables : 
+   * Time (float) 
+* All classes :
    * GameObject
       - void Move(float x, float y, float z)
       - void Rotate(float x, float y, float z)
