@@ -20,6 +20,15 @@ namespace SpaRcle {
 			float constant;
 			float linear;
 			float quadratic;
+
+			float intensity;
+
+			void SetPosition(float x, float y, float z) {
+				position = { x,y,z };
+			}
+			void SetIntensity(float v) {
+				intensity = v;
+			}
 		};
 
 		class DirectionalLight : public Light {
@@ -32,11 +41,14 @@ namespace SpaRcle {
 				this->position = { 0,0,0 };
 
 				this->ambient = { 0.2f, 0.2f, 0.2f };
-				this->diffuse = { 0.5f, 0.5f, 0.5f };
+				//this->diffuse = { 0.5f, 0.5f, 0.5f };
+				this->diffuse = { 1, 1, 1 };
 				this->specular = { 1.0f, 1.0f, 1.0f };
 				this->constant = 1.0f;
 				this->linear = 0.09f;	
 				this->quadratic = 0.032f;
+
+				this->intensity = 1.0f;
 			};
 			~PointLight() {};
 		};

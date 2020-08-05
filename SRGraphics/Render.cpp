@@ -35,7 +35,7 @@ bool SpaRcle::Graphics::Render::Create(Camera* camera, SRGraphics* graph) {
 
 	this->modManager = new ModelManager(debug, graph, def_mat);
 
-	this->raytracing = new RayTracing();
+	this->raytracing = new RayTracing(camera);
 
 	//?//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -142,25 +142,6 @@ void SpaRcle::Graphics::Render::DrawAimingObjects() {
 }
 
 void SpaRcle::Graphics::Render::DrawAllObjects() {
-//	if (!isRun) return;
-//ret: if (clear) goto ret;
-//	render = true;
-
-	/*
-	for (auto del : deleteModels) {
-		std::vector<Model*>::iterator iter = models.begin();
-		while (iter != models.end()) {
-			if ((*iter) == del) {
-				delete del;
-				models.erase(iter);
-				break;
-			}
-			else iter++;
-			std::cout << del << std::endl;
-		}
-		deleteModels.erase(deleteModels.begin());
-	}*/
-
 	//if (fog)
 	//	InitFog();
 	//else

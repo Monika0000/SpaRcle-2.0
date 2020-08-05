@@ -92,6 +92,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>J:\C++\SpaRcle\SRGraphics;J:\C++\SpaRcle\SRHelper;F:\Libraries\OpenGL\Include;F:\Libraries\OpenGL\Include\SDL;F:\Libraries\LuaBridge\Source;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

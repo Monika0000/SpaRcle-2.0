@@ -59,6 +59,7 @@ namespace SpaRcle {
 			win->SetXPos(x);
 			win->SetYPos(y);
 			glfwSetWindowPos(window, x, y);
+			if(win->GetIsRun()) win->Draw();  // Re-draw
 		}
 		void Resize(GLFWwindow* window, int width, int height) {
 			Window* win = Window::Get();

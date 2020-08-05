@@ -40,10 +40,10 @@ namespace SpaRcle {
 			};
 			Material(
 				Texture* diffuse, Texture* normal, Texture* specular, Texture* glossiness, 
-				glm::vec4 Color = { 1, 1, 1, 1 })
+				glm::vec4 Color = { 1, 1, 1, 1 }, bool use_light = true)
 				:
 				diffuse(diffuse), normal(normal), specular(specular), glossiness(glossiness), 
-				isGenerate(false), Color(Color)
+				isGenerate(false), Color(Color), UseLight(use_light)
 			{ 
 
 			};
@@ -55,6 +55,7 @@ namespace SpaRcle {
 			};
 		public:
 			glm::vec4 Color     = { 1, 1, 1, 1 };
+			bool UseLight = true;
 		public:
 			Texture* diffuse    = nullptr;
 			Texture* normal     = nullptr;

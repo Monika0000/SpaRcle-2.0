@@ -39,5 +39,6 @@ void main() {
     //    vec4(aPosition + Normal, 1.0);
     
     TexCoords = aTexCoords;
-    Normal    = aNormal;
+    Normal = mat3(transpose(inverse(modelMat))) * aNormal; 
+    //Normal    = aNormal;
 }

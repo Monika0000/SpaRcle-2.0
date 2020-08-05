@@ -12,6 +12,8 @@ struct Light {
     float constant;
     float linear;
     float quadratic;
+
+    float intensity;
 };
 
 in vec2 TexCoords;
@@ -20,31 +22,49 @@ in vec3 Normal;
 
 uniform sampler2D DiffuseMap;
 uniform sampler2D NormalMap;
+uniform sampler2D SpecularMap;
 uniform vec4      color;
 
-uniform Light light;
+uniform vec3 viewPos;
 
-const vec3 black = vec3(0,0,0);
-vec3 RGB(vec4 c) { return vec3(c.r, c.g, c.b); }
+uniform int use_light;
+uniform Light light;
+//const vec3 black = vec3(0,0,0);
+//vec3 RGB(vec4 c) { return vec3(c.r, c.g, c.b); }
 
 void main(void) {
-    vec3 ambient = light.ambient * texture(DiffuseMap, TexCoords).rgb;
+    if(use_light == 1) {
+        // ambient
+        vec3 ambient = light.ambient * texture(DiffuseMap, TexCoords).rgb;
 
-    vec3 N = normalize(Normal);
-    vec3 L = normalize(light.position - FragPos);
-    float diffuse_intensity = max(dot(N, L), 0.0);
-    
+        // diffuse 
+        vec3 N = normalize(Normal);
+        vec3 L = normalize(light.position - FragPos); // lightDir 
+        float diffuse_intensity = max(dot(N, L), 0.0);
+        vec3 diffuse = texture(DiffuseMap, TexCoords).rgb * color.rgb * light.diffuse * diffuse_intensity;
 
-    vec3 diffuse = texture(DiffuseMap, TexCoords).rgb;
-    //if (diffuse == black)
-    //    diffuse = RGB(color);
-    //else diffuse *= RGB(color);
-    
-    diffuse *= diffuse_intensity;
+        // specular
+        vec3 viewDir = normalize(viewPos - FragPos);
+        vec3 R = reflect(-L, N); // reflectDir 
+        float spec = pow(max(dot(viewDir, R), 0.0), 5); //material.shininess
+        vec3 specular = light.specular * spec * texture(SpecularMap, TexCoords).rgb; 
 
-    FragColor = vec4(diffuse, 1); // - vec3(n, n, n)
+        // attenuation
+        float distance    = length(light.position - FragPos);
+        float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance)) * light.intensity; 
+
+        diffuse  *= attenuation;
+        ambient  *= attenuation;
+        specular *= attenuation;
+
+        FragColor = vec4(diffuse + ambient + specular, 1.0);
+    } else {
+        FragColor = vec4(texture(DiffuseMap, TexCoords).rgb * color.rgb, 1.0); // - vec3(n, n, n)
+    }
 }
 
+//  if (diffuse == vec3(0,0,0)) diffuse = color.rgb;
+  // else diffuse *= color.rgb;
 
 
     //vec3 lightColor = vec3(1, 1, 1);

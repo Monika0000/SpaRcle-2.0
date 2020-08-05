@@ -23,6 +23,8 @@ namespace SpaRcle {
 			for (t = 0; t < meshes.size(); t++) {
 				model_temp_material = materials[t];
 
+				glUniform1i(glGetUniformLocation(shader->ProgramID, "use_light"), (int)model_temp_material->UseLight);
+
 				//std::cout << meshes.size() << std::endl;
 
 				if (model_temp_material->diffuse) {
@@ -35,7 +37,11 @@ namespace SpaRcle {
 					glBindTexture(GL_TEXTURE_2D, model_temp_material->normal->id);
 					glUniform1i(glGetUniformLocation(shader->ProgramID, "NormalMap"), 1); // This is GL_TEXTURE1
 				}
-
+				if (model_temp_material->specular) {
+					glActiveTexture(GL_TEXTURE2);
+					glBindTexture(GL_TEXTURE_2D, model_temp_material->specular->id);
+					glUniform1i(glGetUniformLocation(shader->ProgramID, "SpecularMap"), 2); // This is GL_TEXTURE2
+				}
 				//glm::vec4 c = model_temp_material->Color;
 				//std::cout << c.r << " " << c.g << " " << c.b << "\n";
 

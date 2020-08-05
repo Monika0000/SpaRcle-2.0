@@ -96,6 +96,7 @@ namespace SpaRcle {
 
 					.beginClass<PointLight>("PointLight")
 						.addStaticFunction("new", static_cast<PointLight * (*)()>([]() -> PointLight* { return new PointLight(); }))
+						.addFunction("SetIntensity", &PointLight::SetIntensity)
 					.endClass()
 
 					.beginClass<DirectionalLight>("DirectionalLight")

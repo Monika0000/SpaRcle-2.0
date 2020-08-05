@@ -167,7 +167,7 @@ namespace SpaRcle {
 							if (!toolsEnabled) SetToolMode(tool);
 
 							float dist = window->GetCamera()->Distance(Arrows->transform.position);
-							if (dist < 20) dist = 20; else if (dist > 500) dist = 500;
+							if (dist < 10) dist = 10; else if (dist > 500) dist = 500;
 							switch (tool) {
 							case SpaRcle::Engine::SREngine::ToolMode::Locate:
 								Arrows->transform.SetScale(

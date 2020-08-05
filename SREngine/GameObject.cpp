@@ -21,34 +21,56 @@ namespace SpaRcle {
 			this->model  = nullptr;
 		};
 
+		void GameObject::UpdateComponents() {
+			/*
+				Transform - no
+				Model     - no
+				Light     - yes
+			*/
+
+			if (light) { 
+				light->position = this->transform.position; 
+				//std::cout
+				//	<< light->position.x << " "
+				//	<< light->position.y << " "
+				//	<< light->position.z << "\n";
+			}
+		}
+
 		void GameObject::SetPosition(float x, float y, float z) {
 			for (auto g : Childs) g->SetPosition(x, y, z);
 			transform.SetPosition(x, y, z);
+			UpdateComponents();
 		}
 		void GameObject::SetRotation(float x, float y, float z) {
 			for (auto g : Childs) g->SetRotation(x, y, z);
 			transform.SetRotation(x, y, z);
+			UpdateComponents();
 		}
 		void GameObject::SetScale(float x, float y, float z) {
 			for (auto g : Childs) g->SetScale(x, y, z);
 			transform.SetScale(x, y, z);
+			UpdateComponents();
 		}
 
 		void GameObject::Move(float x, float y, float z) {
 			for (auto g : Childs)
 				g->Move(x, y, z);
 			transform.Move(x, y, z);
+			UpdateComponents();
 		}
 		void GameObject::Move(glm::vec3 dir) {
 			for (auto g : Childs)
 				g->Move(dir);
 			transform.Move(dir);
+			UpdateComponents();
 		}
 
 		void GameObject::Rotate(float x, float y, float z) {
 			for (auto g : Childs)
 				g->Rotate(x, y, z);
 			transform.Rotate(x, y, z);
+			UpdateComponents();
 		}
 
 		void GameObject::SetAimingEnabled(bool val) {
@@ -72,6 +94,8 @@ namespace SpaRcle {
 		void GameObject::SetActive(bool enabled) {
 			if (this->enabled == enabled) return;
 			this->enabled = enabled;
+
+			UpdateComponents();
 
 			if (model) { 
 				model->enabled = enabled;

@@ -5,6 +5,8 @@
 #include <Model.h>
 #include <Debug.h>
 //#include <Light.h>
+#include <RayTracing.h>
+#include <Render.h>
 
 namespace SpaRcle {
 	namespace Graphics {
@@ -72,6 +74,8 @@ namespace SpaRcle {
 			Model*		model = nullptr;
 		private:
 			Light*		light = nullptr;
+		private:
+			void UpdateComponents();
 		public:
 			void SetPosition(float x, float y, float z);
 			void SetRotation(float x, float y, float z);
@@ -110,11 +114,18 @@ namespace SpaRcle {
 			if (std::is_same<T, Model*>::value) {
 				this->model = (Model*)component;
 			} else if (std::is_same<T, PointLight*>::value) {
-				this->light = (PointLight*)component;
+				if (!light) {
+					this->light = (PointLight*)component;
+					render->GetRayTracing()->AddLight(light);
+				} else {
+					debug->Error("AddComponent<PointLight>() : " + name + " already contains PointLight!");
+				}
 			} else {
 				debug->Error("GameObject::AddComponent() : unknow type \"" + std::string(typeid(T).name()) + "\"!");
 				Sleep(500);
 			}
+
+			UpdateComponents();
 		}
 	}
 }

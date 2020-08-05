@@ -14,8 +14,10 @@ namespace SpaRcle {
 	using namespace Helper;
 		
 		namespace Graphics {
+			class RayTracing;
 
 		class Camera {
+			friend class RayTracing;
 		private:
 			//! — Œ–Œ—“» œ≈–≈Ã≈Ÿ≈Õ»ﬂ œŒ Œ—ﬂÃ XYZ
 			float spdx = 0.0;
@@ -36,6 +38,7 @@ namespace SpaRcle {
 			float posy = 0.0; // 2.0
 			float posz = 0.0;
 			//glm::vec3 pos = { 0,0,0 };
+			glm::vec3 ViewPos = { 0,0,0 };
 
 			//POINT pt = { 0, 0 };
 			vec2d pt = { 0,0 };

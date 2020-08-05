@@ -138,7 +138,6 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 
 				//std::cout << "sin(" << ptc << ") = " << dyy << std::endl;
 
-
 				// ÊÎÐÐÅÊÒÈÐÓÅÌ ÑÊÎÐÎÑÒÜ ÏÅÐÅÌÅÙÅÍÈß Â ÇÀÂÈÑÈÌÎÑÒÈ ÎÒ ÓÃËÀ ÏÎÂÎÐÎÒÀ ÊÀÌÅÐÛ
 				// ×ÒÎÁÛ ÊÀÌÅÐÀ ÄÂÈÃÀËÀÑÜ ÒÓÄÀ, ÊÓÄÀ ÑÌÎÒÐÈÒ, À ÍÅ ÂÄÎËÜ ÎÑÅÉ X È Z
 				posz += spdz * dxx;
@@ -146,6 +145,10 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 				posx += spdz * dxz;
 				posz -= spdx * dxz;
 				posy += spdy / 10;
+
+				ViewPos = { posx + dxx,posy + dyy, posz - dxz };
+				//ViewPos = { posx,posy, posz };
+				//ViewPos = { dxx,dyy, dxz };
 			}
 
 			viewMat = glm::lookAt(glm::vec3(posx + dxx, posy + dyy, posz - dxz), glm::vec3(posx, posy, posz), glm::vec3(0, 1, 0));

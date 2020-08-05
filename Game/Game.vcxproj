@@ -106,6 +106,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>J:\C++\SpaRcle\SREngine;J:\C++\SpaRcle\SRHelper;J:\C++\SpaRcle\SRGraphics;F:\Libraries\OpenGL\Include;F:\Libraries\OpenGL\Include\SDL;F:\Libraries\LuaBridge\Source</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

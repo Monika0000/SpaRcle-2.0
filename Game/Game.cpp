@@ -88,7 +88,7 @@ int main(int argcp, char* argv) {
 	Texture* plane_texture   = texManager->LoadTexture("plane.png", Texture::Type::Diffuse, Texture::Filter::LINEAR_MIPMAP_NEAREST);
 	*/
 
-	render->GetRayTracing()->AddLight(new PointLight());
+	//render->GetRayTracing()->AddLight();
 
 	engine->GetCompiler()->AddScript(new Script("script"));
 
