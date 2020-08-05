@@ -4,14 +4,20 @@
 #include <string>
 #include <Model.h>
 #include <Debug.h>
+//#include <Light.h>
 
 namespace SpaRcle {
+	namespace Graphics {
+		class Light;
+		class PointLight;
+	}
 	namespace Engine {
 		using namespace Helper;
 		using namespace Graphics;
 
 		class GameObject;
 		class SREngine;
+		class World;
 
 		class Transform : public IComponent {
 		private:
@@ -47,6 +53,7 @@ namespace SpaRcle {
 
 		class GameObject {
 			friend class SREngine;
+			friend class World;
 		private:
 			GameObject(SREngine* engine, std::string name = "New game object");
 			~GameObject() {  };
@@ -63,6 +70,8 @@ namespace SpaRcle {
 			std::string name;
 			Transform   transform;	
 			Model*		model = nullptr;
+		private:
+			Light*		light = nullptr;
 		public:
 			void SetPosition(float x, float y, float z);
 			void SetRotation(float x, float y, float z);
@@ -78,11 +87,10 @@ namespace SpaRcle {
 			void SetActive(bool enabled);
 
 			template <typename T> T GetComponent();
+			template <typename T> void AddComponent(T component);
 		};
 
-		template<typename T>
-		inline T GameObject::GetComponent()
-		{
+		template<typename T> inline T GameObject::GetComponent() {
 			if (std::is_same<T, Model*>::value) {
 				if (model) return (T)model;
 				else {
@@ -93,9 +101,19 @@ namespace SpaRcle {
 				}
 			}
 			else {
-				debug->Error("GameObject::GetComponent<>() : unknow type \"" + std::string(typeid(T).name()) + "\"!");
+				debug->Error("GameObject::GetComponent() : unknow type \"" + std::string(typeid(T).name()) + "\"!");
 				Sleep(1000);
 				return T();
+			}
+		}
+		template<typename T> inline void GameObject::AddComponent(T component) {
+			if (std::is_same<T, Model*>::value) {
+				this->model = (Model*)component;
+			} else if (std::is_same<T, PointLight*>::value) {
+				this->light = (PointLight*)component;
+			} else {
+				debug->Error("GameObject::AddComponent() : unknow type \"" + std::string(typeid(T).name()) + "\"!");
+				Sleep(500);
 			}
 		}
 	}

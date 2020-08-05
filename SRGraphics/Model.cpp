@@ -13,6 +13,8 @@ namespace SpaRcle {
 		bool SpaRcle::Graphics::Model::Draw(Shader* shader) {
 			if (destroy) return false;
 
+			glBindTexture(GL_TEXTURE_2D, 0); // Уже определено в mesh->Draw();
+
 			for (auto& mat : materials) {
 				if (!mat) return true;
 				if (!mat->isGenerate) mat->Generate();
@@ -226,7 +228,7 @@ namespace SpaRcle {
 		}
 
 		Model* ModelManager::LoadModelFromObj(const char* file, std::vector<Material*> mats, glm::vec3 pos) {
-			std::string path = graph->GetResourcesFolder() + "\\Models\\" + std::string(file);
+			std::string path = graph->GetResourcesFolder() + "\\Models\\" + std::string(file) + ".obj";
 			path = String::MakePath(path);
 			auto find = Models.find(path);
 			if (find != Models.end()) {

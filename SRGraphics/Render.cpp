@@ -166,7 +166,7 @@ void SpaRcle::Graphics::Render::DrawAllObjects() {
 	//else
 	//	glDisable(GL_FOG);
 
-	raytracing->Enable();
+	raytracing->Enable(shader);
 	
 	for (t = 0; t < this->count_models; t++)// {
 		//std::cout << models[t]->GetPosition().x << " "
@@ -265,7 +265,6 @@ void SpaRcle::Graphics::Render::DrawAllUI() {
 
 	vec2d pos =  win->GetMousePos();
 	//std::cout << "mouse_x = " << pos.x << "; mouse_y = " << pos.y << std::endl;
-
 	for (UI* ui : this->_ui_objects) {
 		ui->Draw(
 			{ mouse_left_down, mouse_left_up },  

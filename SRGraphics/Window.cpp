@@ -267,7 +267,7 @@ namespace SpaRcle {
 
 				InitParametrs();
 
-				camera->Init(isMouseLock);
+				camera->Init(isMouseLock, window);
 
 				if (!InitWindow()) {
 					debug->Error("Failed initializing window!");

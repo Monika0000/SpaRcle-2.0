@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "Camera.h"
-#include <GL\glut.h>
+//#include <GL\glut.h>
 #include <time.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Window.h"
 
 bool SpaRcle::Graphics::Camera::Create(WindowFormat** format, int& x_pos, int& y_pos, glm::mat4& projective)  {
 	debug->Graph("Creating camera...");
@@ -24,10 +25,11 @@ bool SpaRcle::Graphics::Camera::Create(WindowFormat** format, int& x_pos, int& y
 	return true;
 }
 
-bool SpaRcle::Graphics::Camera::Init(bool& isMouseLock){
+bool SpaRcle::Graphics::Camera::Init(bool& isMouseLock, GLFWwindow* win){
 	debug->Graph("Initializing camera...");
 
 	this->isMouseLock = &isMouseLock;
+	this->window = win;
 	/*
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -74,8 +76,10 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 			sceneStartTime = clock();
 			if (!isMouseLock || !format) continue;
 
+
 			if (*isMouseLock) {
-				GetCursorPos(&pt);          // онксвюел онгхжхч йспянпю
+				//!GetCursorPos(&pt);          // онксвюел онгхжхч йспянпю
+				glfwGetCursorPos(window, &pt.x, &pt.y);
 
 				prevX = pt.x;                   // он ьхпхме
 				prevY = pt.y;                   // он бшянре         
@@ -85,18 +89,18 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 				 
 			if (*isMouseLock) {
 				//SetCursorPos(1600 / 2, 900 / 2);// ярюбхл йспянп б жемрп нймю
-				bool b = Input::FixedGetKeyDown(KeyCode::F);
+				//bool b = Input::FixedGetKeyDown(KeyCode::F);
 				
 				if ((unsigned long long)(*format) == 0xdddddddddddddddd) { 
 					debug->Warn("Camera : *format has been adress 0xdddddddddddddddd");
 					break; }
 				SetCursorPos(
-					//*x_pos + *x_size / 2,
-					//*y_pos + *y_size / 2
 					*x_pos + (*format)->size_x / 2,
 					*y_pos + (*format)->size_y / 2
 				);// ярюбхл йспянп б жемрп нймю
-				GetCursorPos(&pt);              // онксвюел онгхжхч йспянпю
+
+				glfwGetCursorPos(window, &pt.x, &pt.y);
+				//!GetCursorPos(&pt);              // онксвюел онгхжхч йспянпю
 				//prevX = pt.x;                   // он ьхпхме
 				//prevY = pt.y;                   // он бшянре                
 				//Sleep(10);
@@ -115,7 +119,8 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 				else spdz = 0.0;
 			}
 			else 
-				GetCursorPos(&pt);
+				glfwGetCursorPos(window, &pt.x, &pt.y);
+				//!GetCursorPos(&pt);
 			
 			if (*isMouseLock) {
 				dx = pt.x - prevX;              // бшвхякъел ялеыемхе йспянпю гю 10 лхкхяейсмд он ьхпхме

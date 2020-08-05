@@ -4,18 +4,20 @@
 #include "SREngine.h"
 #include <Windows.h>
 #include <Model.h>
+#include <Light.h>
 
 namespace SpaRcle {
 	using namespace Graphics;
 	namespace Engine {
 
-		GameObject::GameObject(SREngine* engine, std::string name) : transform(this) {
+		GameObject::GameObject(SREngine* engine, std::string name) 
+			: transform(this) 
+		{
 			this->engine = engine;
 
 			this->render = engine->GetRender();
 			this->debug  = engine->GetDebug();
 			this->name	 = name;
-			//this->transform = Transform(this);
 			this->model  = nullptr;
 		};
 

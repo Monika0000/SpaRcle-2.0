@@ -10,6 +10,7 @@ uniform mat4 viewMat;
 uniform mat4 modelMat;
 //uniform vec3 ObjPos;
 
+out vec3 FragPos;
 out vec2 TexCoords;
 out vec3 Normal;
 //out vec4 vertex_vs;
@@ -27,8 +28,9 @@ void main() {
     //vertex_vs = projMat * viewMat * vec4(aPosition + ObjPos, 1.0);
     //gl_Position = projMat * viewMat * vec4(aPosition + ObjPos, 1.0);
     //gl_Position = projMat * viewMat * vec4(aPosition, 1.0) * modelMat;
-        
-    gl_Position = projMat * viewMat * modelMat * vec4(aPosition, 1.0);
+    FragPos = vec3(modelMat * vec4(aPosition, 1.0));
+    gl_Position = projMat * viewMat * vec4(FragPos, 1.0);
+    //gl_Position = projMat * viewMat * modelMat * vec4(aPosition, 1.0);
     
     //gl_Position = projMat * viewMat * modelMat * 
     //   vec4(aPosition + aNormal, 1.0);

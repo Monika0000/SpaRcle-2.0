@@ -53,7 +53,9 @@ namespace SpaRcle {
 				Rings->SetActive(false);
 			}
 			World* CreateWorld(std::string name) {
-				World* world = new World(debug, graph->GetRender(), Arrows);
+				World* world = new World(debug, this, Arrows);
+
+				//TODO: ----code----
 
 				return world;
 			}
@@ -61,7 +63,7 @@ namespace SpaRcle {
 			void SetWorld(World* world) { this->world = world; }
 			World* LoadWorld(const std::string& name) {
 				if (isCreate) {
-					World* world = new World(debug, graph->GetRender(), Arrows);
+					World* world = new World(debug, this, Arrows);
 
 
 					return world;

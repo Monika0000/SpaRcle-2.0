@@ -44,7 +44,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{391E74E1-CF25-4D48-9C14-D234F99AF2DC}"
 	ProjectSection(SolutionItems) = preProject
+		lua_commands.lua = lua_commands.lua
 		Resources\Scripts\script.lua = Resources\Scripts\script.lua
+		Resources\Shaders\shader_fragment.glsl = Resources\Shaders\shader_fragment.glsl
+		Resources\Shaders\shader_vertex.glsl = Resources\Shaders\shader_vertex.glsl
 	EndProjectSection
 EndProject
 Global

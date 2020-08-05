@@ -128,6 +128,14 @@ namespace SpaRcle {
 				else return this->matManager;
 			}
 			size_t GetCountModels() { return this->count_models; }
+			RayTracing* GetRayTracing() {
+				if (!this->raytracing) {
+					debug->Error("Render::GetRayTracing() : raytracing is nullptr!");
+					Sleep(1000);
+					return nullptr;
+				}
+				else return this->raytracing;
+			}
 
 			SRGraphics* GetGraphicsEngine() {
 				if (!this->graph) {

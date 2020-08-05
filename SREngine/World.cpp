@@ -1,8 +1,16 @@
 #include "pch.h"
 #include "World.h"
+#include "SREngine.h"
 
 namespace SpaRcle {
 	namespace Engine {
+		std::string World::MakeCopyName(std::string name)
+		{
+			return name + " (Copy)";
+		}
+		World::World(Debug* debug, SREngine* engine, GameObject* Arrows) : debug(debug), engine(engine), Arrows(Arrows) {
+			this->render = engine->GetRender();
+		}
 		void World::RegisterGameObject(GameObject* game) {
 			ret:
 			auto find = this->gameObjects.find(game->name);
@@ -21,18 +29,37 @@ namespace SpaRcle {
 		}
 
 		GameObject* World::Instantiate(std::string name, Model* model) {
+		ret:
 			auto find = this->gameObjects.find(name);
 			if (find != gameObjects.end()) {
-				debug->Error("World::Instantiate() : object \"" + name + "\" already exists!");
-				Sleep(1000);
-				return nullptr; 
+				name = MakeCopyName(name);
+				goto ret;
 			}
 
-			debug->Log("World::Instantiate() create new game object \""+name+"\"");
+			debug->Log("World::Instantiate() create new game object \""+name+"\", Model is " + std::to_string((size_t)model));
 
-			//GameObject* gameObject = new GameObject()
+			GameObject * gm = new GameObject(engine, name);
 
-			return nullptr;
+			gameObjects.insert(std::make_pair(name, gm));
+			gm->SetModel(model);
+
+			return gm;
+		}
+		GameObject* World::Instantiate(std::string name) {
+			ret:
+			auto find = this->gameObjects.find(name);
+			if (find != gameObjects.end()) {
+				name = MakeCopyName(name);
+				goto ret;
+			}
+
+			debug->Log("World::Instantiate() create new game object \"" + name + "\"");
+
+			GameObject* gm = new GameObject(engine, name);
+
+			gameObjects.insert(std::make_pair(name, gm));
+
+			return gm;
 		}
 
 		bool World::Destroy(std::string name) {

@@ -1,13 +1,20 @@
 #pragma once
+#define GLEW_STATIC
+#define NOMINMAX
+
 #include <SRHelper.h>
 #include "Shader.h"
 #include <GL\glu.h>
 #include <glm/glm.hpp>
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 namespace SpaRcle {
 	using namespace Helper;
-
+		
 		namespace Graphics {
+
 		class Camera {
 		private:
 			//! — Œ–Œ—“» œ≈–≈Ã≈Ÿ≈Õ»ﬂ œŒ Œ—ﬂÃ XYZ
@@ -30,9 +37,10 @@ namespace SpaRcle {
 			float posz = 0.0;
 			//glm::vec3 pos = { 0,0,0 };
 
-			POINT pt = { 0, 0 };
-			float prevX;
-			float prevY;
+			//POINT pt = { 0, 0 };
+			vec2d pt = { 0,0 };
+			double prevX;
+			double prevY;
 		private:
 			void FixedMove();
 		private:
@@ -68,6 +76,7 @@ namespace SpaRcle {
 			int* x_pos = nullptr; int* y_pos = nullptr;
 		private:
 			Debug* debug = nullptr;
+			GLFWwindow* window = nullptr;
 			std::thread move_thread;
 		public:
 			const glm::mat4 GetView() const noexcept { return viewMat; }
@@ -86,7 +95,7 @@ namespace SpaRcle {
 			~Camera() { Close(); };
 		public:
 			bool Create(WindowFormat** format, int& x_pos, int& y_pos, glm::mat4& projective);
-			bool Init(bool& isMouseLock);
+			bool Init(bool& isMouseLock, GLFWwindow*win);
 			bool Run();
 			const vec2l GetMousePos() const noexcept { return { (long)pt.x, (long)pt.y }; }
 			void SetCursorPosition(int x, int y) {

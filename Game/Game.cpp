@@ -54,6 +54,9 @@ int main(int argcp, char* argv) {
 
 	render->SetSkybox(texManager->LoadSkybox("Skyboxes\\Winter", Image::Type::JPG));
 
+	//Material* mat = matManager->LoadMaterial("engine\\yellow");
+	//Model* model = modManager->LoadModelFromObj("engine\\lump");
+	//engine->GetCurrentWorld()->Instantiate("Light demo", model);
 	//GameObject* Sina		 = engine->LoadPrefab("sina");
 	//Sina->transform.SetRotation(0, 270, 0);
 	//Sina->transform.SetScale(0.3, 0.3, 0.3);
@@ -85,26 +88,7 @@ int main(int argcp, char* argv) {
 	Texture* plane_texture   = texManager->LoadTexture("plane.png", Texture::Type::Diffuse, Texture::Filter::LINEAR_MIPMAP_NEAREST);
 	*/
 
-	//Mesh* cube = new Mesh(_3D_Models::CubeVertex, { 1.f, 0.f, 1.f });
-	//Mesh* cube2 = new Mesh(_3D_Models::CubeVertex, { 0.f, 1.f, 1.f });
-	//Model* model2 = modManager->LoadModelFromObj("sphere.obj", { rock }, { 5, 2, 5 });
-	//Model* model3 = modManager->LoadModelFromObj("stone1.obj", { new Material(Stone) }, { 0, 2, 0 });
-	//Model* model4 = modManager->LoadModelFromObj("plane.obj", { brick }, { 0, 2, 5 });
-	//Model* model5 = modManager->LoadModelFromObj("cube_triangulate.obj", { new Material(cubeTexture) }, { 4, 2, 0 });
-	//Model* model6 = modManager->LoadModelFromObj("Player2.obj", 
-	//	{ player_body, player_body, player_body, new Material(Top), new Material(Hair), new Material(Bottom), new Material(Shoes) }, { 40, 2, 4 });
-
-	//Model* model4 = modManager->LoadModelFromObj((graph->GetResourcesFolder() + "\\Models\\plane.obj").c_str(), new Material(plane_texture), { 0, 2, 5});
-	//Model* model2 = modManager->LoadModelFromObj((graph->GetResourcesFolder() + "\\Models\\cube.obj").c_str(), new Material(texture), { 0, 2, 5 });
-	//Model* model = new Model(cube, new Material(texture));
-	//Model* model2 = new Model(cube2, new Material(texture2));
-
-	//render->AddModel(model);
-	//render->AddModel(model2);
-	//render->AddModel(model3);
-	//render->AddModel(model4);
-	//render->AddModel(model5);
-	//render->AddModel(model6);
+	render->GetRayTracing()->AddLight(new PointLight());
 
 	engine->GetCompiler()->AddScript(new Script("script"));
 

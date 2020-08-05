@@ -11,6 +11,7 @@ namespace SpaRcle {
 
 			SREngine* Script::engine = nullptr;
 
+			typedef Material* pMaterial;
 			//void foo(std::string str) {
 			//	std::cout << "foo = " << str << std::endl;
 			//}
@@ -48,8 +49,13 @@ namespace SpaRcle {
 				//void (SpaRcle::Engine::GameObject::*a)(float x, float y, float z) = GameObject::Move;
 				//void (*a)(bool b) = GameObject::SetActive;
 				//auto a = &GameObject::Move;
-
+				
 				luabridge::getGlobalNamespace(L)
+					.beginClass<std::vector<pMaterial>>("Materials")
+						.addConstructor<void(*) ()>()
+						.addFunction("Add", (void (std::vector<pMaterial>::*)(const pMaterial & _Val)) & std::vector<pMaterial>::push_back)
+					.endClass()
+
 					.beginClass<SREngine>("Engine")
 						.addStaticFunction("LoadPrefab", static_cast<GameObject*(*)(std::string)>([](std::string s) -> GameObject* {
 								return engine->LoadPrefab(s); }))
@@ -61,6 +67,39 @@ namespace SpaRcle {
 					.beginClass<World>("World")
 						.addStaticFunction("Find", static_cast<GameObject*(*)(std::string)>([](std::string s) -> GameObject* {
 							return Script::engine->GetCurrentWorld()->Find(s); }))
+						.addStaticFunction("Instantiate", static_cast<GameObject*(*)(std::string, Model*)>([](std::string s, Model*model) -> GameObject* {
+							return Script::engine->GetCurrentWorld()->Instantiate(s, model); }))
+					.endClass()
+
+					.beginClass<Material>("Material")
+						.addStaticFunction("Load", static_cast<Material* (*)(std::string)>([](std::string s) -> Material* {
+							return engine->GetRender()->GetMaterialManager()->LoadMaterial(s.c_str());
+						}))
+					.endClass()
+
+					.beginClass<Model>("Model")
+						.addStaticFunction("LoadOBJWithMats", static_cast<Model * (*)(std::string, std::vector<Material*>)>
+							([](std::string s, std::vector<Material*> m) -> Model* 
+						{
+							return engine->GetRender()->GetModelManager()->LoadModelFromObj(s.c_str(), m);
+						}))
+						.addStaticFunction("LoadOBJ", static_cast<Model * (*)(std::string)> ([](std::string s) -> Model*  {
+							return engine->GetRender()->GetModelManager()->LoadModelFromObj(s.c_str());
+						}))
+						.addStaticFunction("LoadOBJWithMat", static_cast<Model * (*)(std::string, Material*)> ([](std::string s, Material* mat) -> Model* {
+							return engine->GetRender()->GetModelManager()->LoadModelFromObj(s.c_str(), { mat });
+						}))
+						//.addFunction("AddMaterial", static_cast<void(*)(Material*)>([](Material*m) {
+							
+						//}))
+					.endClass()
+
+					.beginClass<PointLight>("PointLight")
+						.addStaticFunction("new", static_cast<PointLight * (*)()>([]() -> PointLight* { return new PointLight(); }))
+					.endClass()
+
+					.beginClass<DirectionalLight>("DirectionalLight")
+						.addStaticFunction("new", static_cast<DirectionalLight * (*)()>([]() -> DirectionalLight* { return new DirectionalLight(); }))
 					.endClass()
 
 					.beginClass<GameObject>("GameObject")
@@ -69,6 +108,8 @@ namespace SpaRcle {
 						.addFunction("SetScale", (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z)) & GameObject::SetScale)
 						.addFunction("Move",   (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z) )&GameObject::Move)
 						.addFunction("Rotate", (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z) )&GameObject::Rotate)
+							.addFunction("AddPointLight", (void(GameObject::*)(PointLight*)) & GameObject::AddComponent<PointLight*>)
+							.addFunction("AddDirectionalLight", (void(GameObject::*)(DirectionalLight*)) & GameObject::AddComponent<DirectionalLight*>)
 					.endClass()
 
 					.beginClass<Debug>("Debug")

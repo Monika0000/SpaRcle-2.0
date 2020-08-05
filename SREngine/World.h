@@ -8,18 +8,21 @@ namespace SpaRcle {
 		using namespace Graphics;
 		using namespace Helper;
 
+		class SREngine;
+
 		class World {
 		public:
 			std::map<std::string, GameObject*> gameObjects = std::map<std::string, GameObject*>();
 		public:
-			Debug* debug;
-			Render* render;
+			Debug*     debug = nullptr;
+			Render*   render = nullptr;
+			SREngine* engine = nullptr;
+		private:
+			std::string MakeCopyName(std::string name);
 		private:
 			GameObject* Arrows = nullptr;
 		public:
-			World(Debug*debug, Render* render, GameObject* Arrows) : debug(debug), render(render), Arrows(Arrows) {
-
-			}
+			World(Debug* debug, SREngine* engine, GameObject* Arrows);
 			~World() {
 
 			}
@@ -44,6 +47,7 @@ namespace SpaRcle {
 			bool Rename(std::string oldName, std::string newName);
 
 			GameObject* Instantiate(std::string name, Model* model);
+			GameObject* Instantiate(std::string name);
 
 			bool Destroy(std::string name);
 			bool Destroy(GameObject* object);
