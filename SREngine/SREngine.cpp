@@ -153,9 +153,8 @@ namespace SpaRcle {
 
 					if (graph->EditorMode) {
 						Model* model = window->GetSelectedModel();
-						if (model) {						
+						if (model) {
 							vec2d mouse = window->GetMousePos();
-
 
 							bool left = Input::GetKey(KeyCode::MouseLeft);
 
@@ -163,72 +162,80 @@ namespace SpaRcle {
 								TempSelectedModel = model;
 								SelectedGameObject = world->Find(model);
 							}
+							if (SelectedGameObject) {
+								if (Input::FixedGetKeyDown(KeyCode::Del)) {
+									world->Destroy(SelectedGameObject);
+									SelectedGameObject = nullptr;
+									this->DisableTools();
+									continue;
+								}
 
-							if (!toolsEnabled) SetToolMode(tool);
+								if (!toolsEnabled) SetToolMode(tool);
 
-							float dist = window->GetCamera()->Distance(Arrows->transform.position);
-							if (dist < 10) dist = 10; else if (dist > 500) dist = 500;
-							switch (tool) {
-							case SpaRcle::Engine::SREngine::ToolMode::Locate:
-								Arrows->transform.SetScale(
-									dist / 50.f,
-									dist / 50.f,
-									dist / 50.f);
-								Arrows->transform.SetPosition(model->GetPosition());
-								break;
-							}
+								float dist = window->GetCamera()->Distance(Arrows->transform.position);
+								if (dist < 10) dist = 10; else if (dist > 500) dist = 500;
+								switch (tool) {
+								case SpaRcle::Engine::SREngine::ToolMode::Locate:
+									Arrows->transform.SetScale(
+										dist / 50.f,
+										dist / 50.f,
+										dist / 50.f);
+									Arrows->transform.SetPosition(model->GetPosition());
+									break;
+								}
 
-							if (!this->window->MouseLock() && left) {
-								POINT p; auto size = window->GetScreenSize();
-								GetCursorPos(&p);
-								if (p.x >= size->x - 1) { SetCursorPos(0, p.y); mouse = mouse_pos = window->GetMousePos(); }
-								else if (p.x <= 0) { SetCursorPos(size->x - 1, p.y); mouse = mouse_pos = window->GetMousePos(); }
-								else 
-								if (p.y >= size->y - 1) { SetCursorPos(p.x, 0); mouse = mouse_pos = window->GetMousePos(); }
-								else if (p.y <= 0) { SetCursorPos(p.x, size->y - 1); mouse = mouse_pos = window->GetMousePos(); }
+								if (!this->window->MouseLock() && left) {
+									POINT p; auto size = window->GetScreenSize();
+									GetCursorPos(&p);
+									if (p.x >= size->x - 1) { SetCursorPos(0, p.y); mouse = mouse_pos = window->GetMousePos(); }
+									else if (p.x <= 0) { SetCursorPos(size->x - 1, p.y); mouse = mouse_pos = window->GetMousePos(); }
+									else
+										if (p.y >= size->y - 1) { SetCursorPos(p.x, 0); mouse = mouse_pos = window->GetMousePos(); }
+										else if (p.y <= 0) { SetCursorPos(p.x, size->y - 1); mouse = mouse_pos = window->GetMousePos(); }
 
-								Mesh* mesh = window->GetAimedMesh();
-								if (mesh) {
-									float dx = mouse.x - mouse_pos.x;
-									float dy = mouse.y - mouse_pos.y;
+									Mesh* mesh = window->GetAimedMesh();
+									if (mesh) {
+										float dx = mouse.x - mouse_pos.x;
+										float dy = mouse.y - mouse_pos.y;
 
-									glm::vec3 dir = { 0,0,0 };
+										glm::vec3 dir = { 0,0,0 };
 
-									switch (tool) {
-									case SpaRcle::Engine::SREngine::ToolMode::Locate: {
-										int id = Arrows->model->GetMeshIndex(mesh);
-										if (!mesh) break;
-										switch (id) {
+										switch (tool) {
+										case SpaRcle::Engine::SREngine::ToolMode::Locate: {
+											int id = Arrows->model->GetMeshIndex(mesh);
+											if (!mesh) break;
+											switch (id) {
 											case 0: dir = { 0, -dy, 0 }; break;
-											case 1: 
-												dir = glm::vec3 { 
+											case 1:
+												dir = glm::vec3{
 													(window->GetCamera()->dXYZ().x * dy) - (window->GetCamera()->dXYZ().z * dx), 0, 0 };
 												break;
-											case 2: 
+											case 2:
 												dir = { 0,0,
 													-(window->GetCamera()->dXYZ().x * dx) - (window->GetCamera()->dXYZ().z * dy) };
 												break;
 											default: break;
+											}
+											break;
 										}
-										break;
-									}
-									case SpaRcle::Engine::SREngine::ToolMode::Rotate:
-										break;
-									case SpaRcle::Engine::SREngine::ToolMode::Scale:
-										break;
-									default: break;
-									}
+										case SpaRcle::Engine::SREngine::ToolMode::Rotate:
+											break;
+										case SpaRcle::Engine::SREngine::ToolMode::Scale:
+											break;
+										default: break;
+										}
 
-									//dir *= 6.f;
-									dir *= dist / 2.5f;
-									
+										//dir *= 6.f;
+										dir *= dist / 2.5f;
 
-									Arrows->transform.Move(dir);
-									SelectedGameObject->Move(dir);
+
+										Arrows->transform.Move(dir);
+										SelectedGameObject->Move(dir);
+									}
 								}
-							}
 
-							this->mouse_pos = mouse;
+								this->mouse_pos = mouse;
+							}
 						}
 						else
 						{

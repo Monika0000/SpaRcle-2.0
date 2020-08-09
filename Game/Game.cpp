@@ -24,6 +24,12 @@ int main(int argcp, char* argv) {
 	//std::cout << String::Remove(s, '/') << std::endl;
 	//std::cout << String::Remove(s, '/') << std::endl;
 
+	//void* str = (int*)malloc(sizeof(int));
+	//(*(int*)str) = 34;
+	//std::cout << str << std::endl;
+	//std::cout << (*(int*)str) << std::endl;
+	//free(str);
+
 	Debug* debug = new Debug(Utils::GetPathToExe());
 	debug->SetShowMemoryLoad(true);
 

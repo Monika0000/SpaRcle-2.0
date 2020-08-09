@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "World.h"
 #include "SREngine.h"
+#include <Model.h>
 
 namespace SpaRcle {
 	namespace Engine {
@@ -66,7 +67,17 @@ namespace SpaRcle {
 			return false;
 		}
 		bool World::Destroy(GameObject* object) {
-			return false;
+			debug->Log("World : destroy " + object->name);
+
+			if (object->model)
+				object->model->Destroy();
+
+			this->gameObjects.erase(object->name);
+
+			delete object;
+			object = nullptr;
+
+			return true;
 		}
 	}
 }

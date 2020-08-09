@@ -13,7 +13,12 @@ namespace SpaRcle {
 		bool SpaRcle::Graphics::Model::Draw(Shader* shader) {
 			if (destroy) return false;
 
-			glBindTexture(GL_TEXTURE_2D, 0); // Уже определено в mesh->Draw();
+			//glActiveTexture(GL_TEXTURE0);
+			//glBindTexture(GL_TEXTURE_2D, 0);
+			//glActiveTexture(GL_TEXTURE1);
+			//glBindTexture(GL_TEXTURE_2D, 0);
+			//glActiveTexture(GL_TEXTURE2);
+			//glBindTexture(GL_TEXTURE_2D, 0);
 
 			for (auto& mat : materials) {
 				if (!mat) return true;
@@ -23,25 +28,44 @@ namespace SpaRcle {
 			for (t = 0; t < meshes.size(); t++) {
 				model_temp_material = materials[t];
 
-				glUniform1i(glGetUniformLocation(shader->ProgramID, "use_light"), (int)model_temp_material->UseLight);
+				if(model_temp_material->UseLight)
+					glUniform1i(glGetUniformLocation(shader->ProgramID, "use_light"), 1 
+						+ int(model_temp_material->diffuse && model_temp_material->normal));
+				else
+					glUniform1i(glGetUniformLocation(shader->ProgramID, "use_light"), 0);
 
 				//std::cout << meshes.size() << std::endl;
-
 				if (model_temp_material->diffuse) {
 					glActiveTexture(GL_TEXTURE0);
 					glBindTexture(GL_TEXTURE_2D, model_temp_material->diffuse->id);
 					glUniform1i(glGetUniformLocation(shader->ProgramID, "DiffuseMap"), 0); // This is GL_TEXTURE0
+				} else {
+					glActiveTexture(GL_TEXTURE0);
+					glBindTexture(GL_TEXTURE_2D, 0);
+					glUniform1i(glGetUniformLocation(shader->ProgramID, "DiffuseMap"), 0); // This is GL_TEXTURE0
 				}
+
 				if (model_temp_material->normal) {
 					glActiveTexture(GL_TEXTURE1);
 					glBindTexture(GL_TEXTURE_2D, model_temp_material->normal->id);
 					glUniform1i(glGetUniformLocation(shader->ProgramID, "NormalMap"), 1); // This is GL_TEXTURE1
+				} else {
+					glActiveTexture(GL_TEXTURE1);
+					glBindTexture(GL_TEXTURE_2D, 0);
+					glUniform1i(glGetUniformLocation(shader->ProgramID, "NormalMap"), 1); // This is GL_TEXTURE0
 				}
-				if (model_temp_material->specular) {
-					glActiveTexture(GL_TEXTURE2);
-					glBindTexture(GL_TEXTURE_2D, model_temp_material->specular->id);
-					glUniform1i(glGetUniformLocation(shader->ProgramID, "SpecularMap"), 2); // This is GL_TEXTURE2
-				}
+
+
+				//if (model_temp_material->specular) {
+				//	glActiveTexture(GL_TEXTURE2);
+				//	glBindTexture(GL_TEXTURE_2D, model_temp_material->specular->id);
+				//	glUniform1i(glGetUniformLocation(shader->ProgramID, "SpecularMap"), 2); // This is GL_TEXTURE2
+				//}
+				//else {
+				//	glActiveTexture(GL_TEXTURE2);
+				//	glBindTexture(GL_TEXTURE_2D, 0);
+				//	glUniform1i(glGetUniformLocation(shader->ProgramID, "SpecularMap"), 2); // This is GL_TEXTURE0
+				//}
 				//glm::vec4 c = model_temp_material->Color;
 				//std::cout << c.r << " " << c.g << " " << c.b << "\n";
 
@@ -60,20 +84,8 @@ namespace SpaRcle {
 				//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 				glUniformMatrix4fv(glGetUniformLocation(shader->ProgramID, "modelMat"), 1, GL_FALSE, glm::value_ptr(meshes[t]->model));
 
-				//if (!DepthTesting) {
-				//	glDepthFunc(GL_ALWAYS);
-				//}
-					//glDepthMask(GL_FALSE);
-				//	glDisable(GL_DEPTH_TEST);
-
 				meshes[t]->Draw();
 
-				//if (!DepthTesting) {
-				//	glDepthFunc(GL_LESS);
-				//}
-				//	glEnable(GL_DEPTH_TEST);
-
-				//glBindTexture(GL_TEXTURE_2D, 0); // Уже определено в mesh->Draw();
 				glActiveTexture(GL_TEXTURE0);
 			}
 

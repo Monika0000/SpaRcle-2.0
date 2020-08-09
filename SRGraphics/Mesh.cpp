@@ -84,7 +84,7 @@ namespace SpaRcle {
 
 			//!======================================
 
-			glBindTexture(GL_TEXTURE_2D, 0); //? IMPORTANT
+			//glBindTexture(GL_TEXTURE_2D, 0); //? IMPORTANT
 		}
 
 		void Mesh::FlatDraw() {

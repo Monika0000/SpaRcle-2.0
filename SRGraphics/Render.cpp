@@ -155,12 +155,14 @@ void SpaRcle::Graphics::Render::DrawAllObjects() {
 		//	<< models[t]->GetPosition().z << "\n";
 		if (models[t] && models[t]->enabled) {
 			if (!models[t]->isSelect) {
+				//shader->Use();
 				if (!models[t]->Draw(shader)) {
 					delete models[t]; models[t] = nullptr;
 					models.erase(models.begin() + t);
 					t--;
 					count_models--;
 				}
+				//glUseProgram(0);
 			}
 			else {
 				glEnable(GL_STENCIL_TEST);
@@ -187,8 +189,8 @@ void SpaRcle::Graphics::Render::DrawAllObjects() {
 		}
 	//}
 
-	glBindTexture(GL_TEXTURE_2D, 0);
 	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	raytracing->Disable();
 

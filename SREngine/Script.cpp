@@ -107,6 +107,7 @@ namespace SpaRcle {
 						.addFunction("SetPosition", (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z)) & GameObject::SetPosition)
 						.addFunction("SetRotation", (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z)) & GameObject::SetRotation)
 						.addFunction("SetScale", (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z)) & GameObject::SetScale)
+						.addFunction("SetActive", (void (SpaRcle::Engine::GameObject::*)(bool v)) & GameObject::SetActive)
 						.addFunction("Move",   (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z) )&GameObject::Move)
 						.addFunction("Rotate", (void (SpaRcle::Engine::GameObject::*)(float x, float y, float z) )&GameObject::Rotate)
 							.addFunction("AddPointLight", (void(GameObject::*)(PointLight*)) & GameObject::AddComponent<PointLight*>)
