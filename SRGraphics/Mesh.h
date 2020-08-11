@@ -30,6 +30,7 @@ namespace SpaRcle {
 			//	Normal(Normal.x, Normal.y, Normal.z),
 			//	TexCoords(TexCoords.x, TexCoords.y) {};
 		//	~Vertex() {};
+			void SetPosition(float x, float y, float z) { Position = { x, y, z }; };
 		};
 
 		class Render;
@@ -43,6 +44,9 @@ namespace SpaRcle {
 			friend class Model;
 			friend class ModelManager;
 		public:
+			size_t GeometryID		 = 0;
+			std::string GeometryName = "";
+		public:
 			float min_x = 0.f, min_y = 0.f, min_z = 0.f,
 				  max_x = 0.f, max_y = 0.f, max_z = 0.f;
 		private:
@@ -50,8 +54,7 @@ namespace SpaRcle {
 		private:
 			size_t count_vertices;
 			std::vector<Vertex> vertices;
-			//std::vector<glm::vec3> vertices;
-			//std::vector<glm::vec2> uvs;
+
 			GLuint VAO, VBO;//, EBO, UV;
 
 			glm::mat4 model = glm::mat4(1.0f);
@@ -61,7 +64,6 @@ namespace SpaRcle {
 
 			glm::vec3 position = { 0, 0, 0 };
 			glm::vec3 rotation = { 0, 0, 0 };
-			//glm::quat rotation = { 0,0,0, 0 };
 			glm::vec3 scale	   = { 1, 1, 1 };
 		private:
 			void Bind() {
@@ -99,6 +101,8 @@ namespace SpaRcle {
 				isGenerate = true;
 			}
 		public:
+			void SetBind(bool v) { this->isBind = v; }
+			Vertex* GetVertex(size_t index) { return &vertices[index]; }
 			void SetPosition(glm::vec3 pos) { position = pos; UpdateMatrix(); }
 			void SetRotation(glm::vec3 rot) { 
 				//const float angle = 1.f; // radians
@@ -136,6 +140,9 @@ namespace SpaRcle {
 				mesh->VAO = VAO;
 				mesh->VBO = VBO;
 				mesh->count_vertices = count_vertices;
+
+				mesh->GeometryID   = GeometryID;
+				mesh->GeometryName = GeometryName;
 
 				return mesh;
 			}

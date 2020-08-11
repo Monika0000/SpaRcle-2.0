@@ -23,6 +23,12 @@ namespace SpaRcle {
 
 			float intensity;
 
+			void SetAmbient(float r, float g, float b) {
+				ambient = { r,g,b };
+			}
+			void SetDiffuse(float r, float g, float b) {
+				diffuse = { r,g,b };
+			}
 			void SetPosition(float x, float y, float z) {
 				position = { x,y,z };
 			}

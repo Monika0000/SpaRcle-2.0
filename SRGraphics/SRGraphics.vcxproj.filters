@@ -33,6 +33,9 @@
     <Filter Include="Geometry\Terrain">
       <UniqueIdentifier>{b4e172ae-bedd-4148-aa69-79209593b0b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources\Fbx">
+      <UniqueIdentifier>{9a58df3e-10b3-4e36-b71a-eca6f0eee90c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -101,6 +104,12 @@
     <ClInclude Include="Chunk.h">
       <Filter>Geometry\Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="FbxLoader.h">
+      <Filter>Resources\Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="Json.h">
+      <Filter>Resources\Fbx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SRGraphics.cpp">
@@ -159,6 +168,12 @@
     </ClCompile>
     <ClCompile Include="Chunk.cpp">
       <Filter>Geometry\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxLoader.cpp">
+      <Filter>Resources\Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="Json.cpp">
+      <Filter>Resources\Fbx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

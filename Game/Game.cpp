@@ -30,6 +30,10 @@ int main(int argcp, char* argv) {
 	//std::cout << (*(int*)str) << std::endl;
 	//free(str);
 
+	//Json* json = Json::Load("J:\\C++\\SpaRcle\\Resources\\Cache\\test.json");
+	//std::cout << json->GetString("str") << std::endl;
+	//delete json;
+
 	Debug* debug = new Debug(Utils::GetPathToExe());
 	debug->SetShowMemoryLoad(true);
 

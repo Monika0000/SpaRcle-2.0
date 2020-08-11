@@ -77,11 +77,25 @@ namespace SpaRcle {
 						}))
 					.endClass()
 
+					/*.beginClass<Vertex>("Vertex")
+						.addFunction("SetPosition", &Vertex::SetPosition)
+					.endClass()
+		
+					.beginClass<Mesh>("Mesh")
+						.addFunction("GetVertex", &Mesh::GetVertex)
+						.addFunction("SetBind", &Mesh::SetBind)
+					.endClass()*/
+
 					.beginClass<Model>("Model")
 						.addStaticFunction("LoadOBJWithMats", static_cast<Model * (*)(std::string, std::vector<Material*>)>
 							([](std::string s, std::vector<Material*> m) -> Model* 
 						{
 							return engine->GetRender()->GetModelManager()->LoadModelFromObj(s.c_str(), m);
+						}))
+						.addStaticFunction("LoadFBX", static_cast<Model * (*)(std::string)>
+							([](std::string s) -> Model* 
+						{
+							return engine->GetRender()->GetFbxLoader()->LoadModel(s);
 						}))
 						.addStaticFunction("LoadOBJ", static_cast<Model * (*)(std::string)> ([](std::string s) -> Model*  {
 							return engine->GetRender()->GetModelManager()->LoadModelFromObj(s.c_str());
@@ -89,6 +103,7 @@ namespace SpaRcle {
 						.addStaticFunction("LoadOBJWithMat", static_cast<Model * (*)(std::string, Material*)> ([](std::string s, Material* mat) -> Model* {
 							return engine->GetRender()->GetModelManager()->LoadModelFromObj(s.c_str(), { mat });
 						}))
+						.addFunction("GetMesh", &Model::GetMesh)
 						//.addFunction("AddMaterial", static_cast<void(*)(Material*)>([](Material*m) {
 							
 						//}))
@@ -97,6 +112,8 @@ namespace SpaRcle {
 					.beginClass<PointLight>("PointLight")
 						.addStaticFunction("new", static_cast<PointLight * (*)()>([]() -> PointLight* { return new PointLight(); }))
 						.addFunction("SetIntensity", &PointLight::SetIntensity)
+						.addFunction("SetDiffuse", &PointLight::SetDiffuse)
+						.addFunction("SetAmbient", &PointLight::SetAmbient)
 					.endClass()
 
 					.beginClass<DirectionalLight>("DirectionalLight")

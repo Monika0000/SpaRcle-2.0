@@ -36,6 +36,39 @@ namespace SpaRcle {
 				str = String::ToLower(str);
 				return str;
 			}
+			static std::string MakeString(std::vector<std::string> words, std::string space = " ") {
+				std::string result = "";
+				size_t len = words.size();
+				for (size_t t = 0; t < len; t++) {
+					result += words[t];
+					if (t < len - 1)
+						result += space;
+				}
+				return result;
+			}
+
+			static std::vector<int> SplitInt(std::string str, std::string chr) {
+				std::vector<int> vd = std::vector<int>();
+				std::vector<std::string> split = Split(str, chr, true);
+
+				for (auto& a : split)
+					vd.push_back(std::stoi(a));
+
+				split.clear();
+
+				return vd;
+			}
+			static std::vector<double> SplitDouble(std::string str, std::string chr) {
+				std::vector<double> vd = std::vector<double>();
+				std::vector<std::string> split = Split(str, chr, true);
+
+				for (auto& a : split)
+					vd.push_back(std::stod(a));
+
+				split.clear();
+
+				return vd;
+			}
 
 			static std::string RandomString(int size) {
 				std::ostringstream oss;
@@ -177,6 +210,15 @@ namespace SpaRcle {
 						return true;
 					}
 				return false;
+			}
+			static std::string SubstringPlus(std::string str, const char c, unsigned int add_substr) {
+				for (size_t t = 0; t < str.size(); t++)
+					if (str[t] == c)
+					{
+						str.erase(0, t + 1 + add_substr);
+						return str;
+					}
+				return str;
 			}
 			static bool Substring(std::string& str, const char c, const char c2) {
 				for (size_t t = 0; t < str.size(); t++)

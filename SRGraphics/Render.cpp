@@ -28,6 +28,8 @@ bool SpaRcle::Graphics::Render::Create(Camera* camera, SRGraphics* graph) {
 	this->graph = graph;
 	this->camera = camera;
 
+	this->fbxLoader  = new FbxLoader(debug, this->graph->GetResourcesFolder());
+
 	this->texManager = new TextureManager(debug, graph);
 	this->matManager = new MaterialManager(debug, graph);
 
@@ -39,10 +41,11 @@ bool SpaRcle::Graphics::Render::Create(Camera* camera, SRGraphics* graph) {
 
 	//?//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	this->shader = new Shader("shader", debug);
-	this->skyboxShader = new Shader("skybox", debug);
+	this->shader		 = new Shader("shader", debug);
+	this->skyboxShader	 = new Shader("skybox", debug);
 	this->selectorShader = new Shader("selector", debug);
-	this->Stencil = new Shader("stencil", debug);
+	this->Stencil		 = new Shader("stencil", debug);
+	this->PostProcessing = new Shader("PostProcessing", debug);
 
 	isCreate = true;
 	return true;
@@ -55,12 +58,20 @@ bool SpaRcle::Graphics::Render::Init() {
 
 	debug->Graph("Initializing render...");
 
-	glGenFramebuffers(1, &FBO);
+
+	//if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE) {
+		// All ok
+	//}
+	//else {
+	//	debug->Error("Render::Init() : Failed bind the frame buffer!");
+	//	return false;
+	//}
 
 	this->EditorMode = this->graph->EditorMode;
 
 	this->shader->Compile();
 	this->skyboxShader->Compile();
+	this->PostProcessing->Compile();
 
 	if (EditorMode) {
 		this->selectorShader->Compile();
@@ -84,6 +95,18 @@ bool SpaRcle::Graphics::Render::Init() {
 		this->camera->SetStencil(Stencil);
 	}
 	//this->InitFog();
+
+	{
+		glGenVertexArrays(1, &quadVAO);
+		glGenBuffers(1, &quadVBO);
+		glBindVertexArray(quadVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Geometry::QuadVertices), &Geometry::QuadVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	}
 
 	isInit = true;
 	return true;
@@ -142,6 +165,15 @@ void SpaRcle::Graphics::Render::DrawAimingObjects() {
 }
 
 void SpaRcle::Graphics::Render::DrawAllObjects() {
+	if (FBO) {
+		//? =================================
+		//? Пока не уверен в надобности этого
+		//? =================================
+		glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Без этого ничего не будет работать (очистка буфера)
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
 	//if (fog)
 	//	InitFog();
 	//else
@@ -156,12 +188,14 @@ void SpaRcle::Graphics::Render::DrawAllObjects() {
 		if (models[t] && models[t]->enabled) {
 			if (!models[t]->isSelect) {
 				//shader->Use();
+				//glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 				if (!models[t]->Draw(shader)) {
 					delete models[t]; models[t] = nullptr;
 					models.erase(models.begin() + t);
 					t--;
 					count_models--;
 				}
+				//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 				//glUseProgram(0);
 			}
 			else {
@@ -180,7 +214,10 @@ void SpaRcle::Graphics::Render::DrawAllObjects() {
 
 				Stencil->Use();
 
+				//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+				// Скайбокс перекрывает обводку
 				models[t]->DrawSencil(this->Stencil);
+				//glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
 				glDisable(GL_STENCIL_TEST);
 
@@ -189,12 +226,19 @@ void SpaRcle::Graphics::Render::DrawAllObjects() {
 		}
 	//}
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
 	raytracing->Disable();
 
 	if (skybox) skybox->Draw(skyboxShader);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	PostProcessing->Use();
+	glBindVertexArray(quadVAO);
+	glBindTexture(GL_TEXTURE_2D, ScreenTexture);	// use the color attachment texture as the texture of the quad plane
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glUseProgram(0);
 

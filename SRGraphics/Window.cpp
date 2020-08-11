@@ -78,6 +78,8 @@ namespace SpaRcle {
 
 			win->projective = glm::perspective(glm::radians(45.f), ratio, 0.1f, 8000.0f);
 
+			if (win->GetRender()) win->GetRender()->Resize(width, height);
+
 			/*
 			if (height == 0)
 				height = 1;
@@ -250,19 +252,27 @@ namespace SpaRcle {
 		bool Window::Init() {
 			this->EditorMode = render->GetGraphicsEngine()->EditorMode;
 
-			task = std::thread([this]() {
+			bool error = false;
+
+			task = std::thread([this, &error]() {
 				if (!InitGlfw()) {
-					debug->Error("Failed initializing glfw!");
+					debug->Error("Window::Init() : Failed initializing glfw!");
+					EventsManager::PushEvent(EventsManager::Events::Error);
+					error = true;
 					return false;
 				}
 				
 				if (!InitGlew()) {
-					debug->Error("Failed initializing glew!");
+					debug->Error("Window::Init() : Failed initializing glew!");
+					EventsManager::PushEvent(EventsManager::Events::Error);
+					error = true;
 					return false;
 				}
 
 				if (!InitGlut(argcp, argv)) {
-					debug->Error("Failed initializing glut!");
+					debug->Error("Window::Init() : Failed initializing glut!");
+					EventsManager::PushEvent(EventsManager::Events::Error);
+					error = true;
 					return false;
 				}
 
@@ -271,12 +281,14 @@ namespace SpaRcle {
 				camera->Init(isMouseLock, window);
 
 				if (!InitWindow()) {
-					debug->Error("Failed initializing window!");
+					debug->Error("Window::Init() : Failed initializing window!");
+					EventsManager::PushEvent(EventsManager::Events::Error);
+					error = true;
 					return false;
 				}
 			});
 
-			while (!this->isInitWindow) { Sleep(1); /* wait oppened winodw...*/ }
+			while (!this->isInitWindow) { Sleep(1); if (error) return false; /* wait oppened window...*/ }
 
 			return true;
 		}

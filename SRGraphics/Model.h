@@ -135,6 +135,7 @@ namespace SpaRcle {
 			void SetScale(float x, float y, float z) { for (auto& a : this->meshes) a->SetScale({ x,y,z }); }
 		public:
 			std::vector<Mesh*>& GetMeshes() { return this->meshes; }
+			Mesh* GetMesh(size_t index) { return this->meshes[index]; }
 			int GetMeshIndex(Mesh* mesh) {
 				for (size_t t = 0; t < this->meshes.size(); t++)
 					if (meshes[t] == mesh) return t;

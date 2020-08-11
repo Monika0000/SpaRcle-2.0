@@ -90,7 +90,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>F:\Libraries\OpenGL\Include;../SRHelper;F:\Libraries\OpenGL\Include\SDL</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\Libraries\OpenGL\Include;../SRHelper;F:\Libraries\OpenGL\Include\SDL;F:\Libraries\Jansson\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
@@ -144,7 +144,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>F:\Libraries\OpenGL\Include;../SRHelper;F:\Libraries\OpenGL\Include\SDL</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\Libraries\OpenGL\Include;../SRHelper;F:\Libraries\OpenGL\Include\SDL;F:\Libraries\Jansson\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -157,6 +157,8 @@
   <ItemGroup>
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="ColorBuffer.h" />
+    <ClInclude Include="FbxLoader.h" />
+    <ClInclude Include="Json.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
@@ -182,6 +184,8 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="ColorBuffer.cpp" />
+    <ClCompile Include="FbxLoader.cpp" />
+    <ClCompile Include="Json.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />

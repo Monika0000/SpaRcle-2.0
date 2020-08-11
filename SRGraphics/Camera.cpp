@@ -64,16 +64,29 @@ bool SpaRcle::Graphics::Camera::Close() {
 	return true;
 }
 void SpaRcle::Graphics::Camera::FixedMove() {
-	int framelimit = 60; //ограничим FPS до 90
-	int now = 0;
-	unsigned sceneStartTime = 0;
-	unsigned sceneSkipTime = 1000 / framelimit;
+	//int framelimit = 60; //ограничим FPS до 90
+	//int now = 0;
+	//unsigned sceneStartTime = 0;
+	//unsigned sceneSkipTime = 1000 / framelimit;
+
+	float num_fps_limit = 120.f;
+	float fps_limit_timer = 0.f;
+	float fps_lim = 1 / num_fps_limit;
+	float frameDeltaTime;
+	int now = 0, then = 0;
 
 	while (isRun) {
 		//ищем разницу во времени
+		//now = clock();
+		//if (now - sceneStartTime > sceneSkipTime) {
+			//sceneStartTime = clock();
 		now = clock();
-		if (now - sceneStartTime > sceneSkipTime) {
-			sceneStartTime = clock();
+		frameDeltaTime = (float)(now - then) / 1000.f;
+		fps_limit_timer += frameDeltaTime;
+
+		if (fps_limit_timer >= fps_lim) {
+			fps_limit_timer = 0.0f;
+
 			if (!isMouseLock || !format) continue;
 
 
@@ -106,17 +119,35 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 				//Sleep(10);
 				//GetCursorPos(&pt);              // СНОВА ПОЛУЧАЕМ ПОЗИЦИЮ КУРСОРА
 
-				if (Input::GetKey(KeyCode::W)) spdx += -0.05;
-				else if (Input::GetKey(KeyCode::S)) spdx += 0.05;
-				else spdx = 0.0;
+				const float speed = 0.00025;
+				const float inert = 3.f;
 
-				if (Input::GetKey(KeyCode::LShift)) spdy += -0.05;
-				else if (Input::GetKey(KeyCode::Space)) spdy += 0.05;
-				else spdy = 0;
+				auto lim = [speed, inert](float& val) {
+					if (val < 0) {
+						if (val + speed * inert > 0)
+							val = 0;
+						else
+							val += speed * inert;
+					} 
+					else if (val > 0)  {
+						if (val - speed * inert < 0)
+							val = 0;
+						else
+							val -= speed * inert;
+					}
+				};
 
-				if (Input::GetKey(KeyCode::A)) spdz += 0.05;
-				else if (Input::GetKey(KeyCode::D)) spdz += -0.05;
-				else spdz = 0.0;
+				if (Input::GetKey(KeyCode::W)) spdx += -speed;
+				else if (Input::GetKey(KeyCode::S)) spdx += speed;
+				else lim(spdx);
+
+				if (Input::GetKey(KeyCode::LShift)) spdy += -speed;
+				else if (Input::GetKey(KeyCode::Space)) spdy += speed;
+				else lim(spdy);
+
+				if (Input::GetKey(KeyCode::A)) spdz += speed;
+				else if (Input::GetKey(KeyCode::D)) spdz += -speed;
+				else lim(spdz);
 			}
 			else 
 				glfwGetCursorPos(window, &pt.x, &pt.y);
@@ -153,6 +184,8 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 
 			viewMat = glm::lookAt(glm::vec3(posx + dxx, posy + dyy, posz - dxz), glm::vec3(posx, posy, posz), glm::vec3(0, 1, 0));
 			//pos = { posx, posy, posz };
+
+			then = now;
 		}
 	}
 }

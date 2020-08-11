@@ -4,6 +4,8 @@
     --Debug.Error("Fail")
 
 function Start ()
+    fbx      = Model.LoadFBX("cube")
+
     sphere   = Engine.LoadPrefab("Sphere")
     sphere:SetPosition(10,0,0)
     
@@ -17,9 +19,9 @@ function Start ()
     light:SetIntensity(5)
     lump:AddPointLight(light)
 
-    mat   = Material.Load("Brick")
-    model = Model.LoadOBJWithMat("plane", mat)
-    gm    = World.Instantiate("Plane", model)
+    mat    = Material.Load("Brick")
+    model  = Model.LoadOBJWithMat("plane", mat)
+    gm     = World.Instantiate("Plane", model)
     gm:SetPosition(-0.5,0,0)
 
     model2 = Model.LoadOBJWithMat("plane", mat)
@@ -30,10 +32,10 @@ function Start ()
     --sina  = World.Instantiate("Sina", model)
     --
 
-    sina     = Engine.LoadPrefab("Sina") 
+    --sina     = Engine.LoadPrefab("Sina") 
     --sina:SetActive(false)
-    sina:SetScale(0.05, 0.05, 0.05)
-    sina:SetPosition(0,-5,-5)
+    --sina:SetScale(0.05, 0.05, 0.05)
+    --sina:SetPosition(0,-5,-5)
 end;
 
 function Update ()
@@ -43,8 +45,12 @@ function Update ()
     local v = math.cos(Time) / 250.0
     sphere:Move(0,0,v)
     
-    sphere2:Rotate(0.03,0.03,0.03)
-    sina:Rotate(0,0.02, 0)
+    sphere2:Rotate(0.01,0.01,0.01)
+    --sina:Rotate(0,0.02, 0)
+
+    --vertex:SetPosition(0, v, 0)
+    --mesh:SetBind(false)
+    --light:SetDiffuse(0.3, math.cos(Time) / 4.0, 0.3)
     --gm:Rotate(0,v*5.0,0)
 end;
 

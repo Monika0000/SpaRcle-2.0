@@ -9,9 +9,23 @@
 #include "Shader.h"
 #include "RayTracing.h"
 #include "Terrain.h"
+#include "FbxLoader.h"
 
 namespace SpaRcle {
 	namespace Graphics {
+		namespace Geometry {
+			inline static const float QuadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+				 // positions   // texCoords
+				 -1.0f,  1.0f,  0.0f, 1.0f,
+				 -1.0f, -1.0f,  0.0f, 0.0f,
+				  1.0f, -1.0f,  1.0f, 0.0f,
+
+				 -1.0f,  1.0f,  0.0f, 1.0f,
+				  1.0f, -1.0f,  1.0f, 0.0f,
+				  1.0f,  1.0f,  1.0f, 1.0f
+			};
+		}
+
 		class SRGraphics;
 
 		class Render {
@@ -53,7 +67,10 @@ namespace SpaRcle {
 			//bool render;
 			GLuint fogMode[3] = { GL_EXP, GL_EXP2, GL_LINEAR };	 // ’ранит три типа тумана
 			GLfloat fogColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };	// ÷вет тумана
-			GLuint FBO = 0; //Frame buffer
+			GLuint FBO = 0; //Frame  buffer
+			GLuint RBO = 0; //Render buffer
+			GLuint quadVAO = 0, quadVBO = 0;
+			GLuint ScreenTexture = 0;
 		public:
 			void DrawSelectorObjects();
 			void DrawAimingObjects();
@@ -85,6 +102,52 @@ namespace SpaRcle {
 			}
 			void SetFog(bool val) { this->fog = val; }
 			bool GetFog() { return this->fog; }
+
+			void Resize(int w, int h) {
+				if (!FBO) {
+					glGenFramebuffers(1, &FBO);
+					debug->Graph("Render::Resize() : frame buffer object has been created. Index : " + std::to_string(FBO));
+				}
+
+				if (!ScreenTexture) {
+					glGenTextures(1, &ScreenTexture);
+					debug->Graph("Render::Resize() : screen texture has been created. Index : " + std::to_string(ScreenTexture));
+				}
+				glBindTexture(GL_TEXTURE_2D, ScreenTexture);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glBindTexture(GL_TEXTURE_2D, 0);
+				
+				if (ScreenTexture && FBO) {
+					glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+					// присоедиение текстуры к объекту текущего кадрового буфера
+					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ScreenTexture, 0);
+				}
+				else {
+					debug->Error("Render::Resize() : screen texture or FBO is not created!");
+					EventsManager::PushEvent(EventsManager::Events::Error);
+					return;
+				}
+
+				if (!RBO) {
+					glGenRenderbuffers(1, &RBO);
+					debug->Graph("Render::Resize() : render buffer object has been created. Index : " + std::to_string(RBO));
+				}
+
+				glBindRenderbuffer(GL_RENDERBUFFER, RBO);
+				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, w, h);
+				glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
+				
+				if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+					debug->Error("Render::Resize() : Framebuffer is not complete!");
+					EventsManager::PushEvent(EventsManager::Events::Error);
+				}
+
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			}
 
 			Model* GetModel(size_t index) { return this->models[index]; }
 			Material* GetDefMat() {
@@ -145,21 +208,31 @@ namespace SpaRcle {
 				}
 				else return this->graph;
 			}
+			FbxLoader* GetFbxLoader() {
+				if (!this->fbxLoader) {
+					debug->Error("Render::GetFbxLoader() : fbxLoader is nullptr!");
+					Sleep(1000);
+					return nullptr;
+				}
+				else return this->fbxLoader;
+			}
 		private:
-			SRGraphics* graph = nullptr;
-			Window* win = nullptr;
-			Camera* camera = nullptr;
+			SRGraphics* graph			= nullptr;
+			Window* win					= nullptr;
+			Camera* camera				= nullptr;
 
-			Shader* shader = nullptr;
-			Shader* skyboxShader = nullptr;
-			Shader* selectorShader = nullptr;
-			Shader* Stencil = nullptr;
+			Shader* shader				= nullptr;
+			Shader* skyboxShader		= nullptr;
+			Shader* selectorShader		= nullptr;
+			Shader* Stencil				= nullptr;
+			Shader* PostProcessing		= nullptr;
 
-			Debug* debug = nullptr;
+			Debug* debug		        = nullptr;
 
-			TextureManager* texManager = nullptr;
-			ModelManager* modManager = nullptr;
+			TextureManager*  texManager	= nullptr;
+			ModelManager*    modManager	= nullptr;
 			MaterialManager* matManager = nullptr;
+			FbxLoader*       fbxLoader  = nullptr;
 		};
 	}
 }
