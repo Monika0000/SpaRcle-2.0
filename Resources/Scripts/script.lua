@@ -30,12 +30,18 @@ function Start ()
     --fbx2   = Model.LoadFBX("Dentist")
     --dentist= World.Instantiate("dentist", fbx2)
     --dentist:SetPosition(5,0,5)
-    
-    fbx2   = Model.LoadFBX("table")
-    table= World.Instantiate("table", fbx2)
-    table:SetPosition(5,0,5)
-    table:SetScale(1, 1, 1)
 
+    fbx3   = Model.LoadFBX("Player")
+    table= World.Instantiate("Player", fbx3)
+    table:SetPosition(-15,0,5)
+    size = 0.05;
+    table:SetScale(size, size, size)
+    
+    fbx2   = Model.LoadFBX("objects")
+    objects= World.Instantiate("objects", fbx2)
+    objects:SetPosition(5,3,5)
+    size   = 0.01;
+    objects:SetScale(size, size, size)
     --model = Model.LoadOBJ("sina")
     --sina  = World.Instantiate("Sina", model)
     --
@@ -55,7 +61,7 @@ function Update ()
     
     sphere2:Rotate(0.01,0.01,0.01)
     --sina:Rotate(0,0.02, 0)
-
+    objects:Rotate(0.01,0.01,0.01)
     --vertex:SetPosition(0, v, 0)
     --mesh:SetBind(false)
     --light:SetDiffuse(0.3, math.cos(Time) / 4.0, 0.3)

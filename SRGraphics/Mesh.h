@@ -124,7 +124,12 @@ namespace SpaRcle {
 				rotation = rot;
 				UpdateMatrix();
 			}
-			void SetScale   (glm::vec3 scl) { scale    = scl; UpdateMatrix(); }
+			void SetScale   (glm::vec3 scl) { 
+				//glm::vec3 delta = scl - scale;
+				scale    = scl; 
+				
+				UpdateMatrix(); 
+			}
 		public:
 			void Draw();
 			void FlatDraw();

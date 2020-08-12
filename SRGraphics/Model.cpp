@@ -179,16 +179,16 @@ namespace SpaRcle {
 			for (auto m : meshes)
 				copy_meshes.push_back(m->Copy());
 
-			Model* model = new Model();
-			model->meshes = copy_meshes;
-			model->materials = materials;
+			Model* model		= new Model();
+			model->meshes		= copy_meshes;
+			model->materials	= materials;
 			model->DepthTesting = DepthTesting;
-			model->CanSelect = CanSelect;
-			model->enabled = enabled;
+			model->CanSelect	= CanSelect;
+			model->enabled		= enabled;
 
 			model->SetPosition(position);
-			//TODO model->SetRotation(); 
-			//TODO model->SetScale(); 
+			model->SetRotation(rotation);
+			model->SetScale(scale);
 
 			return model;
 		}

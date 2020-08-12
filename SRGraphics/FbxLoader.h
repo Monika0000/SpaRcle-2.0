@@ -46,8 +46,17 @@ namespace SpaRcle {
 			std::vector<glm::vec3> MathTangents();
 			Mesh* MakeMesh();
 			void GetLine() {
-				std::getline(in, line);
-				line_number++;
+				if (in.peek() != EOF) {
+					std::getline(in, line);
+					line_number++;
+					if (line_number == 3214) {
+						//std::cout << line << std::endl;
+					}
+				}
+				else {
+					//debug->Error("FbxLoader::GetLine() : file is end! Line number : " + std::to_string(line_number));
+					//Sleep(500);
+				}
 			}
 			bool MoreLines(std::vector<double>& vec) {
 				vec = String::SplitDouble(line, ",");

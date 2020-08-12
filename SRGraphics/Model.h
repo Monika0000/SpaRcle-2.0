@@ -107,7 +107,9 @@ namespace SpaRcle {
 			GLuint texID = 0;
 			size_t t = 0;
 
-			glm::vec3 position = { 0,0,0 };
+			glm::vec3 position = { 0, 0, 0 };
+			glm::vec3 rotation = { 0, 0, 0 };
+			glm::vec3 scale	   = { 1, 1, 1 };
 		private:
 			bool destroy = false;
 		public:
@@ -125,14 +127,42 @@ namespace SpaRcle {
 				for (auto& a : this->meshes)
 					a->SetPosition(val);
 			}
-			void SetPosition(float x, float y, float z) { this->position = { x,y,z }; for (auto& a : this->meshes) a->SetPosition({ x,y,z }); }
+			void SetPosition(float x, float y, float z) { SetPosition({ x,y,z }); }
 			glm::vec3 GetPosition() { return this->position; }
 
-			void SetRotation(glm::vec3 val) { for (auto& a : this->meshes) a->SetRotation(val); }
-			void SetRotation(float x, float y, float z) { for (auto& a : this->meshes) a->SetRotation({ x,y,z }); }
+			void SetRotation(glm::vec3 val) { 
+				this->rotation = val;
+				for (auto& a : this->meshes)
+					a->SetRotation(val);
+			}
+			void SetRotation(float x, float y, float z) {  SetRotation({ x,y,z }); }
 
-			void SetScale(glm::vec3 val) { for (auto& a : this->meshes) a->SetScale(val); }
-			void SetScale(float x, float y, float z) { for (auto& a : this->meshes) a->SetScale({ x,y,z }); }
+			void SetScale(glm::vec3 val) { 
+				glm::vec3 delta = scale + val;
+				this->scale = val;
+
+				for (auto& a : this->meshes) {
+					a->default_position = a->default_position - (a->default_position * delta); // glm::vec3(0.5, 0.5, 0.5)
+
+					/*
+					glm::vec3& def = a->default_position;
+					const float coef = -5.f;
+
+					if (def.x < position.x)		 def.x += delta.x * coef;
+					else if (def.x > position.x) def.x -= delta.x * coef;
+
+					if (def.y < position.y)		 def.y += delta.y * coef;
+					else if (def.y > position.y) def.y -= delta.y * coef;
+
+					if (def.z < position.z)		 def.z += delta.z * coef;
+					else if (def.z > position.z) def.z -= delta.z * coef;
+					*/
+				}
+
+				for (auto& a : this->meshes) 
+					a->SetScale(val); 
+			}
+			void SetScale(float x, float y, float z) { SetScale({ x,y,z }); };
 		public:
 			std::vector<Mesh*>& GetMeshes() { return this->meshes; }
 			Mesh* GetMesh(size_t index) { return this->meshes[index]; }
