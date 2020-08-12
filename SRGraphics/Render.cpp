@@ -28,7 +28,7 @@ bool SpaRcle::Graphics::Render::Create(Camera* camera, SRGraphics* graph) {
 	this->graph = graph;
 	this->camera = camera;
 
-	this->fbxLoader  = new FbxLoader(debug, this->graph->GetResourcesFolder());
+	this->fbxLoader  = new FbxLoader(debug, this->graph);
 
 	this->texManager = new TextureManager(debug, graph);
 	this->matManager = new MaterialManager(debug, graph);

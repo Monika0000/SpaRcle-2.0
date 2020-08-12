@@ -4,8 +4,6 @@
     --Debug.Error("Fail")
 
 function Start ()
-    fbx      = Model.LoadFBX("cube")
-
     sphere   = Engine.LoadPrefab("Sphere")
     sphere:SetPosition(10,0,0)
     
@@ -24,9 +22,19 @@ function Start ()
     gm     = World.Instantiate("Plane", model)
     gm:SetPosition(-0.5,0,0)
 
-    model2 = Model.LoadOBJWithMat("plane", mat)
-    gm2    = World.Instantiate("Plane2", model2)
-    gm2:SetPosition(-0.5,0,-2)
+    --fbx    = Model.LoadFBXWithMat("cube", mat)
+    --gm2    = World.Instantiate("fbx", fbx)
+    --gm2:SetPosition(0,0,600)
+    --gm2:SetScale(0.00001, 0.00001, 0.00001)
+
+    --fbx2   = Model.LoadFBX("Dentist")
+    --dentist= World.Instantiate("dentist", fbx2)
+    --dentist:SetPosition(5,0,5)
+    
+    fbx2   = Model.LoadFBX("table")
+    table= World.Instantiate("table", fbx2)
+    table:SetPosition(5,0,5)
+    table:SetScale(1, 1, 1)
 
     --model = Model.LoadOBJ("sina")
     --sina  = World.Instantiate("Sina", model)

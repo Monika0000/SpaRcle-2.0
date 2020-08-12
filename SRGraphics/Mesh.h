@@ -38,11 +38,13 @@ namespace SpaRcle {
 		class ModelManager;
 		class Shader;
 		class Texture;
+		class FbxLoader;
 
 		struct Mesh {
 			friend class Render;
 			friend class Model;
 			friend class ModelManager;
+			friend class FbxLoader;
 		public:
 			size_t GeometryID		 = 0;
 			std::string GeometryName = "";
@@ -65,6 +67,10 @@ namespace SpaRcle {
 			glm::vec3 position = { 0, 0, 0 };
 			glm::vec3 rotation = { 0, 0, 0 };
 			glm::vec3 scale	   = { 1, 1, 1 };
+
+			glm::vec3 default_position = { 0, 0, 0 };
+			glm::vec3 default_rotation = { 0, 0, 0 };
+			glm::vec3 default_scale	   = { 1, 1, 1 };
 		private:
 			void Bind() {
 				glBindVertexArray(VAO);
@@ -125,6 +131,11 @@ namespace SpaRcle {
 		public:
 			Mesh* Copy() {
 				Mesh* mesh = new Mesh(vertices);
+
+				mesh->default_position = this->default_position;
+				mesh->default_rotation = this->default_rotation;
+				mesh->default_scale    = this->default_scale;
+
 				mesh->SetPosition(position);
 				mesh->SetRotation(rotation);
 				mesh->SetScale(scale);
@@ -166,7 +177,8 @@ namespace SpaRcle {
 					this->count_vertices = vertices.size();
 				if (this->count_vertices == 0) {
 					Debug::InternalError("Mesh constructor : count_vertices == 0!");
-					Sleep(1000);
+					Sleep(500);
+					return;
 				} else {
 					max_x = vertices[0].Position.x;
 					min_x = vertices[0].Position.x;

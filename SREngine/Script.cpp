@@ -97,6 +97,11 @@ namespace SpaRcle {
 						{
 							return engine->GetRender()->GetFbxLoader()->LoadModel(s);
 						}))
+						.addStaticFunction("LoadFBXWithMat", static_cast<Model * (*)(std::string, Material*)>
+							([](std::string s, Material* m) -> Model*
+						{
+								return engine->GetRender()->GetFbxLoader()->LoadModel(s, {m});
+						}))
 						.addStaticFunction("LoadOBJ", static_cast<Model * (*)(std::string)> ([](std::string s) -> Model*  {
 							return engine->GetRender()->GetModelManager()->LoadModelFromObj(s.c_str());
 						}))

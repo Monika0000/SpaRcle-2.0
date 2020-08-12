@@ -20,9 +20,6 @@ int main(int argcp, char* argv) {
 	//	std::cerr << "MEMORY LEAK!" << std::endl;
 	//std::cout << ((0.1f + 0.2f) * pow(10, 30)) - (0.3f * pow(10, 30)) << std::endl;
 	//std::string s = "5/2/1";
-	//std::cout << String::Remove(s, '/') << std::endl;
-	//std::cout << String::Remove(s, '/') << std::endl;
-	//std::cout << String::Remove(s, '/') << std::endl;
 
 	//void* str = (int*)malloc(sizeof(int));
 	//(*(int*)str) = 34;

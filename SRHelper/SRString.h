@@ -69,6 +69,7 @@ namespace SpaRcle {
 
 				return vd;
 			}
+			static std::vector<std::string> SplitWithoutBacktick(std::string str, char c);
 
 			static std::string RandomString(int size) {
 				std::ostringstream oss;

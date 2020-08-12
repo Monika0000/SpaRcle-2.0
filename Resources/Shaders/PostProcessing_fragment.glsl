@@ -33,12 +33,12 @@ void main(){
     //vec4 color = texelFetch(screenTexture, TexCoords, 3);  // считывание из 4ой точки подвыборки
     vec3 result = texture(screenTexture, TexCoords).rgb;
 
-    //if (color.r < 0.6 && color.g < 0.6 && color.b > 0.5)
-    //    color.b += 0.25;
+    // if (result.r < 0.6 && result.g < 0.6 && result.b > 0.5)
+    //    result.b += 0.25;
 
     //FragColor = texture(screenTexture, TexCoords);
     //FragColor = vec4(vec3(1.0 - texture(screenTexture, TexCoords)), 1.0);
 
-    //result = pow(result, vec3(1.0 / gamma));
+    result = pow(result, vec3(1.0 / gamma));
     FragColor = vec4(result, 1.0);
 }

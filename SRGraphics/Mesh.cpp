@@ -48,7 +48,7 @@ namespace SpaRcle {
 	namespace Graphics {
 		void Mesh::UpdateMatrix() {
 			glm::mat4 mat = glm::mat4(1.0f);
-			mat = glm::translate(mat, position);
+			mat = glm::translate(mat, position + default_position);
 
 
 			//const mat4 rotationMatrix = glm::mat4_cast();
@@ -63,11 +63,19 @@ namespace SpaRcle {
 
 			//(glm::mediump_float)
 			 
-			mat = glm::rotate(mat, (glm::mediump_float32)(Math::PI * rotation.x / 180.f), { 1, 0, 0 });
-			mat = glm::rotate(mat, (glm::mediump_float32)(Math::PI * rotation.y / 180.f), { 0, 1, 0 }); //WARNING
-			mat = glm::rotate(mat, (glm::mediump_float32)(Math::PI * rotation.z / 180.f), { 0, 0, 1 });
+			mat = glm::rotate(mat, (glm::mediump_float32)(Math::PI * (rotation.x + default_rotation.x) / 180.f), { 1, 0, 0 });
+			mat = glm::rotate(mat, (glm::mediump_float32)(Math::PI * (rotation.y + default_rotation.y) / 180.f), { 0, 1, 0 }); //WARNING
+			mat = glm::rotate(mat, (glm::mediump_float32)(Math::PI * (rotation.z + default_rotation.z) / 180.f), { 0, 0, 1 });
 
-			model = glm::scale(mat, scale);
+			model = glm::scale(mat, scale * default_scale);
+
+
+
+			//mat = glm::translate(mat, position);
+			//mat = glm::rotate(mat, (glm::mediump_float32)(Math::PI * rotation.x / 180.f), { 1, 0, 0 });
+			//mat = glm::rotate(mat, (glm::mediump_float32)(Math::PI * rotation.y / 180.f), { 0, 1, 0 }); //WARNING
+			//mat = glm::rotate(mat, (glm::mediump_float32)(Math::PI * rotation.z / 180.f), { 0, 0, 1 });
+			//model = glm::scale(mat, scale);
 		}
 		void Mesh::Draw() {
 			if ((unsigned long long)this == 0xdddddddddddddddd) return;
