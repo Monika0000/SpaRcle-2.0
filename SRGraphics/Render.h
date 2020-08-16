@@ -3,29 +3,17 @@
 #include <string>
 #include <SRHelper.h>
 #include "Model.h"
-#include "UIString.h"
-#include "UIWindow.h"
+//#include "UIString.h"
+//#include "UIWindow.h"
 #include "Texture.h"
 #include "Shader.h"
 #include "RayTracing.h"
 #include "Terrain.h"
 #include "FbxLoader.h"
+#include "Material.h"
 
 namespace SpaRcle {
 	namespace Graphics {
-		namespace Geometry {
-			inline static const float QuadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-				 // positions   // texCoords
-				 -1.0f,  1.0f,  0.0f, 1.0f,
-				 -1.0f, -1.0f,  0.0f, 0.0f,
-				  1.0f, -1.0f,  1.0f, 0.0f,
-
-				 -1.0f,  1.0f,  0.0f, 1.0f,
-				  1.0f, -1.0f,  1.0f, 0.0f,
-				  1.0f,  1.0f,  1.0f, 1.0f
-			};
-		}
-
 		class SRGraphics;
 
 		class Render {
@@ -46,12 +34,13 @@ namespace SpaRcle {
 			bool Create(Camera* camera, SRGraphics* graph);
 			bool Init();
 			bool Run();
+			// [Call only into window context]
 			void Close();
 		private: //! ====== [Resources sector] ======
 			//?=====================================
 			std::vector<Model*> models		  = std::vector<Model*>();
 			std::vector<Mesh*>  aiming_meshes = std::vector<Mesh*> ();
-			std::vector<UI*>    _ui_objects	  = std::vector<UI*>   ();
+			//std::vector<UI*>    _ui_objects	  = std::vector<UI*>   ();
 
 			Terrain* terrain			= nullptr;
 
@@ -62,7 +51,7 @@ namespace SpaRcle {
 			RayTracing* raytracing		= nullptr;
 			//?=====================================
 		private:
-			bool fog;
+			bool fog = false;
 			//bool clear;
 			//bool render;
 			GLuint fogMode[3] = { GL_EXP, GL_EXP2, GL_LINEAR };	 // Хранит три типа тумана
@@ -76,7 +65,7 @@ namespace SpaRcle {
 			void DrawAimingObjects();
 
 			void DrawAllObjects();
-			void DrawAllUI();
+			//void DrawAllUI();
 
 			void SetSkybox(Skybox* skybox) { this->skybox = skybox; }
 
@@ -84,7 +73,7 @@ namespace SpaRcle {
 			void AddModel(Model* model);
 			void AddAimingMesh(Mesh* mesh); 
 			bool RemoveAimingMesh(Mesh* mesh);
-			void AddUI(UI* ui);
+			//void AddUI(UI* ui);
 
 			Mesh* GetAimingMesh();
 			Model* GetSelectedModel();
@@ -142,7 +131,10 @@ namespace SpaRcle {
 				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
 				
 				if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-					debug->Error("Render::Resize() : Framebuffer is not complete!");
+					debug->Error("Render::Resize() : Framebuffer is not complete!\n\tWidth = "+
+						std::to_string(w) + "\n\tHeight = " + std::to_string(h) + "\n\tScreenTexture = " + std::to_string(ScreenTexture) +
+						"\n\tFBO = " + std::to_string(FBO) + "\n\tRBO = " + std::to_string(RBO));
+
 					EventsManager::PushEvent(EventsManager::Events::Error);
 				}
 
@@ -158,7 +150,7 @@ namespace SpaRcle {
 				}
 				else return this->def_mat;
 			}
-			Shader* GetShader() {
+			Shader* GetGeometryShader() {
 				if (!this->shader) {
 					debug->Error("Shader is nullptr!");
 					Sleep(1000);

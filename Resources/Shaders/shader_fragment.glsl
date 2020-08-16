@@ -86,7 +86,8 @@ void main(void) {
         vec3 N = normalize(fs_in.Normal0);
         vec3 lightDir  = normalize(light.position - fs_in.FragPos); // lightDir 
         float diffuse_intensity = max(dot(N, lightDir ), 0.0);
-        vec3 diffuse = texture(DiffuseMap, fs_in.TexCoords).rgb * color.rgb * light.diffuse * diffuse_intensity;
+        vec4 _texture = texture(DiffuseMap, fs_in.TexCoords);
+        vec3 diffuse = _texture.rgb * color.rgb * light.diffuse * diffuse_intensity;
 
         // specular
         vec3 viewDir = normalize(viewPos - fs_in.FragPos);
@@ -102,7 +103,7 @@ void main(void) {
         ambient  *= attenuation;
         specular *= attenuation;
 
-        FragColor = vec4(diffuse + ambient + specular, 1.0);
+        FragColor = vec4(diffuse + ambient + specular, _texture.a);
     } else if (use_light == 2) {
         // ambient
         vec3 ambient = light.ambient * texture(DiffuseMap, fs_in.TexCoords).rgb;
@@ -114,7 +115,8 @@ void main(void) {
         //vec3 lightDir  = normalize(light.position - fs_in.FragPos); // lightDir 
         vec3 lightDir = normalize(fs_in.TangentLightPos  - fs_in.TangentFragPos);
         float diffuse_intensity = max(dot(N, lightDir ), 0.0);
-        vec3 diffuse = texture(DiffuseMap, fs_in.TexCoords).rgb * color.rgb * light.diffuse * diffuse_intensity;
+        vec4 _texture = texture(DiffuseMap, fs_in.TexCoords);
+        vec3 diffuse = _texture.rgb * color.rgb * light.diffuse * diffuse_intensity;
 
         // specular
         vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
@@ -133,9 +135,10 @@ void main(void) {
         ambient  *= attenuation;
         specular *= attenuation;
 
-        FragColor = vec4(diffuse + ambient + specular, 1.0);
+        FragColor = vec4(diffuse + ambient + specular, _texture.a);
     } else {
-        FragColor = vec4(texture(DiffuseMap, fs_in.TexCoords).rgb * color.rgb, 1.0); // - vec3(n, n, n)
+        vec4 _texture = texture(DiffuseMap, fs_in.TexCoords);
+        FragColor = vec4(_texture.rgb * color.rgb, _texture.a); // - vec3(n, n, n)
     }
 }
 

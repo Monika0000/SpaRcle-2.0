@@ -37,81 +37,86 @@ int main(int argcp, char* argv) {
 	SREngine* engine = new SREngine(debug);
 	SRGraphics* graph = new SRGraphics(argcp, &argv, debug, true);
 
-	Window* win = new Window(
+	Window* window = new Window(
 		debug,
 		NULL,
 		"SpaRcle",
-		new Screen_720_576(),
-		new Screen_1600_900(),
-		true, false
+		new ScreenFormats::_1280_720(),
+		new ScreenFormats::_1600_900(),
+		false, false
 	);
 	Render* render = new Render(debug);
 
 	engine->Create(
-		graph, 
-		win,
+		graph,
+		window,
 		render,
 		new Camera(debug)
 	);
 
-	//?========================================================================================================
-	TextureManager* texManager  = render->GetTextureManager();
-	ModelManager* modManager    = render->GetModelManager();
+	//?================================================[SCRIPTS]===============================================
+	TextureManager* texManager = render->GetTextureManager();
+	ModelManager* modManager = render->GetModelManager();
 	MaterialManager* matManager = render->GetMaterialManager();
 
 	render->SetSkybox(texManager->LoadSkybox("Skyboxes\\Winter", Image::Type::JPG));
 
-	//Material* mat = matManager->LoadMaterial("engine\\yellow");
-	//Model* model = modManager->LoadModelFromObj("engine\\lump");
-	//engine->GetCurrentWorld()->Instantiate("Light demo", model);
-	//GameObject* Sina		 = engine->LoadPrefab("sina");
-	//Sina->transform.SetRotation(0, 270, 0);
-	//Sina->transform.SetScale(0.3, 0.3, 0.3);
-
-	//GameObject* Sphere = engine->LoadPrefab("sphere");
-	//Sphere->transform.SetPosition(10, 0, 0);
-
-	//GameObject* Sphere2 = engine->LoadPrefab("sphere");
-	//Sphere2->transform.SetPosition(14, 0, 0);
-
-	//GameObject* Sphere3 = engine->LoadPrefab("sphere");
-	//Sphere3->transform.SetPosition(3, 5, -2);
-
-	/*
-	Material* player_body    = matManager->LoadMaterial("body");
-	Material* brick          = matManager->LoadMaterial("brick");
-	Material* rock           = matManager->LoadMaterial("rock");
-
-	Texture* texture	     = texManager->LoadTexture("base.bmp", Texture::Type::Diffuse, Texture::Filter::NEAREST_MIPMAP_LINEAR);
-	Texture* Stone			 = texManager->LoadTexture("Stone1.png", Texture::Type::Diffuse, Texture::Filter::LINEAR_MIPMAP_NEAREST);
-	Texture* Weapon			 = texManager->LoadTexture("mccree_weapon_3d.bmp", Texture::Type::Diffuse, Texture::Filter::LINEAR_MIPMAP_NEAREST);
-	Texture* AssassinBody    = texManager->LoadTexture("AssassinBody_Dif.png", Texture::Type::Diffuse, Texture::Filter::LINEAR_MIPMAP_NEAREST);
-	//Texture* Body			 = texManager->LoadTexture("Textures\\Player\\Player_Body_diffuse.png", Texture::Type::Diffuse, Texture::Filter::LINEAR_MIPMAP_NEAREST);
-	Texture* Hair			 = texManager->LoadTexture("Player\\Player_Hair_diffuse.png", Texture::Type::Diffuse, Texture::Filter::LINEAR_MIPMAP_NEAREST);
-	Texture* Top			 = texManager->LoadTexture("Player\\Player_Top_diffuse.png", Texture::Type::Diffuse, Texture::Filter::LINEAR_MIPMAP_NEAREST);
-	Texture* Bottom		     = texManager->LoadTexture("Player\\Player_Bottom_diffuse.png", Texture::Type::Diffuse, Texture::Filter::LINEAR_MIPMAP_NEAREST);
-	Texture* Shoes   		 = texManager->LoadTexture("Player\\Player_Shoes_diffuse.png", Texture::Type::Diffuse, Texture::Filter::LINEAR_MIPMAP_NEAREST);
-	Texture* cubeTexture     = texManager->LoadTexture("Cube_triangulate.png", Texture::Type::Diffuse, Texture::Filter::LINEAR_MIPMAP_NEAREST);
-	Texture* plane_texture   = texManager->LoadTexture("plane.png", Texture::Type::Diffuse, Texture::Filter::LINEAR_MIPMAP_NEAREST);
-	*/
-
-	//render->GetRayTracing()->AddLight();
-
 	engine->GetCompiler()->AddScript(new Script("script"));
+	//?================================================[SCRIPTS]===============================================
 
-	//?========================================================================================================
-
-	render->AddUI(new UIWindow(win, "Console", -2.15f, -0.2f, 1.0f, 0.5f, true));
+	//render->AddUI(new UIWindow(win, "Console", -2.15f, -0.2f, 1.0f, 0.5f, true));
 
 	engine->Init();
 
-	//model2->Destroy(); 
-	//model4->Destroy();
-	//model6->Destroy();
-	//std::cout << render->RemoveModel(model5);
-	//std::cout << render->RemoveModel(model2);
-	//std::cout << render->RemoveModel(model6);
-	//std::cout << render->RemoveModel(model3);
+	//?==================================================[GUI]=================================================
+
+	Canvas* canvas = window->GetCanvas();
+	
+	/*
+	GUIObject* main_object = new GUIObject(canvas);
+	GUIObject* top_object = new GUIObject(canvas);
+
+	Texture* gui_up = texManager->LoadTexture("GUI/GUI UP.png");
+	Texture* gui_rt = texManager->LoadTexture("GUI/GUI RIGHT SMALL.png");
+
+	main_object->SetTexture(gui_up);
+	main_object->SetOrientationH(GUI::OrientationH::LEFT);
+	main_object->SetScale(0.125, 1);
+	main_object->SetColor(0.7, 0.7, 0.7,0.8);
+	//main_object->SetPosition({ 0.75, 0 });
+
+	top_object->SetTexture(gui_up);
+	top_object->SetOrientationV(GUI::OrientationV::UP);
+	top_object->SetOrientationH(GUI::OrientationH::LEFT);
+	top_object->SetScale(0.125, 0.02);
+	top_object->SetColor(0.6,0.6,0.6,0.8);
+	//top_object->SetPosition()
+
+	canvas->AddGUIObject(top_object);
+	canvas->AddGUIObject(main_object);
+	*/
+
+	GUIList* list = new GUIList(
+		canvas, "Hierarchy", 
+		{ 0, 0 }, { 0.125, 1 }, {1,1,1,1},
+		OrientationH::LEFT, OrientationV::CENTER
+	);
+
+	canvas->AddGUIList(list);
+
+	GUIList* list2 = new GUIList(
+		canvas, "Hierarchy2",
+		{ 0, 0 }, { 0.2, 1 }, { 1,1,1,1 },
+		OrientationH::RIGHT, OrientationV::CENTER
+	);
+
+	canvas->AddGUIList(list2);
+
+	//GUIObject* obj = new GUIObject(canvas, OrientationH::CENTER, OrientationV::DOWN, {}, { 1,0.5 }, {1,1,1,1});
+	//canvas->AddGUIObject(obj);
+
+
+	//?==================================================[GUI]=================================================
 
 	engine->Run();
 
@@ -136,3 +141,59 @@ std::thread task = std::thread([cube, render]() {
 
 	task.detach();
 */
+
+//model2->Destroy(); 
+//model4->Destroy();
+//model6->Destroy();
+//std::cout << render->RemoveModel(model5);
+//std::cout << render->RemoveModel(model2);
+//std::cout << render->RemoveModel(model6);
+//std::cout << render->RemoveModel(model3);
+
+	/*
+	//object->SetPosition({ 0.5, 0.5, 0});
+	//GUIText* guiText = new GUIText(canvas);
+
+	auto math = [](float size) -> float {
+		if (size > 0)
+			return (-1.0 / size) + 1.0;
+		else if (size < 0)
+			return (-1.0 / size) - 1.0;
+		else
+			return 0;
+	};
+
+	//float size = 0.125;
+	//float pos = math(size);
+	//object->SetGlobalScale({ size, 1 });
+	//object->SetPosition({ pos, 0 });
+	*/
+
+	/*
+	if(false)
+	{	// SetSize Left
+		float size = 1;
+		float pos = (-1.0 / size) + 1.0;//pow(size, -0.5 - 1);
+
+		object->SetGlobalScale({ size, 1 });
+		object->SetPosition({ pos, 0 });
+	}
+	if (false)
+	{	// SetSize Right
+		float size = 0.5;
+		float pos = (1.0 / size) - 1.0;
+
+		object->SetGlobalScale({ size, 1 });
+		object->SetPosition({ pos, 0 });
+	}
+	*/
+	//object->SetGlobalScale({ 0.5, 1 });
+	//object->SetPosition({ -1, 0 });
+
+	//object->SetGlobalScale({ 0.25, 1 });
+	//object->SetPosition({ -3, 0 });
+
+	//object->SetGlobalScale({ 0.125, 1 });
+	//object->SetPosition({ -7, 0 });
+
+	//canvas->AddGUIText(guiText);

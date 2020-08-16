@@ -6,7 +6,36 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Window.h"
 
-bool SpaRcle::Graphics::Camera::Create(WindowFormat** format, int& x_pos, int& y_pos, glm::mat4& projective)  {
+void SpaRcle::Graphics::Camera::CalcPos() {
+	dx = pt.x - prevX;              // бшвхякъел ялеыемхе йспянпю гю 10 лхкхяейсмд он ьхпхме
+	dy = pt.y - prevY;              // бшвхякъел ялеыемхе йспянпю гю 10 лхкхяейсмд он бшянре
+
+	yaw -= dx / 1000.0;             // ялеыемхе он ьхпхме мюйюокхбюеряъ б сцнк бпюыемхъ бопюбн-бкебн
+	ptc -= dy / 1000.0;
+
+	if (abs(ptc) >= 2.f) ptc = 2.f * (ptc / abs(ptc));
+
+	// цнпхгнмрюкэмни окняйнярэч ъбкъеряъ X-Z
+	dxx = sin(yaw); // dxx - онкнфемхе рнвйх нрмняхрекэмн нях X
+	dxz = cos(yaw); // dxz - онкнфемхе рнвйх нрмняхрекэмн нях Z
+	dyy = sin(ptc / 4.f) * 4.f; // dyy - онкнфемхе рнвйх нрмняхрекэмн нях Y
+
+	//std::cout << "sin(" << ptc << ") = " << dyy << std::endl;
+
+	// йнппейрхпсел яйнпнярэ оепелеыемхъ б гюбхяхлнярх нр сцкю онбнпнрю йюлепш
+	// врнаш йюлепю дбхцюкюяэ рсдю, йсдю ялнрпхр, ю ме бднкэ няеи X х Z
+	posz += spdz * dxx;
+	posx += spdx * dxx;
+	posx += spdz * dxz;
+	posz -= spdx * dxz;
+	posy += spdy / 10;
+
+	ViewPos = { posx + dxx,posy + dyy, posz - dxz };
+	//ViewPos = { posx,posy, posz };
+	//ViewPos = { dxx,dyy, dxz };
+}
+
+bool SpaRcle::Graphics::Camera::Create(Screen** format, int& x_pos, int& y_pos, glm::mat4& projective)  {
 	debug->Graph("Creating camera...");
 
 	//this->x_size = &x_size;
@@ -25,11 +54,15 @@ bool SpaRcle::Graphics::Camera::Create(WindowFormat** format, int& x_pos, int& y
 	return true;
 }
 
-bool SpaRcle::Graphics::Camera::Init(bool& isMouseLock, GLFWwindow* win){
+//bool SpaRcle::Graphics::Camera::Init(bool& isMouseLock, GLFWwindow* win){
+bool SpaRcle::Graphics::Camera::Init(bool& isMouseLock, Window* window){
 	debug->Graph("Initializing camera...");
 
 	this->isMouseLock = &isMouseLock;
-	this->window = win;
+	this->window = window->GetGLFWwindow();
+	//this->window = win;
+	this->win = window;
+
 	/*
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -75,6 +108,8 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 	float frameDeltaTime;
 	int now = 0, then = 0;
 
+	CalcPos();
+
 	while (isRun) {
 		//ХЫЕЛ ПЮГМХЖС БН БПЕЛЕМХ
 		//now = clock();
@@ -89,8 +124,10 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 
 			if (!isMouseLock || !format) continue;
 
+			bool lock = *isMouseLock;
+			if (lock) lock = this->win->GetIsFocus();
 
-			if (*isMouseLock) {
+			if (lock) {
 				//!GetCursorPos(&pt);          // онксвюел онгхжхч йспянпю
 				glfwGetCursorPos(window, &pt.x, &pt.y);
 
@@ -100,7 +137,7 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 
 			//std::cout << (*format)->size_x << " " << (*format)->size_y << std::endl;
 				 
-			if (*isMouseLock) {
+			if (lock) {
 				//SetCursorPos(1600 / 2, 900 / 2);// ярюбхл йспянп б жемрп нймю
 				//bool b = Input::FixedGetKeyDown(KeyCode::F);
 				
@@ -153,34 +190,7 @@ void SpaRcle::Graphics::Camera::FixedMove() {
 				glfwGetCursorPos(window, &pt.x, &pt.y);
 				//!GetCursorPos(&pt);
 			
-			if (*isMouseLock) {
-				dx = pt.x - prevX;              // бшвхякъел ялеыемхе йспянпю гю 10 лхкхяейсмд он ьхпхме
-				dy = pt.y - prevY;              // бшвхякъел ялеыемхе йспянпю гю 10 лхкхяейсмд он бшянре
-
-				yaw -= dx / 1000.0;             // ялеыемхе он ьхпхме мюйюокхбюеряъ б сцнк бпюыемхъ бопюбн-бкебн
-				ptc -= dy / 1000.0;
-
-				if (abs(ptc) >= 2.f) ptc = 2.f * (ptc / abs(ptc));
-
-				// цнпхгнмрюкэмни окняйнярэч ъбкъеряъ X-Z
-				dxx = sin(yaw); // dxx - онкнфемхе рнвйх нрмняхрекэмн нях X
-				dxz = cos(yaw); // dxz - онкнфемхе рнвйх нрмняхрекэмн нях Z
-				dyy = sin(ptc / 4.f) * 4.f; // dyy - онкнфемхе рнвйх нрмняхрекэмн нях Y
-
-				//std::cout << "sin(" << ptc << ") = " << dyy << std::endl;
-
-				// йнппейрхпсел яйнпнярэ оепелеыемхъ б гюбхяхлнярх нр сцкю онбнпнрю йюлепш
-				// врнаш йюлепю дбхцюкюяэ рсдю, йсдю ялнрпхр, ю ме бднкэ няеи X х Z
-				posz += spdz * dxx;
-				posx += spdx * dxx;
-				posx += spdz * dxz;
-				posz -= spdx * dxz;
-				posy += spdy / 10;
-
-				ViewPos = { posx + dxx,posy + dyy, posz - dxz };
-				//ViewPos = { posx,posy, posz };
-				//ViewPos = { dxx,dyy, dxz };
-			}
+			if (lock) CalcPos();
 
 			viewMat = glm::lookAt(glm::vec3(posx + dxx, posy + dyy, posz - dxz), glm::vec3(posx, posy, posz), glm::vec3(0, 1, 0));
 			//pos = { posx, posy, posz };

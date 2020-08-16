@@ -156,10 +156,10 @@ namespace SpaRcle {
 
 			debug->Graph("Close graphics engine...");
 			delete this->win;			// 1
+			//this->render->Close();		// 3 | move to window 
 			if (camera) delete camera;	// 2
 
 			//delete this->render;		// 3
-			this->render->Close();		// 3
 
 			return true;
 		}

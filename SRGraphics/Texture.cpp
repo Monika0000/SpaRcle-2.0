@@ -78,12 +78,37 @@ namespace SpaRcle {
 
 			return bmp;
 		}
-		Image* TextureManager::LoadPNG(const char* path) {
+		Image* TextureManager::LoadTIFF(const char* path) {
 			int width = 0;
 			int height = 0;
 			int channels = 0;
 
 			unsigned char* image = SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_AUTO);
+
+			if (!image)
+				debug->Error("TextureManager::LoadTIFF() : " + std::string(SOIL_last_result()) + "\n\tPath : " + std::string(path));
+
+			Image* png = new Image();
+			png->alpha = true;
+			png->data = image;
+			png->type = Image::Type::TIFF;
+			png->height = height;
+			png->width = width;
+			png->channels = channels;
+			png->imageSize = width * height;
+
+			return png;
+		}
+		Image* TextureManager::LoadPNG(const char* path) {
+			int width = 0;
+			int height = 0;
+			int channels = 0;
+			 
+			unsigned char* image = SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_AUTO);
+
+			if(!image)
+				debug->Error("TextureManager::LoadPNG() : " + std::string(SOIL_last_result()) + "\n\tPath : " + std::string(path));
+
 			Image* png = new Image();
 			png->alpha = true;
 			png->data = image;
@@ -181,8 +206,7 @@ namespace SpaRcle {
 
 			return jpg;
 		}
-
-		Image* TextureManager::LoadImage(const char* file, bool log) {
+		Image* TextureManager::LoadImg(const char* file, bool log) {
 			if(log) debug->Log("Loading image : \"" + std::string(file)+"\"");
 
 			Image* image = nullptr;
@@ -195,13 +219,22 @@ namespace SpaRcle {
 				image = LoadTGA(file);
 			else if (extension == "jpg")
 				image = LoadJPG(file);
+			else if (extension == "tif" || extension == "tiff")
+				image = LoadTIFF(file);
 			else {
 				debug->Error("TextureManager::LoadImage() : Unknown image format!\n\tPath : " + std::string(file) + "\n\tExtension : " + extension);
 				Sleep(1000);
 				return nullptr;
 			}
 			if (!image || !image->data) {
-				debug->Error("TextureManager::LoadImage() : Failed loading image!\n\tPath : " + std::string(file));
+				if(!image)
+					debug->Error("TextureManager::LoadImage() : Failed loading image!\n\tPath : " + std::string(file)
+						+ "\n\tImage : " + std::to_string((size_t)image) + "\n\tExtension : "+ extension);
+				else
+					debug->Error("TextureManager::LoadImage() : Failed loading image!\n\tPath : " + std::string(file)
+						+ "\n\tImage : " + std::to_string((size_t)image) + "\n\tData : " 
+						+ std::to_string((size_t)image->data) + "\n\tExtension : " + extension);
+
 				Sleep(1000);
 				return nullptr;
 			}
@@ -216,12 +249,11 @@ namespace SpaRcle {
 			Skybox* skybox = new Skybox();	
 
 			for (unsigned int i = 0; i < 6; i++){
-				skybox->sides[i] = LoadImage((graph->GetResourcesFolder() + "\\" + std::string(file_base) + "\\skybox" + files[i] + Image::TypeToStr(format)).c_str());
+				skybox->sides[i] = LoadImg((graph->GetResourcesFolder() + "\\" + std::string(file_base) + "\\skybox" + files[i] + Image::TypeToStr(format)).c_str());
 			}
 
 			return skybox;
 		}
-
 		Texture* TextureManager::LoadTexture(const char* file, bool log, Texture::Type type_texture, Texture::Filter filter) {
 			std::string path = graph->GetResourcesFolder() + "\\Textures\\" + std::string(file);
 
@@ -233,7 +265,7 @@ namespace SpaRcle {
 			if (find != Textures.end())
 				return find->second;
 
-			Image* image = this->LoadImage(path.c_str(), log);
+			Image* image = this->LoadImg(path.c_str(), log);
 
 			if (!image) {
 				debug->Error("TextureManager : Failed loading texture!\n\tPath : " + std::string(path));

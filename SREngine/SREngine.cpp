@@ -2,7 +2,7 @@
 #include "SREngine.h"
 #include "Window.h"
 #include <Shlobj_core.h> 
-#include <UIList.h>
+//#include <UIList.h>
 
 namespace SpaRcle {
 	using namespace Graphics;
@@ -41,12 +41,12 @@ namespace SpaRcle {
 				SetToolMode(ToolMode::None);
 
 				//!====================================================================================================
-				this->Hierarchy = new UIList<GameObject*>(win, "Hierarchy", -2.2075f, -0.25f, 0.60f, 2.45f);
-				Hierarchy->SetList(world->gameObjects);
+				//this->Hierarchy = new UIList<GameObject*>(win, "Hierarchy", -2.2075f, -0.25f, 0.60f, 2.45f);
+				//Hierarchy->SetList(world->gameObjects);
 				//std::next(world->gameObjects.begin(), 1)->second;
-				Hierarchy->SetEvent_GetName([](GameObject* gm) -> std::string { return gm->name; });
+				//Hierarchy->SetEvent_GetName([](GameObject* gm) -> std::string { return gm->name; });
 
-				render->AddUI(this->Hierarchy);
+				//render->AddUI(this->Hierarchy);
 				//!====================================================================================================
 
 				return true;
@@ -81,8 +81,6 @@ namespace SpaRcle {
 
 			//this->window->MouseLock(!this->window->MouseLock());
 
-			//Texture* texture = graph->GetRender()->GetTextureManager()->LoadTexture((graph->GetResourcesFolder() + "\\Textures\\rock.bmp").c_str());
-
 			float num_fps_limit = 120.f;
 			float fps_limit_timer = 0.f;
 			float fps_lim = 1 / num_fps_limit;
@@ -92,10 +90,18 @@ namespace SpaRcle {
 			float frame = 0;
 
 			debug->System("All systems are running successfully!");
+			this->isRun = true;
 
-			for (auto script : compiler->scripts)
-				if (script->IsCompile())
-					script->Start();
+			bool isCompileScripts = false;
+			std::thread thread_compile = std::thread([this, &isCompileScripts]() {
+				for (auto script : compiler->scripts) {
+					if (!isRun)
+						break;
+					if (script->IsCompile())
+						script->Start();
+				}
+				isCompileScripts = true;
+			});
 
 			while (true) {
 				if (EventsManager::PopEvent(EventsManager::Events::Exit)
@@ -104,34 +110,36 @@ namespace SpaRcle {
 					break;
 				}
 
-				if (Input::FixedGetKeyDown(KeyCode::Esc)) {
-					debug->System("Escape key has been pressed!");
-					break;
-				}
-				if (Input::FixedGetKeyDown(KeyCode::M))
-					std::cout << ("Current memory load is " + std::to_string(Utils::GetCurrentMemoryLoad() / 1024) + "Kb\n");
-				if (Input::FixedGetKeyDown(KeyCode::L))
-					this->window->MouseLock(!this->window->MouseLock());
-				else if (Input::FixedGetKeyDown(KeyCode::O)) {
-					/*
-					OPENFILENAME l = { sizeof(l), };
-					TCHAR buf[1024];
-
-					HWND hwnd = ::CreateWindowA("STATIC", "explore", WS_VISIBLE, 0, 0, 100, 100, NULL, NULL, NULL, NULL);
-					l.hwndOwner = hwnd;
-					//l.lpstrFilter = L"ZIP Files\0*.zip\0All Files\0*.*\0";
-					l.lpstrFilter = L"*.*\0";
-					l.lpstrFile = buf;
-					l.nMaxFile = 1023;
-					l.lpstrTitle =L"Open resource";
-					//l.lpstrDefExt = L"zip";
-					l.lpstrInitialDir = String::CharsToLPWSTR(graph->GetResourcesFolder().c_str());
-					l.Flags = OFN_HIDEREADONLY | OFN_EXPLORER | OFN_PATHMUSTEXIST;
-					buf[0] = 0;
-					if (GetOpenFileName(&l)) {
-
+				if (window->GetIsFocus()) {
+					if (Input::FixedGetKeyDown(KeyCode::Esc)) {
+						debug->System("Escape key has been pressed!");
+						break;
 					}
-					*/
+					if (Input::FixedGetKeyDown(KeyCode::M))
+						std::cout << ("Current memory load is " + std::to_string(Utils::GetCurrentMemoryLoad() / 1024) + "Kb\n");
+					if (Input::FixedGetKeyDown(KeyCode::L))
+						this->window->MouseLock(!this->window->MouseLock());
+					else if (Input::FixedGetKeyDown(KeyCode::O)) {
+						/*
+						OPENFILENAME l = { sizeof(l), };
+						TCHAR buf[1024];
+
+						HWND hwnd = ::CreateWindowA("STATIC", "explore", WS_VISIBLE, 0, 0, 100, 100, NULL, NULL, NULL, NULL);
+						l.hwndOwner = hwnd;
+						//l.lpstrFilter = L"ZIP Files\0*.zip\0All Files\0*.*\0";
+						l.lpstrFilter = L"*.*\0";
+						l.lpstrFile = buf;
+						l.nMaxFile = 1023;
+						l.lpstrTitle =L"Open resource";
+						//l.lpstrDefExt = L"zip";
+						l.lpstrInitialDir = String::CharsToLPWSTR(graph->GetResourcesFolder().c_str());
+						l.Flags = OFN_HIDEREADONLY | OFN_EXPLORER | OFN_PATHMUSTEXIST;
+						buf[0] = 0;
+						if (GetOpenFileName(&l)) {
+
+						}
+						*/
+					}
 				}
 				//?========================================================
 
@@ -142,7 +150,7 @@ namespace SpaRcle {
 				if (fps_limit_timer >= fps_lim) {
 					fps_limit_timer = 0.0f;
 
-					for (auto script : compiler->scripts)
+					if(isCompileScripts) for (auto script : compiler->scripts)
 						if (!script->HasErrors() && script->IsCompile())
 							if (!script->Update(frame)) {
 								//debug->ScriptError("Engine::Run() : An exception has been occured!\n\tFile script : " + script->GetName());
@@ -151,7 +159,7 @@ namespace SpaRcle {
 					frame += 0.001;
 					if (frame == 1) frame = 0;
 
-					if (graph->EditorMode) {
+					if (graph->EditorMode && window->GetIsFocus()) {
 						Model* model = window->GetSelectedModel();
 						if (model) {
 							vec2d mouse = window->GetMousePos();
@@ -283,10 +291,14 @@ namespace SpaRcle {
 					this->graph->GetRender()->SetFog(!this->graph->GetRender()->GetFog());
 				}
 
-				if (Input::GetKey(KeyCode::LeftArrow)) Arrows->transform.Rotate({ 0.1, 0, 0 });
-				else if (Input::GetKey(KeyCode::RightArrow)) Arrows->transform.Rotate({ -0.1, 0, 0 });
+				//if (Input::GetKey(KeyCode::LeftArrow)) Arrows->transform.Rotate({ 0.1, 0, 0 });
+				//else if (Input::GetKey(KeyCode::RightArrow)) Arrows->transform.Rotate({ -0.1, 0, 0 });
 			}
 
+			//?=======================================================
+
+			this->isRun = false;
+			if (thread_compile.joinable()) thread_compile.join();
 			debug->Info("Engine has been completed work!");
 			return true;
 		}

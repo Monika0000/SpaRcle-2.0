@@ -14,6 +14,19 @@
 
 namespace SpaRcle {
 	namespace Graphics {
+		namespace Geometry {
+			inline static const float QuadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+				 // positions   // texCoords
+				 -1.0f,  1.0f,  0.0f, 1.0f,
+				 -1.0f, -1.0f,  0.0f, 0.0f,
+				  1.0f, -1.0f,  1.0f, 0.0f,
+
+				 -1.0f,  1.0f,  0.0f, 1.0f,
+				  1.0f, -1.0f,  1.0f, 0.0f,
+				  1.0f,  1.0f,  1.0f, 1.0f
+			};
+		}
+
 		using namespace Helper;
 
 		struct Vertex {
@@ -210,7 +223,9 @@ namespace SpaRcle {
 				this->UpdateMatrix();
 			}
 			~Mesh() {
-				//this->verts.clear();
+				if (VAO) glDeleteVertexArrays(1, &this->VAO);
+				if (VBO) glDeleteBuffers(1, &this->VBO);
+				this->vertices.clear();
 			}
 		};
 		/*

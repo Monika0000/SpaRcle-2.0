@@ -15,6 +15,7 @@ namespace SpaRcle {
 		
 		namespace Graphics {
 			class RayTracing;
+			class Window;
 
 		class Camera {
 			friend class RayTracing;
@@ -74,12 +75,13 @@ namespace SpaRcle {
 			GLuint	StencilViewMat = 0;
 			//GLuint	StencilCameraPosition = 0;
 			//?=========================================
-			WindowFormat** format = nullptr;
+			Screen** format = nullptr;
 			glm::mat4* projective = nullptr;
 			int* x_pos = nullptr; int* y_pos = nullptr;
 		private:
 			Debug* debug = nullptr;
 			GLFWwindow* window = nullptr;
+			Window* win = nullptr;
 			std::thread move_thread;
 		public:
 			const glm::mat4 GetView() const noexcept { return viewMat; }
@@ -96,9 +98,12 @@ namespace SpaRcle {
 				isRun = false;
 			};
 			~Camera() { Close(); };
+		private:
+			void CalcPos();
 		public:
-			bool Create(WindowFormat** format, int& x_pos, int& y_pos, glm::mat4& projective);
-			bool Init(bool& isMouseLock, GLFWwindow*win);
+			bool Create(Screen** format, int& x_pos, int& y_pos, glm::mat4& projective);
+			//bool Init(bool& isMouseLock, GLFWwindow*win);
+			bool Init(bool& isMouseLock, Window* window);
 			bool Run();
 			const vec2l GetMousePos() const noexcept { return { (long)pt.x, (long)pt.y }; }
 			void SetCursorPosition(int x, int y) {

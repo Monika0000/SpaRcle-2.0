@@ -12,9 +12,6 @@
     <Filter Include="Window">
       <UniqueIdentifier>{a7825425-bf7b-4dfa-90b8-05810e85cd08}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UIElements">
-      <UniqueIdentifier>{bad0cad6-ce2c-4f4a-937f-893c5afd0e82}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utils">
       <UniqueIdentifier>{d1eb5486-3eec-4354-945a-76de38060fd7}</UniqueIdentifier>
     </Filter>
@@ -35,6 +32,12 @@
     </Filter>
     <Filter Include="Resources\Fbx">
       <UniqueIdentifier>{9a58df3e-10b3-4e36-b71a-eca6f0eee90c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{bad0cad6-ce2c-4f4a-937f-893c5afd0e82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Base">
+      <UniqueIdentifier>{9e434655-f1b1-4ae8-b193-cea11aaa8fe8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,15 +62,6 @@
     <ClInclude Include="Material.h">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="UIString.h">
-      <Filter>UIElements</Filter>
-    </ClInclude>
-    <ClInclude Include="UI.h">
-      <Filter>UIElements</Filter>
-    </ClInclude>
-    <ClInclude Include="UIWindow.h">
-      <Filter>UIElements</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Resources</Filter>
     </ClInclude>
@@ -89,14 +83,8 @@
     <ClInclude Include="Model.h">
       <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="UIList.h">
-      <Filter>UIElements</Filter>
-    </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>RayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="UIButton.h">
-      <Filter>UIElements</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h">
       <Filter>Geometry\Terrain</Filter>
@@ -109,6 +97,24 @@
     </ClInclude>
     <ClInclude Include="Json.h">
       <Filter>Resources\Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIObject.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIList.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIButton.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Canvas.h">
+      <Filter>GUI\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIBase.h">
+      <Filter>GUI\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIText.h">
+      <Filter>GUI\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -126,12 +132,6 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>RenderSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="UI.cpp">
-      <Filter>UIElements</Filter>
-    </ClCompile>
-    <ClCompile Include="UIWindow.cpp">
-      <Filter>UIElements</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Resources</Filter>
@@ -154,14 +154,8 @@
     <ClCompile Include="Model.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="UIList.cpp">
-      <Filter>UIElements</Filter>
-    </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>RayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="UIButton.cpp">
-      <Filter>UIElements</Filter>
     </ClCompile>
     <ClCompile Include="Terrain.cpp">
       <Filter>Geometry\Terrain</Filter>
@@ -175,8 +169,27 @@
     <ClCompile Include="Json.cpp">
       <Filter>Resources\Fbx</Filter>
     </ClCompile>
+    <ClCompile Include="GUIObject.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIList.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIButton.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Canvas.cpp">
+      <Filter>GUI\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIBase.cpp">
+      <Filter>GUI\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIText.cpp">
+      <Filter>GUI\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

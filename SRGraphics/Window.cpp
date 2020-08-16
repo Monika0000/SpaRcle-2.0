@@ -5,9 +5,14 @@
 //#include <GL\freeglut_std.h>
 #include <GL/glut.h>
 #include "Camera.h"
-#include "UI.h"
+//#include "UI.h"
 #include <glm\ext\matrix_clip_space.hpp>
 #include "SRGraphics.h"
+#include <CommCtrl.h>
+#include <WinUser.h>
+#include <Debug.h>
+
+#pragma comment(lib, "COMCTL32.LIB") // For toolBar
 
 namespace SpaRcle {
 	namespace Graphics {
@@ -59,7 +64,7 @@ namespace SpaRcle {
 			win->SetXPos(x);
 			win->SetYPos(y);
 			glfwSetWindowPos(window, x, y);
-			if(win->GetIsRun()) win->Draw();  // Re-draw
+			//if(win->GetIsRun()) win->Draw();  // Re-draw
 		}
 		void Resize(GLFWwindow* window, int width, int height) {
 			Window* win = Window::Get();
@@ -69,7 +74,8 @@ namespace SpaRcle {
 
 			glfwSetWindowSize(window, x_size, y_size);
 
-			float ratio = 1.0 * x_size / y_size;
+			//float ratio = 1.0 * x_size / y_size;
+			float ratio = 16.0 / 9.0;
 			glMatrixMode(GL_PROJECTION);// используем матрицу проекции
 			glLoadIdentity();// Reset матрицы
 			glViewport(0, 0, x_size, y_size);// определ€ем окно просмотра
@@ -102,7 +108,9 @@ namespace SpaRcle {
 			win->SetYSize(height);
 			*/
 
-		 	if(win->GetIsRun()) win->Draw(); // Re-draw
+		 	//if(win->GetIsRun()) win->Draw(); // Re-draw
+
+			if(win->GetEditorMode()) win->CreateToolBar(); // Re-Create
 		}
 
 		vec2d Window::GetMousePos() {
@@ -129,7 +137,9 @@ namespace SpaRcle {
 			return vec;
 		}
 
-		Window::Window(Debug* debug, Camera* camera, const char* name, WindowFormat* window_minimize, WindowFormat* window_maximize, bool isMouseLock, bool vsync) {
+		Window::Window(Debug* debug, Camera* camera, const char* name, Screen* window_minimize,
+			Screen* window_maximize, bool isMouseLock, bool vsync)
+		{
 			if (global) {
 				debug->Error("Window already create!");
 				EventsManager::PushEvent(EventsManager::Events::Error);
@@ -138,6 +148,7 @@ namespace SpaRcle {
 			}
 			else {
 				this->isMouseLock = isMouseLock;
+
 				this->vsync = vsync;
 
 				this->screen_size = GraphUtils::GetDesktopResolution();
@@ -166,6 +177,52 @@ namespace SpaRcle {
 				isInitDisplay = false;
 				isInitGlew = false;
 			}
+		}
+		bool Window::CreateToolBar() {
+			if (!EditorMode) return false;/*
+			//debug->Info("Wondow : creating tool bar...");
+			HINSTANCE hInst = (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE); //GWL_HINSTANCE
+
+			if (hWndToolBar) {
+				DestroyWindow(hWndToolBar);
+				hWndToolBar = nullptr;
+			}
+
+			TBBUTTON tbb[] = {
+					 {33, 181,  TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
+					 { 1, 182,  TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
+					 { 2, 183,  TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
+					 { 0,   0,                0, TBSTYLE_SEP,    0, 0},
+					 { 3, 184,  TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
+					 { 4, 185,                0, TBSTYLE_BUTTON, 0, 0},
+					 { 5, 186,  TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
+					 { 0,   0,                0, TBSTYLE_SEP,    0, 0},
+					 { 6, 187,  TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
+			};
+
+			//hWndToolBar = CreateWindowEx(0x80, TOOLBARCLASSNAME, NULL, WS_CHILD | TBSTYLE_FLAT | WS_BORDER, 0, 0, 0, 0, hWnd, NULL, hInst, NULL);
+			hWndToolBar = CreateToolbarEx(hWnd, WS_CHILD | WS_BORDER | WS_VISIBLE | TBSTYLE_TOOLTIPS | CCS_ADJUSTABLE,
+				180,                 // идентификатор органа Toolbar     IDT_TOOLBAR
+				7,                   // количество пиктограмм
+				HINST_COMMCTRL,      //  hInstance,           // идентификатор приложени€
+				IDB_STD_SMALL_COLOR, // IDB_BITMAP,          // идентификатор битового изображени€ кнопок   IDB_STD_SMALL_COLOR, // 
+				(LPCTBBUTTON)&tbb,   // адрес описани€ кнопок
+				9,                   // количество кнопок
+				0, 0,                // ширина и высота кнопок
+				16, 16,              // ширина и высота пиктограмм
+				sizeof(TBBUTTON));   // размер структуры в байтах
+			if (hWndToolBar == NULL)
+				return false;
+
+			//SendMessage(hWndToolBar, TB_SETBITMAPSIZE, 0, MAKELONG(0, 10));
+			//SendMessage(hWndToolBar, TB_SETBUTTONSIZE, 0, MAKELONG(0, 10));
+			//SendMessage(hWndToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+			//SendMessage(hWndToolBar, TB_ADDBUTTONS, (WPARAM)numButtons, (LPARAM)&tbButtons);
+
+			//SendMessage(hWndToolBar, TB_AUTOSIZE, 0, 0);
+			ShowWindow(hWndToolBar, TRUE);
+			*/
+			return true;
 		}
 		void Window::PollEvents() {
 			MSG msg;			// событи€ окна	
@@ -241,11 +298,17 @@ namespace SpaRcle {
 				return false;
 			}
 
-			this->argcp = argcp;
-			this->argv  = argv;
+			this->argcp  = argcp;
+			this->argv   = argv;
 
-			fps = new UIString(this, "FPS : " + std::to_string(GraphUtils::GetFPS()), 0.5f, 0.25f, new color { 0.f, 1.f, 0.1f, 0.7f });
-			render->AddUI(fps);
+			this->canvas = new Canvas(this);
+			
+			this->fps    = new GUIText(canvas);
+			this->fps->SetColor(0,1,0,1);
+			this->canvas->AddGUIText(fps);
+
+			//fps = new UIString(this, "FPS : " + std::to_string(GraphUtils::GetFPS()), 0.5f, 0.25f, new color { 0.f, 1.f, 0.1f, 0.7f });
+			//render->AddUI(fps);
 
 			return true;
 		}
@@ -278,7 +341,10 @@ namespace SpaRcle {
 
 				InitParametrs();
 
-				camera->Init(isMouseLock, window);
+				//MouseLock(isMouseLock);
+
+				//camera->Init(isMouseLock, window);
+				camera->Init(isMouseLock, this);
 
 				if (!InitWindow()) {
 					debug->Error("Window::Init() : Failed initializing window!");
@@ -488,14 +554,13 @@ namespace SpaRcle {
 
 			camera->Move();
 
-			glPushMatrix(); // —охранение матрици
+			//glPushMatrix(); // —охранение матрици
 				render->DrawAllObjects();
 			//render->DrawSelectorObjects();
-			glPopMatrix();
+			//glPopMatrix();
 
-			render->DrawAllUI();
+			//render->DrawAllUI();
 
-			glfwSwapBuffers(window);
 		}
 		bool Window::InitWindow() {
 			debug->Graph("Initializing window...");
@@ -518,6 +583,12 @@ namespace SpaRcle {
 			}
 			hDC = GetDC(hWnd);
 
+			if (EditorMode)
+				if (!CreateToolBar()) {
+					debug->Error("Window:InitWindow() : failed create tool bar!");
+					return false;
+				}
+
 			Resize(window, format->size_x, format->size_y);
 			Position(window, 
 				screen_size->x / 2 - format->size_x / 2,
@@ -528,7 +599,9 @@ namespace SpaRcle {
 				return false;
 			}
 			else {
-				this->shader = render->GetShader();
+				this->canvas->Init();
+
+				this->shader = render->GetGeometryShader();
 				//this->camera->AddShader(shader);
 			}
 
@@ -540,9 +613,22 @@ namespace SpaRcle {
 				this->fps->SetString("FPS : " + std::to_string(GraphUtils::GetFPS()));
 
 				this->Draw();
+
+				//!===================================================
+
+				this->canvas->PoolEvents();
+
+				this->canvas->Draw();
+
+				//!===================================================
+
+				glfwSwapBuffers(window);
 			} 
 
 			debug->Info("Window has been completed work! isRun = " + std::to_string(isRun));
+
+			this->render->Close();
+			delete this->canvas;
 
 			return true;
 		}

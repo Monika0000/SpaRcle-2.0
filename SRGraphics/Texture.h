@@ -35,7 +35,7 @@ namespace SpaRcle {
 				case Image::Type::JPG:
 					return ".jpg";
 				case Image::Type::TIFF:
-					return ".tiff";
+					return ".tif";
 				case Image::Type::TGA:
 					return ".tga";
 				case Image::Type::UNKNOWN:
@@ -72,9 +72,11 @@ namespace SpaRcle {
 				NEAREST = GL_NEAREST, LINEAR = GL_LINEAR, NEAREST_MIPMAP_NEAREST = GL_NEAREST_MIPMAP_NEAREST, 
 				LINEAR_MIPMAP_NEAREST = GL_LINEAR_MIPMAP_NEAREST, NEAREST_MIPMAP_LINEAR = GL_NEAREST_MIPMAP_LINEAR, LINEAR_MIPMAP_LINEAR = GL_LINEAR_MIPMAP_LINEAR,
 			};
-		private:
+		public:
 			bool isGenerate = false;
 			void Generate() {
+				if (isGenerate) return;
+
 				GLuint textureID = SOIL_create_OGL_texture(image->data, image->width, image->height, image->channels, 0,
 					SOIL_FLAG_INVERT_Y | SOIL_FLAG_MIPMAPS);
 				glBindTexture(GL_TEXTURE_2D, textureID);
@@ -154,12 +156,12 @@ namespace SpaRcle {
 				id = 0;
 			}
 		public:
-			bool Alpha = false;
-			GLuint id;
-			Type type;
-			Filter filter;
-			std::string path;
-			Image* image;
+			bool Alpha			= false;
+			GLuint id			= 1;
+			Type type			= Type::Diffuse;
+			Filter filter		= Filter::LINEAR;
+			std::string path	= "";
+			Image* image		= nullptr;
 		};
 
 		class Skybox {
@@ -287,8 +289,9 @@ namespace SpaRcle {
 			Image* LoadPNG(const char* path);
 			Image* LoadTGA(const char* path);
 			Image* LoadJPG(const char* path);
+			Image* LoadTIFF(const char* path);
 
-			Image* LoadImage(const char* file, bool log = true);
+			Image* LoadImg(const char* file, bool log = true);
 			Skybox* LoadSkybox(const char* file_base, Image::Type format);
 			Texture* LoadTexture(const char* file,
 				Texture::Type type_texture = Texture::Type::Diffuse, Texture::Filter filter = Texture::Filter::NEAREST) 

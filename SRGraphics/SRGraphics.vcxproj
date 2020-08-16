@@ -155,9 +155,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Canvas.h" />
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="ColorBuffer.h" />
     <ClInclude Include="FbxLoader.h" />
+    <ClInclude Include="GUIBase.h" />
+    <ClInclude Include="GUIButton.h" />
+    <ClInclude Include="GUIList.h" />
+    <ClInclude Include="GUIObject.h" />
+    <ClInclude Include="GUIText.h" />
     <ClInclude Include="Json.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
@@ -172,19 +178,20 @@
     <ClInclude Include="SRGraphics.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="UI.h" />
-    <ClInclude Include="UIButton.h" />
-    <ClInclude Include="UIList.h" />
-    <ClInclude Include="UIString.h" />
-    <ClInclude Include="UIWindow.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowEvents.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="ColorBuffer.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
+    <ClCompile Include="GUIBase.cpp" />
+    <ClCompile Include="GUIButton.cpp" />
+    <ClCompile Include="GUIList.cpp" />
+    <ClCompile Include="GUIObject.cpp" />
+    <ClCompile Include="GUIText.cpp" />
     <ClCompile Include="Json.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -202,16 +209,20 @@
     <ClCompile Include="SRGraphics.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="UI.cpp" />
-    <ClCompile Include="UIButton.cpp" />
-    <ClCompile Include="UIList.cpp" />
-    <ClCompile Include="UIWindow.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\Eigen.3.3.3\build\native\Eigen.targets" Condition="Exists('..\packages\Eigen.3.3.3\build\native\Eigen.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Eigen.3.3.3\build\native\Eigen.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Eigen.3.3.3\build\native\Eigen.targets'))" />
+  </Target>
 </Project>

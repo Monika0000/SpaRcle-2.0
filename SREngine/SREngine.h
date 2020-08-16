@@ -2,10 +2,10 @@
 #include <SRHelper.h>
 #include <SRGraphics.h>
 #include "World.h"
-#include <UIList.h>
+//#include <UIList.h>
 #include "Script.h"
 #include "Compiler.h"
-#include <UIButton.h>
+//#include <UIButton.h>
 
 namespace SpaRcle {
 	using namespace Graphics;
@@ -27,7 +27,7 @@ namespace SpaRcle {
 			GameObject* Arrows = nullptr;
 			GameObject* Rings  = nullptr;
 
-			UIList<GameObject*>* Hierarchy  = nullptr;
+			//UIList<GameObject*>* Hierarchy  = nullptr;
 
 			bool toolsEnabled  = false;
 			ToolMode tool	   = ToolMode::Locate;

@@ -9,6 +9,7 @@
 
 #include <SRHelper.h>
 #include "SRGraphics.h"
+#include <glm\gtc\type_ptr.hpp>
 
 SpaRcle::Graphics::Shader::Shader(std::string name, Debug* debug) {
     this->name = name;
@@ -17,7 +18,23 @@ SpaRcle::Graphics::Shader::Shader(std::string name, Debug* debug) {
 }
 
 SpaRcle::Graphics::Shader::~Shader() {
+    if(!isRelease) this->Release();
+}
 
+void SpaRcle::Graphics::Shader::SetMat4(const std::string& name, glm::mat4 mat) {
+    glUniformMatrix4fv(glGetUniformLocation(ProgramID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void SpaRcle::Graphics::Shader::SetVec2(const std::string& name, glm::vec2 vec) {
+    glUniform2fv(glGetUniformLocation(ProgramID, name.c_str()), 1, glm::value_ptr(vec));
+}
+
+void SpaRcle::Graphics::Shader::SetVec4(const std::string& name, glm::vec4 vec){
+    glUniform4fv(glGetUniformLocation(ProgramID, name.c_str()), 1, glm::value_ptr(vec));
+}
+
+void SpaRcle::Graphics::Shader::SetTexture(const std::string& name, GLuint ID) {
+    glUniform1ui(glGetUniformLocation(ProgramID, name.c_str()), ID);
 }
 
 bool SpaRcle::Graphics::Shader::Compile() {
@@ -177,6 +194,9 @@ bool SpaRcle::Graphics::Shader::Use() { //GLuint tex1, GLuint vbo, GLuint uv
 }
 
 bool SpaRcle::Graphics::Shader::Release() {
-    glDeleteProgram(this->ProgramID);
+    debug->Info("Shader::Release() : Delete shader \"" + name +"\"");
+    glUseProgram(0);
+    if(isLinked && ProgramID) glDeleteProgram(this->ProgramID);
+    this->isRelease = true;
 	return true;
 }

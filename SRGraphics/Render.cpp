@@ -122,15 +122,22 @@ bool SpaRcle::Graphics::Render::Run() {
 	isRun = true;
 	return true;
 }
+
 void SpaRcle::Graphics::Render::Close() {
 	debug->Graph("Close render...");
 
 	isRun = false;
 	Sleep(10); //! We wait until the render has time to close. 
 	//Clear();
-	for (UI* ui : this->_ui_objects)
-		if (ui) delete ui;
+	//for (UI* ui : this->_ui_objects)
+	//	if (ui) delete ui;
 	//_ui_objects.clear();
+
+	delete this->shader;
+	delete this->skyboxShader;
+	delete this->selectorShader;
+	delete this->Stencil;
+	delete this->PostProcessing;
 
 	delete raytracing;
 }
@@ -278,6 +285,7 @@ void SpaRcle::Graphics::Render::DrawAllObjects() {
 
 //	render = false;
 }
+/*
 void SpaRcle::Graphics::Render::DrawAllUI() {
 	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 	gluLookAt(
@@ -292,17 +300,17 @@ void SpaRcle::Graphics::Render::DrawAllUI() {
 
 	vec2d pos =  win->GetMousePos();
 	//std::cout << "mouse_x = " << pos.x << "; mouse_y = " << pos.y << std::endl;
-	for (UI* ui : this->_ui_objects) {
-		ui->Draw(
-			{ mouse_left_down, mouse_left_up },  
-			pos
-		);
-	}
+	//for (UI* ui : this->_ui_objects) {
+	//	ui->Draw(
+	//		{ mouse_left_down, mouse_left_up },  
+	//		pos
+	//	);
+	//}
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_FOG); // Туман
 }
-
+*/
 void SpaRcle::Graphics::Render::AddModel(Model* model) {
 	if ((unsigned long long)model == 0xdddddddddddddddd) {
 		debug->Error("Render::AddModel() : model has adress 0xdddddddddddddddd!");
@@ -330,13 +338,13 @@ bool SpaRcle::Graphics::Render::RemoveAimingMesh(Mesh* mesh) {
 		}
 	return false;
 }
-void SpaRcle::Graphics::Render::AddUI(UI* ui) {
-	if ((unsigned long long)ui == 0xdddddddddddddddd) {
-		debug->Error("Render::AddObject3D() : object has adress 0xdddddddddddddddd!");
-		return;
-	}
-	this->_ui_objects.push_back(ui);
-}
+//void SpaRcle::Graphics::Render::AddUI(UI* ui) {
+//	if ((unsigned long long)ui == 0xdddddddddddddddd) {
+//		debug->Error("Render::AddObject3D() : object has adress 0xdddddddddddddddd!");
+//		return;
+//	}
+//	this->_ui_objects.push_back(ui);
+//}
 
 SpaRcle::Graphics::Mesh* SpaRcle::Graphics::Render::GetAimingMesh() {
 	if (count_aiming_meshes == 0) return nullptr;
