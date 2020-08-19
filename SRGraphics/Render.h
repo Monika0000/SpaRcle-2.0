@@ -44,8 +44,10 @@ namespace SpaRcle {
 
 			Terrain* terrain			= nullptr;
 
-			size_t count_models			= 0;
-			size_t count_aiming_meshes	= 0;
+			unsigned int t = 0;
+
+			unsigned int count_models			= 0;
+			unsigned int count_aiming_meshes	= 0;
 			Material* def_mat			= nullptr;
 			Skybox* skybox				= nullptr;
 			RayTracing* raytracing		= nullptr;
@@ -182,7 +184,7 @@ namespace SpaRcle {
 				}
 				else return this->matManager;
 			}
-			size_t GetCountModels() { return this->count_models; }
+			unsigned int GetCountModels() { return this->count_models; }
 			RayTracing* GetRayTracing() {
 				if (!this->raytracing) {
 					debug->Error("Render::GetRayTracing() : raytracing is nullptr!");

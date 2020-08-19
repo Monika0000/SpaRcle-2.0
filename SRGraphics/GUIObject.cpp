@@ -53,6 +53,9 @@ bool SpaRcle::Graphics::GUI::GUIObject::Draw() {
 	if (!isBind) Bind();
 
 	this->shader->SetVec2("size", this->scale);
+	//if(parent)
+	//	this->shader->SetVec2("offset", this->posit + this->offset + this->parent->posit);
+	//else
 	this->shader->SetVec2("offset", this->posit + this->offset);
 	this->shader->SetVec4("color", this->color);
 	glBindVertexArray(VAO);
@@ -69,8 +72,4 @@ bool SpaRcle::Graphics::GUI::GUIObject::Draw() {
 	}
 
 	return true;
-}
-
-void SpaRcle::Graphics::GUI::GUIObject::Flat() {
-
 }

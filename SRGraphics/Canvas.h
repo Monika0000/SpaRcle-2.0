@@ -7,6 +7,7 @@
 #include "GUIText.h"
 #include "GUIObject.h"
 #include "GUIList.h"
+#include "GUIButton.h"
 
 namespace SpaRcle {
 	namespace Helper {
@@ -24,6 +25,7 @@ namespace SpaRcle {
 				std::vector<GUIText*>	m_texts		= std::vector<GUIText*>();
 				std::vector<GUIObject*> m_objects	= std::vector<GUIObject*>();
 				std::vector<GUIList*>   m_lists		= std::vector<GUIList*>();
+				std::vector<GUIButton*> m_buttons	= std::vector<GUIButton*>();
 			private:
 				size_t t							= 0;
 				Window* window						= nullptr;
@@ -52,6 +54,7 @@ namespace SpaRcle {
 				bool AddGUIText		(GUIText* text)		{ this->m_texts.push_back(text); return true;		};
 				bool AddGUIObject	(GUIObject* obj)	{ this->m_objects.push_back(obj); return true;		};
 				bool AddGUIList		(GUIList* list)		{ this->m_lists.push_back(list); return true;		};
+				bool AddGUIButton	(GUIButton* bttn)	{ this->m_buttons.push_back(bttn); return true;		};
 			public:
 				bool PoolEvents();
 				bool Draw();

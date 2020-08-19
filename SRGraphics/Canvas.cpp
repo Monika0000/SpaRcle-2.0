@@ -82,6 +82,8 @@ bool SpaRcle::Graphics::GUI::Canvas::Draw() {
     //for (auto a : this->m_lists)
     DrawGUI(this->m_lists);
 
+    DrawGUI(this->m_buttons);
+
     glUseProgram(0);
 
     //!=============================================================================================================================================================

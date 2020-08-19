@@ -1,4 +1,6 @@
 #version 330 core
+#extension GL_EXT_gpu_shader4 : enable
+
 out vec4 FragColor;
   
 in vec2 TexCoords;
@@ -30,9 +32,10 @@ const float kernel[9] = float[](
 const float gamma = 0.8;
 
 void main(){ 
+
     //vec4 color = texelFetch(screenTexture, TexCoords, 3);  // считывание из 4ой точки подвыборки
     vec3 result = texture(screenTexture, TexCoords).rgb;
-
+    //result = result / 2;
     // if (result.r < 0.6 && result.g < 0.6 && result.b > 0.5)
     //    result.b += 0.25;
 

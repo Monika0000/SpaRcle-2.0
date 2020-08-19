@@ -27,7 +27,6 @@ namespace SpaRcle {
 				void SetTexture(Texture* texture);
 			public:
 				bool Draw() override;
-				virtual void Flat();
 			};
 		}
 	}

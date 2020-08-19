@@ -61,6 +61,7 @@ namespace SpaRcle {
 
 		void Position(GLFWwindow* window, int x, int y) {
 			Window* win = Window::Get();
+			
 			win->SetXPos(x);
 			win->SetYPos(y);
 			glfwSetWindowPos(window, x, y);
@@ -227,8 +228,30 @@ namespace SpaRcle {
 		void Window::PollEvents() {
 			MSG msg;			// события окна	
 			// просматриваем все поступившие события
+
+			static bool PollEvents_MouseLock_Memory = false;
+
 			while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE)) {
 				//std::cout << msg.message << " " << msg.wParam << std::endl;
+				if (msg.wParam == 2) {
+					if (msg.message == 161) {
+						if (this->isMouseLock) {
+							if (!this->GetIsFocus()) {
+								MouseLock(false);
+								DispatchMessage(&msg);
+								PollEvents_MouseLock_Memory = true;
+							}
+							else continue;
+						}
+					}
+					else if (msg.message == 160) {
+						if (PollEvents_MouseLock_Memory) {
+							MouseLock(true);
+							PollEvents_MouseLock_Memory = false;
+							continue;
+						}
+					}
+				}
 
 				switch (WindowEvents::GetEvent(msg.message, msg.wParam)) {
 				case WindowEvents::Close: {
@@ -378,6 +401,14 @@ namespace SpaRcle {
 					return false;
 				}
 				glfwMakeContextCurrent(window);
+
+				const GLubyte* vendor   = glGetString(GL_VENDOR); // Returns the vendor
+				const GLubyte* renderer = glGetString(GL_RENDERER); // Returns a hint to the model
+				const GLubyte* version  = glGetString(GL_VERSION); // Returns a hint to the model
+
+				debug->Info("Window::InitGlfw() : GL_VENDOR   is " + std::string((char*)vendor));
+				debug->Info("Window::InitGlfw() : GL_RENDERER is " + std::string((char*)renderer));
+				debug->Info("Window::InitGlfw() : GL_VERSION  is " + std::string((char*)version));
 
 				glfwSetWindowPos(window, 
 					screen_size->x / 2 - format->size_x / 2,

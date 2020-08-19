@@ -23,6 +23,7 @@ namespace SpaRcle {
 				GUIText* text			= nullptr;
 			public:
 				bool Draw() override;
+				//void Move(float x, float y) override;
 			};
 		}
 	}

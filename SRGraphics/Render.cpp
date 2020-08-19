@@ -7,8 +7,6 @@
 #include <glm\gtc\type_ptr.hpp>
 //#pragma comment(lib, "glew32s.lib")
 
-static size_t t = 0;
-
 SpaRcle::Graphics::Render::Render(Debug* debug) {
 	this->fog = true;
 	this->debug = debug;
@@ -388,7 +386,7 @@ SpaRcle::Graphics::Model* SpaRcle::Graphics::Render::GetSelectedModel() {
 	camera->MoveSelector();
 
 	win->colorBuffer->InitNames(GetCountModels());
-	for (size_t t = 0; t < GetCountModels(); t++) {
+	for (t = 0; t < GetCountModels(); t++) {
 		//vec3uc color = GraphUtils::IntToColor(t + 1);
 		//vec3uc color{ 0, 0, t + 1};
 		//debug->Log("Add color : "+  std::to_string(color.x) + " " + std::to_string(color.y) + " " + std::to_string(color.z));

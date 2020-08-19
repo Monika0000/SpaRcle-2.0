@@ -96,21 +96,41 @@ int main(int argcp, char* argv) {
 	canvas->AddGUIObject(main_object);
 	*/
 
+	/*
 	GUIList* list = new GUIList(
 		canvas, "Hierarchy", 
-		{ 0, 0 }, { 0.125, 1 }, {1,1,1,1},
+		{ 0, 0 }, { 0.125, 0.5 }, {1,1,1,1},
 		OrientationH::LEFT, OrientationV::CENTER
 	);
 
 	canvas->AddGUIList(list);
 
+	//list->SetPosition(1, 0);
+	//list->Move(0.5, 0);
+	*/
+
 	GUIList* list2 = new GUIList(
-		canvas, "Hierarchy2",
+		canvas, "Inspector",
 		{ 0, 0 }, { 0.2, 1 }, { 1,1,1,1 },
 		OrientationH::RIGHT, OrientationV::CENTER
 	);
-
 	canvas->AddGUIList(list2);
+	
+
+	//GUIList* list3 = new GUIList(
+	//	canvas, "Console",
+	//	{ 0, 0 }, { 0.8, 0.5 }, { 1,1,1,1 },
+	//	OrientationH::LEFT, OrientationV::DOWN
+	//);
+	//canvas->AddGUIList(list3);
+
+	//list3->Move(-0.25, 0.5);
+
+	GUIButton* button = new GUIButton(
+		canvas, "[Some Button]", 
+		{ 0,0 }, { 0.15,0.05 }, {1,1,1,0.8}, 
+		OrientationH::CENTER, OrientationV::DOWN);
+	canvas->AddGUIButton(button);
 
 	//GUIObject* obj = new GUIObject(canvas, OrientationH::CENTER, OrientationV::DOWN, {}, { 1,0.5 }, {1,1,1,1});
 	//canvas->AddGUIObject(obj);

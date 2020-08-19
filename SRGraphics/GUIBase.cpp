@@ -14,8 +14,12 @@ SpaRcle::Graphics::GUI::GUIBase::GUIBase(Canvas* canvas, glm::vec2 pos, glm::vec
 	//this->SetLocalScale({ 1,1 });
 }
 
-void SpaRcle::Graphics::GUI::GUIBase::MoveTo(glm::vec3 new_pos) {
-
+void SpaRcle::Graphics::GUI::GUIBase::Move(float x, float y) {
+	glm::vec2 old = this->GetPosition();
+	this->SetPosition(posit.x + x, posit.y + y * 2.f);
+	//GUIBase::Move(x, y);
+	for (auto& a : Childs)
+		a->Move(x, y);
 }
 
 void SpaRcle::Graphics::GUI::GUIBase::SetScale(float x, float y) {
@@ -43,6 +47,7 @@ void SpaRcle::Graphics::GUI::GUIBase::SetScale(float x, float y) {
 		break;
 	default: break;
 	}
+
 
 	this->scale = {x,y};
 }

@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 SpaRcle::Graphics::GUI::GUIText::GUIText(Canvas* canvas, glm::vec2 pos, glm::vec2 scale, glm::vec4 color) 
-	: GUIBase(canvas, pos, scale, color) {
+	: GUIBase(canvas, pos * glm::vec2(begin_x, begin_y), scale, color) {
 	this->SetString("[None]");
 }
 
@@ -27,9 +27,6 @@ void SpaRcle::Graphics::GUI::GUIText::SetScale(float x, float y) {
 		return;
 	} else {
 		offset = { 0,0 };
-
-		const float begin_x = 2.21;
-		const float begin_y = 0.245;
 
 		switch (orientationH) {
 		case SpaRcle::Graphics::GUI::OrientationH::CENTER: 
@@ -100,7 +97,28 @@ void SpaRcle::Graphics::GUI::GUIText::SetScale(float x, float y) {
 	*/
 }
 
+void SpaRcle::Graphics::GUI::GUIText::SetPosition(float x, float y) {
+	this->posit = { x * this->begin_x, y * this->begin_y };
+}
+
+void SpaRcle::Graphics::GUI::GUIText::Move(float x, float y) {
+	glm::vec2 old = this->GetPosition();
+	//this->SetPosition(old.x + x, -begin_y + (y / begin_y));
+	//posit = { (old.x + x) * this->begin_x, (old.y * begin_y) - (1 + begin_y) };
+	y *= 2.f;
+	posit = { (old.x + x) * this->begin_x, (old.y * begin_y) - (-y + begin_y * -y) };
+
+	//posit = { begin_x, 0 };
+	//SetScale(scale.x, scale.y);
+}
+
+glm::vec2 SpaRcle::Graphics::GUI::GUIText::GetPosition() {
+	return glm::vec2(posit.x / begin_x, posit.y / begin_y);
+}
+
 bool SpaRcle::Graphics::GUI::GUIText::Draw() {
+	if (isDestroy) return false;
+
 	glPushMatrix();
 	glColor4f(
 		color.r,

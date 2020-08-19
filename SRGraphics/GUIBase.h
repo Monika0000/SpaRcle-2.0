@@ -58,21 +58,24 @@ namespace SpaRcle {
 				 }
 			public:
 				// [WITH CHILDS]
-				void MoveTo(glm::vec3 new_pos);
 			public:
 				// [NO CHILDS | SET DEFAULT VALUES | FOR INITIALIZE]
-				void SetColor		(float r, float g, float b, float a)		{ this->color	= {r,g,b,a};			};
-				void SetPosition	(float x, float y)							{ this->posit	= {x,y};				};
-				virtual void SetScale(float x, float y);
+				virtual void		SetColor	(float r, float g, float b, float a)		{ this->color	= {r,g,b,a};			};
+				virtual void		SetPosition	(float x, float y)							{ this->posit	= {x,y};				};
+				virtual void		Move(float x, float y);
+				virtual glm::vec2	GetPosition	()											{ return posit;							};
+				virtual void		SetScale	(float x, float y);
 				void SetParent(GUIBase* parent) {
 					this->parent = parent;
 					this->SetScale(scale.x, scale.y);
+					this->parent->Childs.push_back(this);
 				}
 				//void SetLocalScale	(glm::vec2 scale);
 			protected:
 				//void UpdateMatrix();
 			public:
-				virtual bool Draw() { return false; };
+				virtual bool Draw()				{ return false; };
+				virtual void Flat(size_t index) { return;		};
 			};
 		}
 	}
