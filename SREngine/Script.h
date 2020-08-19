@@ -36,6 +36,7 @@ namespace SpaRcle {
 				Debug* debug		    = nullptr;
 				int r				    = -1;
 			private:
+				bool RegisterGUI();
 				bool RegisterStandartFunctions();
 				bool RegisterStandartVariables();
 				bool Compile(SREngine* engine, Debug* debug); 

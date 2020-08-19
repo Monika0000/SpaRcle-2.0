@@ -4,6 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <glm/glm.hpp>
+#include "Animation.h"
 
 namespace SpaRcle {
 	using namespace Helper;

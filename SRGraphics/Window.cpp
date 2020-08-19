@@ -490,6 +490,12 @@ namespace SpaRcle {
 			debug->Graph("Initializing parametrs...");
 			glEnable(GL_BLEND); // Прозрачность стекла
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+			glBlendEquation(GL_FUNC_ADD);
+
+			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA);
+			//glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			//glBlendFunc(GL_DST_ALPHA, GL_ONE);
 
 			glEnable(GL_TEXTURE_2D);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);

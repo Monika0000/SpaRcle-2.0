@@ -42,19 +42,26 @@ function Start ()
     --size = 0.05;
     --table:SetScale(size, size, size)
     
-    fbx2   = Model.LoadFBX("objects")
-    objects= World.Instantiate("objects", fbx2)
+    --fbx2   = Model.LoadFBX("objects")
+    --objects= World.Instantiate("objects", fbx2)
+    --objects:SetPosition(5,3,5)
+    --size   = 0.01;
+    --objects:SetScale(size, size, size)
+
+    fbx2   = Model.LoadFBX("plane_bone")
+    objects= World.Instantiate("plane_bone", fbx2)
     objects:SetPosition(5,3,5)
     size   = 0.01;
     objects:SetScale(size, size, size)
+
     --model = Model.LoadOBJ("sina")
     --sina  = World.Instantiate("Sina", model)
     --
 
-    --sina     = Engine.LoadPrefab("Sina") 
+    sina     = Engine.LoadPrefab("Sina") 
     --sina:SetActive(false)
-    --sina:SetScale(0.05, 0.05, 0.05)
-    --sina:SetPosition(0,-5,-5)
+    sina:SetScale(0.05, 0.05, 0.05)
+    sina:SetPosition(0,-5,-5)
 end;
 
 function Update ()
@@ -66,7 +73,7 @@ function Update ()
     
     sphere2:Rotate(0.01,0.01,0.01)
     --sina:Rotate(0,0.02, 0)
-    objects:Rotate(0.01,0.01,0.01)
+    --objects:Rotate(0.01,0.01,0.01)
     --vertex:SetPosition(0, v, 0)
     --mesh:SetBind(false)
     --light:SetDiffuse(0.3, math.cos(Time) / 4.0, 0.3)

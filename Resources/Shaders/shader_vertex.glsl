@@ -1,5 +1,7 @@
 #version 420 core
 
+const int MAX_BONES = 128;
+
 struct Light {
     vec3 position;  
   
@@ -34,6 +36,9 @@ out VS_OUT {
 } vs_out;
 
 uniform Light light;
+
+uniform int use_anim;
+uniform mat4[MAX_BONES] Bones;
 
 void main() {
     //vec3 T = normalize(vec3(vec4(aTangent,   0.0)));

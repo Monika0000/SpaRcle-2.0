@@ -5,6 +5,8 @@
 #include "Texture.h"
 #include <glm\ext\matrix_transform.hpp>
 #include <glm/detail/type_float.hpp>
+#include "Model.h"
+#include "Animator.h"
 
 using namespace SpaRcle::Graphics;
 
@@ -82,6 +84,10 @@ namespace SpaRcle {
 
 			//if (!isCompile) Compile();
 			//if (!isRecompile) Recompile();
+
+			//if (anim) {
+				//anim->Use();
+			//}
 
 			//glColor4f(0.2f, 0.f, 0.f, 1.f);
 			glBindVertexArray(this->VAO);

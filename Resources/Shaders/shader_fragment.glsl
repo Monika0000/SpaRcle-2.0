@@ -87,6 +87,8 @@ void main(void) {
         vec3 lightDir  = normalize(light.position - fs_in.FragPos); // lightDir 
         float diffuse_intensity = max(dot(N, lightDir ), 0.0);
         vec4 _texture = texture(DiffuseMap, fs_in.TexCoords);
+        if(_texture.a < 0.1)
+            discard;
         vec3 diffuse = _texture.rgb * color.rgb * light.diffuse * diffuse_intensity;
 
         // specular
@@ -116,6 +118,8 @@ void main(void) {
         vec3 lightDir = normalize(fs_in.TangentLightPos  - fs_in.TangentFragPos);
         float diffuse_intensity = max(dot(N, lightDir ), 0.0);
         vec4 _texture = texture(DiffuseMap, fs_in.TexCoords);
+        if(_texture.a < 0.1)
+            discard;
         vec3 diffuse = _texture.rgb * color.rgb * light.diffuse * diffuse_intensity;
 
         // specular
@@ -138,6 +142,8 @@ void main(void) {
         FragColor = vec4(diffuse + ambient + specular, _texture.a);
     } else {
         vec4 _texture = texture(DiffuseMap, fs_in.TexCoords);
+        if(_texture.a < 0.1)
+            discard;
         FragColor = vec4(_texture.rgb * color.rgb, _texture.a); // - vec3(n, n, n)
     }
 }

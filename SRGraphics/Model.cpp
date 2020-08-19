@@ -6,6 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Material.h"
 #include "SRGraphics.h"
+#include "Animator.h"
 
 namespace SpaRcle {
 	namespace Graphics {
@@ -39,7 +40,8 @@ namespace SpaRcle {
 					glActiveTexture(GL_TEXTURE0);
 					glBindTexture(GL_TEXTURE_2D, model_temp_material->diffuse->id);
 					glUniform1i(glGetUniformLocation(shader->ProgramID, "DiffuseMap"), 0); // This is GL_TEXTURE0
-				} else {
+				} 
+				else {
 					glActiveTexture(GL_TEXTURE0);
 					glBindTexture(GL_TEXTURE_2D, 0);
 					glUniform1i(glGetUniformLocation(shader->ProgramID, "DiffuseMap"), 0); // This is GL_TEXTURE0
@@ -49,23 +51,24 @@ namespace SpaRcle {
 					glActiveTexture(GL_TEXTURE1);
 					glBindTexture(GL_TEXTURE_2D, model_temp_material->normal->id);
 					glUniform1i(glGetUniformLocation(shader->ProgramID, "NormalMap"), 1); // This is GL_TEXTURE1
-				} else {
+				} 
+				else {
 					glActiveTexture(GL_TEXTURE1);
 					glBindTexture(GL_TEXTURE_2D, 0);
 					glUniform1i(glGetUniformLocation(shader->ProgramID, "NormalMap"), 1); // This is GL_TEXTURE0
 				}
 
+				if (model_temp_material->specular) {
+					//glActiveTexture(GL_TEXTURE2);
+					//glBindTexture(GL_TEXTURE_2D, model_temp_material->specular->id);
+					//glUniform1i(glGetUniformLocation(shader->ProgramID, "SpecularMap"), 2); // This is GL_TEXTURE2
+				}
+				else {
+					//glActiveTexture(GL_TEXTURE2);
+					//glBindTexture(GL_TEXTURE_2D, 0);
+					//glUniform1i(glGetUniformLocation(shader->ProgramID, "SpecularMap"), 2); // This is GL_TEXTURE0
+				}
 
-				//if (model_temp_material->specular) {
-				//	glActiveTexture(GL_TEXTURE2);
-				//	glBindTexture(GL_TEXTURE_2D, model_temp_material->specular->id);
-				//	glUniform1i(glGetUniformLocation(shader->ProgramID, "SpecularMap"), 2); // This is GL_TEXTURE2
-				//}
-				//else {
-				//	glActiveTexture(GL_TEXTURE2);
-				//	glBindTexture(GL_TEXTURE_2D, 0);
-				//	glUniform1i(glGetUniformLocation(shader->ProgramID, "SpecularMap"), 2); // This is GL_TEXTURE0
-				//}
 				//glm::vec4 c = model_temp_material->Color;
 				//std::cout << c.r << " " << c.g << " " << c.b << "\n";
 
@@ -83,6 +86,9 @@ namespace SpaRcle {
 				//model = glm::translate(model, meshes[t]->position);
 				//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 				glUniformMatrix4fv(glGetUniformLocation(shader->ProgramID, "modelMat"), 1, GL_FALSE, glm::value_ptr(meshes[t]->model));
+
+				if (animator)
+					animator->Use(shader, t);
 
 				meshes[t]->Draw();
 

@@ -62,6 +62,8 @@ int main(int argcp, char* argv) {
 	render->SetSkybox(texManager->LoadSkybox("Skyboxes\\Winter", Image::Type::JPG));
 
 	engine->GetCompiler()->AddScript(new Script("script"));
+	if(graph->EditorMode)
+		engine->GetCompiler()->AddScript(new Script("gui_engine"));
 	//?================================================[SCRIPTS]===============================================
 
 	//render->AddUI(new UIWindow(win, "Console", -2.15f, -0.2f, 1.0f, 0.5f, true));
@@ -109,13 +111,14 @@ int main(int argcp, char* argv) {
 	//list->Move(0.5, 0);
 	*/
 
+	/*
 	GUIList* list2 = new GUIList(
 		canvas, "Inspector",
 		{ 0, 0 }, { 0.2, 1 }, { 1,1,1,1 },
 		OrientationH::RIGHT, OrientationV::CENTER
 	);
 	canvas->AddGUIList(list2);
-	
+	*/
 
 	//GUIList* list3 = new GUIList(
 	//	canvas, "Console",
@@ -126,11 +129,11 @@ int main(int argcp, char* argv) {
 
 	//list3->Move(-0.25, 0.5);
 
-	GUIButton* button = new GUIButton(
-		canvas, "[Some Button]", 
-		{ 0,0 }, { 0.15,0.05 }, {1,1,1,0.8}, 
-		OrientationH::CENTER, OrientationV::DOWN);
-	canvas->AddGUIButton(button);
+	//GUIButton* button = new GUIButton(
+	//	canvas, "[Some Button]", 
+	//	{ 0,0 }, { 0.15,0.05 }, {1,1,1,0.8}, 
+	//	OrientationH::CENTER, OrientationV::DOWN);
+	//canvas->AddGUIButton(button);
 
 	//GUIObject* obj = new GUIObject(canvas, OrientationH::CENTER, OrientationV::DOWN, {}, { 1,0.5 }, {1,1,1,1});
 	//canvas->AddGUIObject(obj);

@@ -2,6 +2,8 @@
 #include "Script.h"
 #include <SRHelper.h>
 #include "SREngine.h"
+#include <Canvas.h>
+#include <GUIList.h>
 
 namespace SpaRcle {
 	using namespace Helper;
@@ -18,6 +20,27 @@ namespace SpaRcle {
 
 			//void Lambda(std::function<void()> fun) { fun(); }
 
+			bool Script::RegisterGUI() {
+				luabridge::getGlobalNamespace(L)
+					.beginClass<GUIList>("GUIList")
+						.addStaticFunction("New", static_cast<GUIList * (*)
+							(std::string, float, float, float, float, int, int) > 
+							([](std::string name, float xpos, float ypos, float xsize, float ysize, int hOr, int vOr) -> GUIList*
+							{
+									return new GUIList(engine->GetWindow()->GetCanvas(), name, { xpos, ypos }, { xsize, ysize },
+										{1,1,1,1}, (OrientationH)hOr, (OrientationV)vOr);
+							}))
+						.addFunction("Move", &GUIList::Move)
+					.endClass()
+
+					.beginClass<Canvas>("Canvas")
+						.addStaticFunction("AddGUIList", static_cast<void(*)(GUIList*)>([](GUIList*list) {
+							engine->GetWindow()->GetCanvas()->AddGUIList(list);
+						}))
+					.endClass();
+
+				return true;
+			}
 			bool Script::RegisterStandartFunctions() {
 				/*
 				//auto a = &debug->Log;
@@ -215,6 +238,7 @@ namespace SpaRcle {
 
 					this->RegisterStandartFunctions();
 					this->RegisterStandartVariables();
+					this->RegisterGUI();
 
 					isCompile = true;
 					return true;

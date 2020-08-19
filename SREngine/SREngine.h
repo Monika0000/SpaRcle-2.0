@@ -74,6 +74,9 @@ namespace SpaRcle {
 					return nullptr;
 				}
 			}
+			Window* GetWindow() {
+				return this->window;
+			}
 			World* GetCurrentWorld() {
 				if (world) return world;	
 				else {

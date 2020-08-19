@@ -101,26 +101,29 @@ namespace SpaRcle {
 		*/
 
 		class Shader;
+		class Animator;
+
 		class Model : public IComponent {
 		private:
-			//GLuint position = 0;
-			GLuint texID = 0;
-			size_t t = 0;
+			GLuint texID						= 0;
+			unsigned int t						= 0;
 
-			glm::vec3 position = { 0, 0, 0 };
-			glm::vec3 rotation = { 0, 0, 0 };
-			glm::vec3 scale	   = { 1, 1, 1 };
+			glm::vec3 position					= { 0, 0, 0 };
+			glm::vec3 rotation					= { 0, 0, 0 };
+			glm::vec3 scale						= { 1, 1, 1 };
 		private:
-			bool destroy = false;
+			bool destroy						= false;
 		public:
-			bool isSelect = false;
-			bool CanSelect = true;
-			bool enabled = true;
-			bool DepthTesting = true;
+			bool isSelect						= false;
+			bool CanSelect						= true;
+			bool enabled						= true;
+			bool DepthTesting					= true;
 			//Material* material;
 			//Mesh* mesh;
-			std::vector<Material*> materials = std::vector<Material*>();
-			std::vector<Mesh*>	   meshes = std::vector<Mesh*>();
+			std::vector<Material*> materials	= std::vector<Material*>();
+			std::vector<Mesh*>	   meshes		= std::vector<Mesh*>();
+		public:
+			Animator* animator = nullptr;
 		public:
 			void SetPosition(glm::vec3 val) {
 				this->position = val;

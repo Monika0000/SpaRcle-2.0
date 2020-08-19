@@ -46,6 +46,7 @@ namespace SpaRcle {
 			void SetPosition(float x, float y, float z) { Position = { x, y, z }; };
 		};
 
+		class Animator;
 		class Render;
 		class Model;
 		class ModelManager;

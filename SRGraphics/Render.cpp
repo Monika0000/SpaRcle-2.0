@@ -179,10 +179,6 @@ void SpaRcle::Graphics::Render::DrawAllObjects() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // Без этого ничего не будет работать (очистка буфера)
 		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-	//if (fog)
-	//	InitFog();
-	//else
-	//	glDisable(GL_FOG);
 
 	raytracing->Enable(shader);
 	
@@ -229,7 +225,6 @@ void SpaRcle::Graphics::Render::DrawAllObjects() {
 				shader->Use();
 			}
 		}
-	//}
 
 	raytracing->Disable();
 

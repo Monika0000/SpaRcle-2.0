@@ -155,6 +155,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="Animator.h" />
+    <ClInclude Include="Skeleton.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="ColorBuffer.h" />
@@ -182,6 +185,9 @@
     <ClInclude Include="WindowEvents.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Animator.cpp" />
+    <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Chunk.cpp" />
